@@ -221,8 +221,8 @@ export default defineComponent({
         elements.map[nodeId].data.color = colorMap[state];
         if (state === NodeState.Queued) {
           const graph = selectedGraph.value;
-          const nodeData = graph.nodes[nodeId] as any; // REVIEW: ComputedNodeData
-          if ((nodeData.priority ?? 0) > 0) {
+          const nodeData = graph.nodes[nodeId]; // REVIEW: ComputedNodeData
+          if ("priority" in nodeData && (nodeData.priority ?? 0) > 0) {
             elements.map[nodeId].data.color = "#f80";
           }
         }
