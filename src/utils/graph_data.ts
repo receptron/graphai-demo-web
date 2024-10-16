@@ -145,7 +145,7 @@ export const graph_data_http = {
 };
 
 export const graph_data_co2 = {
-  version: 0.3,
+  version: 0.5,
   nodes: {
     slashGPTAgent: {
       agent: "httpAgent",
@@ -198,7 +198,7 @@ export const graph_data_co2 = {
         function_data_key: "methods",
         result_key: 0,
       },
-      inputs: [":slashGPTAgent"],
+      inputs: { array: ":slashGPTAgent" },
       agent: "slashGPTFuncitons2TextAgent",
     },
     mapNode: {
@@ -218,11 +218,11 @@ export const graph_data_co2 = {
                 prompt: "ユーザの問い合わせにある文章の専門家です。専門家として、ユーザのアイデアに対して実現可能なシナリオを100文字で書いてください。",
               },
             },
-            inputs: [":row"],
+            inputs: { array: [":row"] },
           },
           bypassAgent: {
             agent: "bypassAgent",
-            inputs: [":slashGPTAgent0.$last.content"],
+            inputs: { result: ":slashGPTAgent0.$last.content" },
             isResult: true,
           },
         },
@@ -232,7 +232,7 @@ export const graph_data_co2 = {
 };
 
 export const graph_data_stream: GraphData = {
-  version: 0.3,
+  version: 0.5,
   nodes: {
     echo: {
       agent: "echoAgent",

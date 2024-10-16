@@ -31,11 +31,11 @@ export const httpAgent: AgentFunction = async ({ inputs, params }) => {
 
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 /* eslint require-await: 0 */
-export const slashGPTFuncitons2TextAgent: AgentFunction<{ function_data_key: string; result_key: number }, Record<string, string[]>, any[]> = async ({
+export const slashGPTFuncitons2TextAgent: AgentFunction<{ function_data_key: string; result_key: number }, Record<string, string[]>, null, any[]> = async ({
   params,
-  inputs,
+  namedInputs,
 }) => {
-  const message = inputs[0].find((mess) => mess.role === "function_result");
+  const message = namedInputs.array.find((mess) => mess.role === "function_result");
   if (!message) {
     return null;
   }
