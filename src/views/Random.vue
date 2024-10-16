@@ -49,7 +49,7 @@ export default defineComponent({
 
     const selectedGraph = ref(generateGraph(staticNode.value, computedNode.value));
 
-    const { updateCytoscape, cytoscapeRef, resetCytoscape, zoomingEnabled  } = useCytoscape(selectedGraph);
+    const { updateCytoscape, cytoscapeRef, resetCytoscape, zoomingEnabled } = useCytoscape(selectedGraph);
 
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
@@ -98,7 +98,6 @@ export default defineComponent({
 
       toggleZoom,
       zoomingEnabled,
-
     };
   },
 });

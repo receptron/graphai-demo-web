@@ -192,7 +192,6 @@ export default defineComponent({
       loadLayoutCytoscape,
       toggleZoom,
       zoomingEnabled,
-
     };
   },
 });
