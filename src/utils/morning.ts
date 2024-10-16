@@ -12,8 +12,9 @@ const cycle_task = async (name: string, time: number, count: number) => {
   let task_counter = 0;
   console.log(`start task ${name}`);
   while (task_counter < count) {
+    //console.log({task_counter, count})
     console.log(`task ${name} call`);
-    task_counter = +1;
+    task_counter = task_counter + 1;
     if (task_counter < count) {
       await sleep(time * 1000);
     }
@@ -93,57 +94,59 @@ export const graph_data_morning = {
     },
     task_5_drip_coffee: {
       agent: task_5_drip_coffee,
-      inputs: [":task_1_coffee_water"],
+      inputs: { array: [":task_1_coffee_water"] },
     },
     task_6_changing_childrens_clothes: {
       agent: task_6_changing_childrens_clothes,
-      inputs: [":task_2_wakeup"],
+      inputs: { array: [":task_2_wakeup"] },
     },
     task_7_do_laundry: {
       agent: task_7_do_laundry,
-      inputs: [":task_6_changing_childrens_clothes"],
+      inputs: { array: [":task_6_changing_childrens_clothes"] },
     },
     task_8_breakfirst: {
       agent: task_8_breakfirst,
-      inputs: [":task_3_cooking", ":task_5_drip_coffee", ":task_6_changing_childrens_clothes"],
+      inputs: { array: [":task_3_cooking", ":task_5_drip_coffee", ":task_6_changing_childrens_clothes"] },
     },
     task_9_dry_the_laundry: {
       agent: task_9_dry_the_laundry,
-      inputs: [":task_7_do_laundry"],
+      inputs: { array: [":task_7_do_laundry"] },
     },
     task_10_coffee: {
       agent: task_10_coffee,
-      inputs: [":task_5_drip_coffee", ":task_9_dry_the_laundry"],
+      inputs: { array: [":task_5_drip_coffee", ":task_9_dry_the_laundry"] },
     },
     task_11_wash_dish: {
       agent: task_11_wash_dish,
-      inputs: [":task_8_breakfirst", ":task_10_coffee"],
+      inputs: { array: [":task_8_breakfirst", ":task_10_coffee"] },
     },
     task_12_ready_to_go_out: {
       agent: task_12_ready_to_go_out,
-      inputs: [":task_8_breakfirst"],
+      inputs: { array: [":task_8_breakfirst"] },
     },
     task_13_read_news_paper: {
       agent: task_13_read_news_paper,
-      inputs: [":task_4_newspaper"],
+      inputs: { array: [":task_4_newspaper"] },
     },
     task14: {
       agent: task_14_go_out,
-      inputs: [
-        ":task_1_coffee_water",
-        ":task_2_wakeup",
-        ":task_3_cooking",
-        ":task_4_newspaper",
-        ":task_5_drip_coffee",
-        ":task_6_changing_childrens_clothes",
-        ":task_7_do_laundry",
-        ":task_8_breakfirst",
-        ":task_9_dry_the_laundry",
-        ":task_10_coffee",
-        ":task_11_wash_dish",
-        ":task_12_ready_to_go_out",
-        ":task_13_read_news_paper",
-      ],
+      inputs: {
+        array: [
+          ":task_1_coffee_water",
+          ":task_2_wakeup",
+          ":task_3_cooking",
+          ":task_4_newspaper",
+          ":task_5_drip_coffee",
+          ":task_6_changing_childrens_clothes",
+          ":task_7_do_laundry",
+          ":task_8_breakfirst",
+          ":task_9_dry_the_laundry",
+          ":task_10_coffee",
+          ":task_11_wash_dish",
+          ":task_12_ready_to_go_out",
+          ":task_13_read_news_paper",
+        ],
+      },
     },
   },
 };

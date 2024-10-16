@@ -120,14 +120,14 @@ export const graph_data_http = {
     },
     bypassAgent: {
       agent: "httpAgent",
-      inputs: [":echo"],
+      inputs: { text: ":echo" },
       params: {
         agent: "bypassAgent",
       },
     },
     sleepAgent: {
       agent: "httpAgent",
-      inputs: [":echo"],
+      inputs: { text: ":echo" },
       params: {
         agent: "sleeperAgent",
         duration: 1000,
@@ -135,7 +135,7 @@ export const graph_data_http = {
     },
     bypassAgent2: {
       agent: "httpAgent",
-      inputs: [":bypassAgent"],
+      inputs: { text: ":bypassAgent" },
       params: {
         agent: "bypassAgent",
       },
