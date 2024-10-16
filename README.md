@@ -12,8 +12,8 @@ This package includes vite, vue-router, pinia, tailwindcss, prettier, vue-tsc
 
 ## Requirements
 
-- Node.js version 16 or later.
-- Functions requires node 18
+- Node.js version 20 or later.
+- Functions requires node 20
 
 ## Instruction
 

@@ -7,6 +7,9 @@ const lang = {
   menu: {
     top: "Home",
     mypage: "MyPage",
+    chat: "Chat",
+    test: "Step",
+    random: "BigNode",
     signin: "SignIn",
     signout: "SignOut",
     about: "Abount",

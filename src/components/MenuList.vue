@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col space-y-1 bg-white p-4">
     <MenuItem @click="handleClose" link="/" icon="man" title="menu.top" />
+    <MenuItem @click="handleClose" link="/chat" icon="man" title="menu.chat" />
+    <MenuItem @click="handleClose" link="/test" icon="man" title="menu.test" />
+    <MenuItem @click="handleClose" link="/random" icon="man" title="menu.random" />
   </div>
 </template>
 

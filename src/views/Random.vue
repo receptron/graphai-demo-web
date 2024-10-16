@@ -9,6 +9,9 @@
       <div class="mt-2">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="logClear">Clear</button>
+        <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="toggleZoom">
+          Zoom({{ zoomingEnabled }})
+        </button>
       </div>
 
       <div class="mt-2">
@@ -46,7 +49,7 @@ export default defineComponent({
 
     const selectedGraph = ref(generateGraph(staticNode.value, computedNode.value));
 
-    const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
+    const { updateCytoscape, cytoscapeRef, resetCytoscape, zoomingEnabled  } = useCytoscape(selectedGraph);
 
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
@@ -74,6 +77,11 @@ export default defineComponent({
       console.log("update");
       selectedGraph.value = generateGraph(staticNode.value, computedNode.value, concurrency.value);
     };
+
+    const toggleZoom = () => {
+      zoomingEnabled.value = !zoomingEnabled.value;
+    };
+
     return {
       run,
       logs,
@@ -87,6 +95,10 @@ export default defineComponent({
       staticNode,
       computedNode,
       concurrency,
+
+      toggleZoom,
+      zoomingEnabled,
+
     };
   },
 });
