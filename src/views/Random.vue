@@ -48,7 +48,6 @@ export default defineComponent({
     const concurrency = ref(8);
 
     const selectedGraph = ref(generateGraph(staticNode.value, computedNode.value));
-
     const { updateCytoscape, cytoscapeRef, resetCytoscape, zoomingEnabled } = useCytoscape(selectedGraph);
 
     const graphaiResponse = ref({});

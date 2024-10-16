@@ -42,13 +42,13 @@ export const generateGraph = (staticNode: number = 10, computedNode: number = 50
         duration: randomInt(10) * 400,
       },
       priority: Math.random() > 0.5 ? 1 : 0, // 50% will have priority = 1
-      inputs,
+      inputs: { array: inputs },
     };
     inputsNode.push(name);
   });
 
   return {
-    version: 0.3,
+    version: 0.5,
     nodes,
     concurrency,
   };
