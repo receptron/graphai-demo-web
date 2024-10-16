@@ -2,8 +2,14 @@ import { AgentFunction } from "graphai";
 import { sleep } from "@/utils/utils";
 
 export const sleepTestAgent: AgentFunction<{ duration?: number }> = async (context) => {
-  const { params, inputs } = context;
+  const { params, inputs, namedInputs } = context;
   await sleep(params?.duration ?? 500);
+  if (namedInputs && namedInputs.array) {
+    return namedInputs.array[0];
+  }
+  if (namedInputs && namedInputs.item) {
+    return namedInputs.item;
+  }
   return inputs[0];
 };
 

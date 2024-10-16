@@ -21,28 +21,28 @@ export const graph_data: GraphData = {
       params: {
         duration: 200,
       },
-      inputs: [":source"],
+      inputs: { array: [":source"] },
     },
     sleeper2: {
       agent: "sleepTestAgent",
       params: {
         duration: 200,
       },
-      inputs: [":sleeper1"],
+      inputs: { item: ":sleeper1" },
     },
     sleeper3: {
       agent: "sleepTestAgent",
       params: {
         duration: 200,
       },
-      inputs: [":sleeper2"],
+      inputs: { item: ":sleeper2" },
     },
     sleeper4: {
       agent: "sleepTestAgent",
       params: {
         duration: 200,
       },
-      inputs: [":sleeper3"],
+      inputs: { item: ":sleeper3" },
     },
     popper: {
       inputs: { array: ":sleeper4" },
@@ -63,47 +63,47 @@ export const graph_data2: GraphData = {
     },
     node2: {
       agent: "sleepTestAgent",
-      inputs: [":node1"],
+      inputs: { array: [":node1"] },
     },
     node3: {
       agent: "sleepTestAgent",
-      inputs: [":node2"],
+      inputs: { array: [":node2"] },
     },
     node4: {
       agent: "sleepTestAgent",
-      inputs: [":node2", ":node3"],
+      inputs: { array: [":node2", ":node3"] },
     },
     node5: {
       agent: "sleepTestAgent",
-      inputs: [":node3", ":node4"],
+      inputs: { array: [":node3", ":node4"] },
     },
     node6: {
       agent: "sleepTestAgent",
-      inputs: [":node1", ":node5"],
+      inputs: { array: [":node1", ":node5"] },
     },
     node7: {
       agent: "sleepTestAgent",
-      inputs: [":node3", ":node5"],
+      inputs: { array: [":node3", ":node5"] },
     },
     node8: {
       agent: "sleepTestAgent",
-      inputs: [":node2", ":node5", ":node3"],
+      inputs: { array: [":node2", ":node5", ":node3"] },
     },
     node9: {
       agent: "sleepTestAgent",
-      inputs: [":node4", ":node8", ":node6"],
+      inputs: { array: [":node4", ":node8", ":node6"] },
     },
     node10: {
       agent: "sleepTestAgent",
-      inputs: [":node5", ":node6", ":node7"],
+      inputs: { array: [":node5", ":node6", ":node7"] },
     },
     node11: {
       agent: "sleepTestAgent",
-      inputs: [":node3", ":node6", ":node7"],
+      inputs: { array: [":node3", ":node6", ":node7"] },
     },
     node12: {
       agent: "sleepTestAgent",
-      inputs: [":node10", ":node11", ":node9"],
+      inputs: { array: [":node10", ":node11", ":node9"] },
     },
   },
 };
