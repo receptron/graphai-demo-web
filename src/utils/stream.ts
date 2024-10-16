@@ -57,7 +57,8 @@ export const useGraphData = () => {
 
   const faucatGenerator = (key: string) => {
     words.value[key] = [];
-    return (streamer: WordStreamer) => {
+    return (namedInputs: { streamer: WordStreamer }) => {
+      const { streamer } = namedInputs;
       return new Promise((resolve) => {
         streamer.run();
         streamer.onWord = (word: string | undefined) => {
@@ -91,7 +92,7 @@ export const useGraphData = () => {
   ];
 
   const graphdata_any: GraphData = {
-    version: 0.3,
+    version: 0.5,
     concurrency: 3,
     nodes: {
       message: {
@@ -103,14 +104,15 @@ export const useGraphData = () => {
   Array.from(messages.keys()).forEach((key) => {
     // const message = messages[k];
     graphdata_any.nodes["source" + key] = {
-      agent: (message: string) => {
+      agent: (namedInputs: { message: string }) => {
+        const { message } = namedInputs;
         return new WordStreamer(message);
       },
-      inputs: [":message.$" + key],
+      inputs: { message: ":message.$" + key },
     };
     graphdata_any.nodes["destination" + key] = {
       agent: faucatGenerator("message" + key),
-      inputs: [":source" + key],
+      inputs: { streamer: ":source" + key },
     };
   });
 
