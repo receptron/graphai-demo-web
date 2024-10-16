@@ -52,6 +52,7 @@ export default [
       "no-ternary": "off",
       "no-unreachable": "error",
       "one-var": "off",
+      "operator-assignment": "off",
       "no-undefined": "off",
       "sort-keys": "off",
       "sort-vars": "off",
