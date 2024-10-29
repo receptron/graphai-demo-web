@@ -23,6 +23,3 @@ app.post("/api/agents/:agentId", agentDispatcher(agentDictionary));
 
 app.get("/api/agents", agentsList(agentDictionary, hostName, "/api/agents"));
 app.get("/api/agents/:agentId", agentDoc(agentDictionary, hostName, "/api/agents"));
-
-
-

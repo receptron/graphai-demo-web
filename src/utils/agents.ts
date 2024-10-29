@@ -13,11 +13,11 @@ export const sleepTestAgent: AgentFunction<{ duration?: number }> = async (conte
   return inputs[0];
 };
 
-export const httpAgent: AgentFunction = async ({ inputs, params }) => {
+export const httpAgent: AgentFunction = async ({ inputs, params, namedInputs }) => {
   const { agent } = params;
   const url = "https://graphai-demo.web.app/api/agents/" + agent;
 
-  const postData = { inputs, params };
+  const postData = { inputs, params, namedInputs };
 
   const response = await fetch(url, {
     method: "post",
@@ -31,10 +31,12 @@ export const httpAgent: AgentFunction = async ({ inputs, params }) => {
 
 /* eslint @typescript-eslint/no-explicit-any: 0 */
 /* eslint require-await: 0 */
-export const slashGPTFuncitons2TextAgent: AgentFunction<{ function_data_key: string; result_key: number }, Record<string, string[]>, null, {array: any[]}> = async ({
-  params,
-  namedInputs,
-}) => {
+export const slashGPTFuncitons2TextAgent: AgentFunction<
+  { function_data_key: string; result_key: number },
+  Record<string, string[]>,
+  null,
+  { array: any[] }
+> = async ({ params, namedInputs }) => {
   const messages = namedInputs.array.find((message) => message.role === "function_result");
   if (!messages) {
     return null;

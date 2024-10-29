@@ -6,7 +6,7 @@ export default functions
   .runWith({
     maxInstances: 5,
     timeoutSeconds: 10,
-    memory: "1GB" as "1GB",
+    memory: "1GB" as const,
     secrets: ["OPENAI_API_KEY"],
   })
   .https.onRequest(express.app);

@@ -117,27 +117,30 @@ export const graph_data_http = {
         agent: "echoAgent",
         message: "hello",
       },
+      isResult: true,
     },
-    bypassAgent: {
+    copyAgent: {
       agent: "httpAgent",
-      inputs: { text: ":echo" },
+      inputs: { text: ":echo.message" },
       params: {
-        agent: "bypassAgent",
+        agent: "copyAgent",
       },
+      isResult: true,
     },
     sleepAgent: {
       agent: "httpAgent",
-      inputs: { text: ":echo" },
+      inputs: { text: ":echo.message" },
       params: {
         agent: "sleeperAgent",
         duration: 1000,
       },
+      isResult: true,
     },
-    bypassAgent2: {
+    copyAgent2: {
       agent: "httpAgent",
-      inputs: { text: ":bypassAgent" },
+      inputs: { text: ":copyAgent.text" },
       params: {
-        agent: "bypassAgent",
+        agent: "copyAgent",
       },
       isResult: true,
     },
@@ -220,8 +223,8 @@ export const graph_data_co2 = {
             },
             inputs: { array: [":row"] },
           },
-          bypassAgent: {
-            agent: "bypassAgent",
+          copyAgent: {
+            agent: "copyAgent",
             inputs: { result: ":slashGPTAgent0.$last.content" },
             isResult: true,
           },
