@@ -4,6 +4,7 @@
     <MenuItem @click="handleClose" link="/chat" icon="man" title="menu.chat" />
     <MenuItem @click="handleClose" link="/test" icon="man" title="menu.test" />
     <MenuItem @click="handleClose" link="/random" icon="man" title="menu.random" />
+    <MenuItem @click="handleClose" link="/reception" icon="man" title="menu.reception" />
   </div>
 </template>
 

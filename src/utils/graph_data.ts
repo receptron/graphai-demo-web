@@ -284,11 +284,11 @@ export const graphChat = {
   nodes: {
     continue: {
       value: true,
-      update: ":checkInput.continue",
+      update: ":checkInput",
     },
     messages: {
       value: [],
-      update: ":reducer",
+      update: ":reducer.array",
     },
     userInput: {
       agent: "textInputAgent",
@@ -297,49 +297,9 @@ export const graphChat = {
       },
     },
     checkInput: {
-      agent: "propertyFilterAgent",
-      params: {
-        inspect: [
-          {
-            propId: "continue",
-            notEqual: "/bye",
-          },
-        ],
-      },
-      inputs: {
-        array: [
-          {
-            dummy: 1,
-          },
-          ":userInput",
-        ],
-      },
-    },
-    userMessage: {
-      agent: "propertyFilterAgent",
-      params: {
-        inject: [
-          {
-            propId: "content",
-            from: 1,
-          },
-        ],
-      },
-      inputs: {
-        array: [
-          {
-            role: "user",
-          },
-          ":userInput",
-        ],
-      },
-    },
-    appender: {
-      agent: "pushAgent",
-      inputs: {
-        array: ":messages",
-        item: ":userMessage",
-      },
+      // Checks if the user wants to terminate the chat or not.
+      agent: "compareAgent",
+      inputs: { array: [":userInput.text", "!=", "/bye"] },
     },
     llm: {
       agent: "openAIAgent",
@@ -348,40 +308,121 @@ export const graphChat = {
         apiKey: import.meta.env.VITE_OPEN_API_KEY,
         stream: true,
       },
-      inputs: {
-        messages: ":appender",
-      },
+      inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
     output: {
       agent: "stringTemplateAgent",
       console: {
         after: true,
       },
-      params: {
-        template: "LLM: ${text}",
-      },
       inputs: {
-        text: ":llm.text",
-      },
-    },
-    llmResponse: {
-      agent: "stringTemplateAgent",
-      params: {
-        template: {
-          role: "assistant",
-          content: "${text}",
-        },
-      },
-      inputs: {
-        text: ":llm.text",
+        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
       },
     },
     reducer: {
       agent: "pushAgent",
-      inputs: {
-        array: ":appender",
-        item: ":llmResponse",
+      inputs: { array: ":messages", items: [":userInput.message", { content: ":llm.text", role: "assistant" }] },
+    },
+  },
+};
+
+const tools = [
+  {
+    type: "function",
+    function: {
+      name: "report",
+      description: "Report the information acquired from the user",
+      parameters: {
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+            description: "the name of the patient (first and last)",
+          },
+          sex: {
+            type: "string",
+            description: "Gender of the patient.",
+            enum: ["male", "female"],
+          },
+          dob: {
+            type: "string",
+            description: "Patient's date of birth.",
+          },
+        },
+        required: ["name", "sex", "dob"],
       },
+    },
+  },
+];
+
+export const graphReception = {
+  version: 0.5,
+  loop: {
+    while: ":continue",
+  },
+  nodes: {
+    // Holds a boolean value, which specifies if we need to contine or not.
+    continue: {
+      value: true,
+      update: ":llm.text",
+    },
+    information: {
+      // Holds the information acquired from the user at the end of this chat.
+      value: {},
+      update: ":llm.tool.arguments",
+      isResult: true,
+    },
+    messages: {
+      // Holds the conversation, the array of messages.
+      value: [
+        {
+          role: "system",
+          content:
+            "You are responsible in retrieving following information from the user.\n" +
+            "name: both first and last name\n" +
+            "dob: date of birth. It MUST include the year\n" +
+            "sex: gender (NEVER guess from the name)\n" +
+            "When you get all the information from the user, call the function 'report'.\n" +
+            "The first message should be a greeting and ask the user for the necessary information.\n",
+        },
+      ],
+      update: ":reducer.array",
+    },
+    userInput: {
+      // Receives an input from the user.
+      agent: "textInputAgent",
+      params: {
+        message: "You:",
+      },
+    },
+    llm: {
+      // Sends those messages to LLM to get a response.
+      agent: "openAIAgent",
+      params: {
+        model: "gpt-4o",
+        forWeb: true,
+        apiKey: import.meta.env.VITE_OPEN_API_KEY,
+        tools,
+      },
+      console: { before: true },
+      inputs: { messages: ":messages", prompt: ":userInput.text" },
+    },
+    output: {
+      // Displays the response to the user.
+      agent: "stringTemplateAgent",
+      params: {
+        template: "\x1b[32mAgent\x1b[0m: ${message}",
+      },
+      console: {
+        after: true,
+      },
+      inputs: { message: [":llm.text"] },
+      if: ":llm.text",
+    },
+    reducer: {
+      // Appends the responce to the messages.
+      agent: "pushAgent",
+      inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
     },
   },
 };

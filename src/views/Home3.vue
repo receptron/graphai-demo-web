@@ -108,7 +108,10 @@ export default defineComponent({
     const textInputAgent: AgentFunction = async (__context) => {
       const result = await textPromise();
       console.log(result);
-      return result as string;
+      return {
+        text: result as string,
+        message: { role: "user", content: result as string },
+      };
     };
 
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
@@ -155,12 +158,13 @@ export default defineComponent({
         updateCytoscape(nodeId, state);
         console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          if (nodeId === "reducer") {
+          console.log(result);
+          if (nodeId === "llm") {
             isStreaming.value = false;
-            messages.value = [...(result as { role: string; content: string }[])];
+            messages.value.push((result as { message: { role: string; content: string } }).message);
           }
-          if (nodeId === "userMessage") {
-            messages.value.push(result as { role: string; content: string });
+          if (nodeId === "userInput") {
+            messages.value.push((result as { message: { role: string; content: string } }).message);
           }
         }
         if (nodeId === "llm") {

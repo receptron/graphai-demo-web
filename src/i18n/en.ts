@@ -10,6 +10,7 @@ const lang = {
     chat: "Chat",
     test: "Step",
     random: "BigNode",
+    reception: "Reception",
     signin: "SignIn",
     signout: "SignOut",
     about: "Abount",
