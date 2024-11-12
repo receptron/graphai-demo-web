@@ -364,13 +364,7 @@ export const graphReception = {
     // Holds a boolean value, which specifies if we need to contine or not.
     continue: {
       value: true,
-      update: ":llm.text",
-    },
-    information: {
-      // Holds the information acquired from the user at the end of this chat.
-      value: {},
-      update: ":llm.tool.arguments",
-      isResult: true,
+      update: ":llm_tools.text",
     },
     messages: {
       // Holds the conversation, the array of messages.
@@ -395,7 +389,7 @@ export const graphReception = {
         message: "You:",
       },
     },
-    llm: {
+    llm_tools: {
       // Sends those messages to LLM to get a response.
       agent: "openAIAgent",
       params: {
@@ -407,22 +401,10 @@ export const graphReception = {
       console: { before: true },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
-    output: {
-      // Displays the response to the user.
-      agent: "stringTemplateAgent",
-      params: {
-        template: "\x1b[32mAgent\x1b[0m: ${message}",
-      },
-      console: {
-        after: true,
-      },
-      inputs: { message: [":llm.text"] },
-      if: ":llm.text",
-    },
     reducer: {
       // Appends the responce to the messages.
       agent: "pushAgent",
-      inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
+      inputs: { array: ":messages", items: [":userInput.message", ":llm_tools.message"] },
     },
   },
 };

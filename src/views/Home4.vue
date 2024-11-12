@@ -23,7 +23,7 @@
         <div class="w-10/12 m-auto my-4">
           <div v-if="inputPromise.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
           <div class="flex">
-            <input v-model="userInput" @keyup.enter="submit" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromise.length == 0" />
+            <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromise.length == 0" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
               :class="inputPromise.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
@@ -34,6 +34,14 @@
           </div>
         </div>
       </div>
+      <button
+        :class="isServer ? 'bg-sky-500 hover:bg-sky-700' : ' bg-red-200 hover:bg-red-300'"
+        class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
+        @click="isServer = !isServer"
+      >
+        Server
+      </button>
+      <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
       <div class="w-10/12 m-auto text-left">Transitions</div>
       <div class="w-10/12 m-auto">
         <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
@@ -58,12 +66,13 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFilterFunction, sleep } from "graphai";
+import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphReception } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
+import { httpAgentFilter } from "@graphai/agent_filters";
 
 import { useCytoscape } from "../utils/cytoscape";
 
@@ -72,6 +81,7 @@ export default defineComponent({
   components: {},
   setup() {
     const userInput = ref("");
+    const isServer = ref(false);
 
     const selectedGraph = computed(() => {
       return graphReception;
@@ -108,15 +118,31 @@ export default defineComponent({
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
     const demoAgentFilter: AgentFilterFunction = async (context, next) => {
-      await sleep(250);
+      await sleep(1000);
       return next(context);
     };
-    const agentFilters = [
-      {
-        name: "demoAgentFilter",
-        agent: demoAgentFilter,
-      },
-    ];
+
+    const agentFilters = computed(() => {
+      const ret: AgentFilterInfo[] = [
+        {
+          name: "demoAgentFilter",
+          agent: demoAgentFilter,
+        },
+      ];
+      if (isServer.value) {
+        ret.push({
+          name: "httpAgentFilter",
+          agent: httpAgentFilter,
+          filterParams: {
+            server: {
+              baseUrl: "http://localhost:8085/agents",
+            },
+          },
+          agentIds: ["openAIAgent"],
+        });
+      }
+      return ret;
+    });
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
@@ -130,7 +156,7 @@ export default defineComponent({
           openAIAgent,
           textInputAgent: agentInfoWrapper(textInputAgent),
         },
-        { agentFilters },
+        { agentFilters: agentFilters.value },
       );
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
@@ -142,7 +168,7 @@ export default defineComponent({
         updateCytoscape(nodeId, state);
         console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          if (nodeId === "llm") {
+          if (nodeId === "llm_tools") {
             if ((result as { tool: { arguments: string } })?.tool?.arguments) {
               messages.value.push({ role: "bot", content: (result as { tool: { arguments: string } })?.tool.arguments });
             } else {
@@ -165,7 +191,7 @@ export default defineComponent({
       resetCytoscape();
     };
 
-    run();
+    // run();
 
     return {
       run,
@@ -180,6 +206,8 @@ export default defineComponent({
       userInput,
       messages,
       inputPromise,
+
+      isServer,
     };
   },
 });
