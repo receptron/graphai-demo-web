@@ -386,10 +386,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@receptron/graphai_vue_cytoscape@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@receptron/graphai_vue_cytoscape/-/graphai_vue_cytoscape-0.0.6.tgz#b637c78103f31b90f3761df2b49124e554ae5c69"
-  integrity sha512-SJLijBYi/bmy3OMGyKCqafsD+BY8jdLTs3IydvNxRxdjE4+iXS3wvmrsGWerOO/tFnI0HCzvBel6q64bJ1TnpQ==
+"@receptron/graphai_vue_cytoscape@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@receptron/graphai_vue_cytoscape/-/graphai_vue_cytoscape-0.0.8.tgz#d915be74707578c2724e6f10e973d86457d0adaa"
+  integrity sha512-vY3QzaYRSLx3k2ckkw9mrgyPlbCE7p5Zgj8dYrrIsfz4mC8moL4lClJhkguAj82wPz6S9M+P782AN1lz48ecDQ==
   dependencies:
     cytoscape "^3.30.3"
     cytoscape-klay "^3.1.4"

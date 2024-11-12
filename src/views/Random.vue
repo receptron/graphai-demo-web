@@ -34,8 +34,8 @@ import { sleepTestAgent, httpAgent } from "@/utils/agents";
 
 import { generateGraph } from "@/utils/graph";
 
-// import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { useCytoscape } from "../utils/cytoscape";
+import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
+// import { useCytoscape } from "../utils/cytoscape";
 
 // const layouts = ["grid", "cose", "random", "circle", "concentric", "fcose", "breadthfirst"];
 
