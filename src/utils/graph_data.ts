@@ -315,11 +315,8 @@ export const graphChat = {
       console: {
         after: true,
       },
-      params: {
-        template: "\x1b[32mAgent\x1b[0m: ${message}",
-      },
       inputs: {
-        message: ":llm.text",
+        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
       },
     },
     reducer: {

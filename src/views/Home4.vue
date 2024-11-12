@@ -74,7 +74,7 @@ import { graphReception } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
 import { httpAgentFilter } from "@graphai/agent_filters";
 
-import { useCytoscape } from "../utils/cytoscape";
+import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
 export default defineComponent({
   name: "HomePage",

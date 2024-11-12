@@ -74,7 +74,7 @@ import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
 
-import { useCytoscape } from "../utils/cytoscape";
+import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
 export default defineComponent({
   name: "HomePage",
