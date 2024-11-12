@@ -380,7 +380,7 @@ export const graphReception = {
             "The first message should be a greeting and ask the user for the necessary information.\n",
         },
       ],
-      update: ":reducer.array",
+      update: ":llm_tools.messages",
     },
     userInput: {
       // Receives an input from the user.
@@ -400,11 +400,6 @@ export const graphReception = {
       },
       console: { before: true },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
-    },
-    reducer: {
-      // Appends the responce to the messages.
-      agent: "pushAgent",
-      inputs: { array: ":messages", items: [":userInput.message", ":llm_tools.message"] },
     },
   },
 };
