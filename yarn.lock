@@ -273,10 +273,10 @@
     openai "^4.70.2"
     tiktoken "^1.0.17"
 
-"@graphai/vanilla@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.1.6.tgz#c98c91969c680218407b17b882b19a1986a58f34"
-  integrity sha512-6R/trMvEbbOf2sutc+QE6mGvc6vhrH037lY5nndXnT4I925w/X+XJ6qNjHtEnSb0E4ULuHvX94zwr1FQB6FMMw==
+"@graphai/vanilla@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.1.7.tgz#67e482cfcc026e68fd1ea9b9617e716b6a65e7ce"
+  integrity sha512-ksKyciD08S1YDBmaorWwFe+kqwdHc++slI7dOxsDZ7u4rrU1Nl9vKvzs2OmQFDimpvo3LT+tU/9T474zX8TKZA==
   dependencies:
     "@graphai/agent_utils" "0.0.2"
 
