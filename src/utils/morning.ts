@@ -78,7 +78,7 @@ const task_14_go_out = () => {
 };
 
 export const graph_data_morning = {
-  version: 0.3,
+  version: 0.5,
   nodes: {
     task_1_coffee_water: {
       agent: task_1_coffee_water,

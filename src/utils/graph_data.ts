@@ -147,6 +147,68 @@ export const graph_data_http = {
   },
 };
 
+
+export const graph_data_nested = {
+  version: 0.5,
+  nodes: {
+    node1: {
+      value: { message: "Hello World" },
+    },
+    node2: {
+      agent: "sleepTestAgent",
+      inputs: { array: [":node1"] },
+    },
+    node3: {
+      agent: "sleepTestAgent",
+      inputs: { array: [":node2"] },
+    },
+    node4Nested: {
+      agent: "nestedAgent",
+      inputs: { node1data: ":node1", node2data: ":node2", node3data: ":node3" },
+      graph: {
+        nodes: {
+          node5Child: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node3data"] },
+          },
+          node6Child: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node1data", ":node5Child"] },
+            isResult: true,
+          },
+          node7Child: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node3data", ":node5Child"] },
+          },
+          node8Child: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node2data", ":node5Child", ":node3data"] },
+          },
+          node9Child: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node8Child", ":node6Child"] },
+            isResult: true,
+          },
+          node10: {
+            agent: "sleepTestAgent",
+            inputs: { array: [":node5Child", ":node6Child", ":node7Child"] },
+            isResult: true,
+          },
+        }
+      }
+    },
+    node11: {
+      agent: "sleepTestAgent",
+      inputs: { array: [":node3", ":node4Nested.node6Child", ":node4Nested.node10"] },
+    },
+    node12: {
+      agent: "sleepTestAgent",
+      inputs: { array: [":node11", ":node4Nested.node9Child"] },
+    },
+  },
+
+};
+
 export const graph_data_co2 = {
   version: 0.5,
   nodes: {

@@ -62,7 +62,7 @@ import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { sleepTestAgent, httpAgent, slashGPTFuncitons2TextAgent } from "@/utils/agents";
 import { generateGraph } from "@/utils/graph";
-import { graph_data, graph_data2, graph_data_co2, graph_data_http, graph_data_stream } from "@/utils/graph_data";
+import { graph_data, graph_data2, graph_data_co2, graph_data_http, graph_data_stream, graph_data_nested } from "@/utils/graph_data";
 import { graph_data_morning } from "@/utils/morning";
 
 import { useStreamData, useGraphData } from "@/utils/stream";
@@ -84,6 +84,7 @@ export default defineComponent({
       { name: "stream", data: graph_data_stream },
       { name: "stream2", data: graphdata_any },
       { name: "morning", data: graph_data_morning },
+      { name: "nested", data: graph_data_nested },
     ];
 
     const selectedGraphIndex = ref(0);

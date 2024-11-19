@@ -171,7 +171,6 @@ export default defineComponent({
             resetStreamData("llm");
           }
           if (state === "executing") {
-            console.log("HOGE");
             isStreaming.value = true;
           }
           // if (state === "completed") {
