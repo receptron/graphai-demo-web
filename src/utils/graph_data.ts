@@ -147,7 +147,6 @@ export const graph_data_http = {
   },
 };
 
-
 export const graph_data_nested = {
   version: 0.5,
   nodes: {
@@ -194,8 +193,8 @@ export const graph_data_nested = {
             inputs: { array: [":node5Child", ":node6Child", ":node7Child"] },
             isResult: true,
           },
-        }
-      }
+        },
+      },
     },
     node11: {
       agent: "sleepTestAgent",
@@ -206,7 +205,6 @@ export const graph_data_nested = {
       inputs: { array: [":node11", ":node4Nested.node9Child"] },
     },
   },
-
 };
 
 export const graph_data_co2 = {
