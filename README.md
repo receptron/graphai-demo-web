@@ -2,6 +2,8 @@
 
 This demonstrates the scale and capacity of GraphAI
 
+![screen](docs/screen.png)
+
 # Usage
 
 ### install npm packages
