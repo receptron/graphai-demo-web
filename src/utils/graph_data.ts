@@ -329,6 +329,7 @@ Array.from(messages.keys()).forEach((key) => {
   graph_data_stream.nodes["streamMockAgent" + key] = {
     agent: "streamMockAgent",
     inputs,
+    isResult: true,
     params: {
       message,
       sleep: randomInt(800),
@@ -363,6 +364,7 @@ export const graphChat = {
     },
     llm: {
       agent: "openAIAgent",
+      isResult: true,
       params: {
         forWeb: true,
         apiKey: import.meta.env.VITE_OPEN_API_KEY,
