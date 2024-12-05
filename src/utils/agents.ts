@@ -2,7 +2,7 @@ import { AgentFunction } from "graphai";
 import { sleep } from "@/utils/utils";
 
 export const sleepTestAgent: AgentFunction<{ duration?: number }> = async (context) => {
-  const { params, inputs, namedInputs } = context;
+  const { params, namedInputs } = context;
   await sleep(params?.duration ?? 500);
   if (namedInputs && namedInputs.array) {
     return namedInputs.array[0];
@@ -10,14 +10,13 @@ export const sleepTestAgent: AgentFunction<{ duration?: number }> = async (conte
   if (namedInputs && namedInputs.item) {
     return namedInputs.item;
   }
-  return inputs[0];
 };
 
-export const httpAgent: AgentFunction = async ({ inputs, params, namedInputs }) => {
+export const httpAgent: AgentFunction = async ({ params, namedInputs }) => {
   const { agent } = params;
   const url = "https://graphai-demo.web.app/api/agents/" + agent;
 
-  const postData = { inputs, params, namedInputs };
+  const postData = { params, namedInputs };
 
   const response = await fetch(url, {
     method: "post",
