@@ -10,6 +10,7 @@ export const sleepTestAgent: AgentFunction<{ duration?: number }> = async (conte
   if (namedInputs && namedInputs.item) {
     return namedInputs.item;
   }
+  return "";
 };
 
 export const httpAgent: AgentFunction = async ({ params, namedInputs }) => {
@@ -33,7 +34,6 @@ export const httpAgent: AgentFunction = async ({ params, namedInputs }) => {
 export const slashGPTFuncitons2TextAgent: AgentFunction<
   { function_data_key: string; result_key: number },
   Record<string, string[]>,
-  null,
   { array: any[] }
 > = async ({ params, namedInputs }) => {
   const messages = namedInputs.array.find((message) => message.role === "function_result");

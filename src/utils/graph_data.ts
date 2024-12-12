@@ -374,9 +374,6 @@ export const graphChat = {
     },
     output: {
       agent: "stringTemplateAgent",
-      console: {
-        after: true,
-      },
       inputs: {
         text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
       },
@@ -460,7 +457,6 @@ export const graphReception = {
         apiKey: import.meta.env.VITE_OPEN_API_KEY,
         tools,
       },
-      console: { before: true },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
   },

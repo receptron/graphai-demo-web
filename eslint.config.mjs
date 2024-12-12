@@ -74,6 +74,8 @@ export default [
       "sonarjs/no-empty-collection": "error",
       "sonarjs/no-extra-arguments": "error",
       "sonarjs/no-gratuitous-expressions": "error",
+      "sonarjs/pseudo-random": "off",
+      "sonarjs/no-nested-functions": "off",
       "sonarjs/no-identical-conditions": "error",
       "sonarjs/no-identical-expressions": "error",
       "sonarjs/no-identical-functions": "error",
