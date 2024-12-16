@@ -41,13 +41,10 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } from "graphai";
+import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
-import { graphReception } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
-import { httpAgentFilter } from "@graphai/agent_filters";
 import { getGraphData, code, seedIdeas, prompt } from "../utils/sakana/graph";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
@@ -64,7 +61,6 @@ export default defineComponent({
 
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
-    const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
     const transitions = ref<unknown[]>([]);
@@ -75,11 +71,11 @@ export default defineComponent({
         ...agents,
         openAIAgent,
       });
-      const ideaStrArchive = seedIdeas.map((m: unknown) => JSON.stringify(m));
+      const ideaStrArchive = seedIdeas.map((message: unknown) => JSON.stringify(message));
 
       graphai.injectValue("idea_str_archive", ideaStrArchive);
-      graphai.injectValue("ideaSystemPrompt", prompt["system"]);
-      graphai.injectValue("taskDescription", prompt["task_description"]);
+      graphai.injectValue("ideaSystemPrompt", prompt.system);
+      graphai.injectValue("taskDescription", prompt.task_description);
       graphai.injectValue("code", code);
 
       // console.log({ code, ideaStrArchive, prompt });
@@ -96,7 +92,7 @@ export default defineComponent({
         if (state === "completed" && result) {
           if (nodeId === "task2") {
             // console.log(result.message.content);
-            output.value = (result as any).message.content;
+            output.value = (result as { message: { content: string } }).message.content;
           }
         }
       };

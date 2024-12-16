@@ -6,9 +6,9 @@ export const idea_first_prompt = `
 
 Here are the ideas that you have already generated:
 
-\'\'\'
+'''
 \${prev_ideas_string}
-\'\'\'
+'''
 
 Come up with the next impactful and creative idea for research experiments and directions you can feasibly investigate with the code provided.
 Note that you will not have access to any additional resources or datasets.
