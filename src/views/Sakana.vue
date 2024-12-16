@@ -12,13 +12,34 @@
       </div>
 
       <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
-      <div class="w-10/12 m-auto text-left">Transitions</div>
-      <div class="flex">
-        <div class="w-5/12 m-auto">
-          <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
+      <div class="flex items-start w-10/12 m-auto">
+        <div class="w-1/2">
+          <div v-for="(nodeId, key) in Object.keys(transitions)" :key="key">
+            <div>
+              <div @click="toggle(nodeId)" :class="color(transitions[nodeId].state)" class="text-left border-2 m-1 p-1 text-white font-bold cursor-pointer">
+                {{ nodeId }} / {{ transitions[nodeId].state }}
+              </div>
+              <div v-if="transitionToggles[nodeId]">
+                <div
+                  v-for="(log, logKey) in transitions[nodeId].log"
+                  class="border-2 m-1 p-1 font-bold"
+                  :class="truncate(nodeId, logKey)"
+                  :key="logKey"
+                  @click="toggleTruncate(nodeId, logKey)"
+                >
+                  <div v-if="log.state === 'executing'">{{ log.state }} {{ log.inputs }} {{ log.updated }}</div>
+                  <div v-else-if="log.state === 'completed'">{{ log.state }} {{ log.result }} {{ log.updated }}</div>
+                  <div v-else>{{ log.state }} {{ log.updated }}</div>
+                </div>
+              </div>
+              <div class="truncate cursor-pointer" @click="toggle(nodeId)" v-else>
+                {{ transitions[nodeId].log.slice(-1) }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="w-5/12 m-auto">
-          <textarea class="border-2 p-2 w-full" rows="20">{{ output }}</textarea>
+        <div class="w-1/2">
+          <textarea class="border-2 p-2 w-full m-1" rows="20">{{ output }}</textarea>
         </div>
       </div>
 
@@ -63,7 +84,7 @@ export default defineComponent({
 
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
-    const transitions = ref<unknown[]>([]);
+    const transitions = ref<Record<string, unknown>>({});
     const output = ref("");
 
     const run = async () => {
@@ -81,12 +102,14 @@ export default defineComponent({
       // console.log({ code, ideaStrArchive, prompt });
 
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
-          transitions.value[transitions.value.length - 1] += " → " + state;
+        if (!transitions.value[nodeId]) {
+          transitions.value[nodeId] = { state, log: [] };
         } else {
-          transitions.value.push(nodeId + ": " + state);
+          transitions.value[nodeId].state = state;
         }
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
+        transitions.value[nodeId].log.push({ inputs, result, state, errorMessage, updated: Date.now() });
+
+        logs.value.push({ inputs, result });
         updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
         if (state === "completed" && result) {
@@ -101,12 +124,48 @@ export default defineComponent({
     };
     const logClear = () => {
       logs.value = [];
-      transitions.value = [];
+      transitions.value = {};
 
       resetCytoscape();
     };
 
+    const color = (state: string) => {
+      if (state === "executing") {
+        return "bg-green-500";
+      }
+      if (state === "updated") {
+        return "bg-black";
+      }
+      if (state === "completed") {
+        return "bg-black";
+      }
+      if (state === "waiting") {
+        return "bg-gray-500";
+      }
+      if (state === "injected") {
+        return "bg-blue-500";
+      }
+      console.log(state);
+    };
+    const transitionToggles = ref({});
+    const toggle = (nodeId: string) => {
+      transitionToggles.value[nodeId] = !transitionToggles.value[nodeId];
+    };
+    const toggleTruncateData = ref({});
+    const truncate = (nodeId: string, key: number) => {
+      if (toggleTruncateData.value[nodeId] && toggleTruncateData.value[nodeId][String(key)]) {
+        return "bg-gray-100";
+      }
+      return "truncate";
+    };
+    const toggleTruncate = (nodeId: string, key: number) => {
+      if (!toggleTruncateData.value[nodeId]) {
+        toggleTruncateData.value[nodeId] = {};
+      }
+      toggleTruncateData.value[nodeId][String(key)] = !toggleTruncateData.value[nodeId][String(key)];
+    };
     return {
+      color,
       run,
       logs,
       transitions,
@@ -115,6 +174,12 @@ export default defineComponent({
       cytoscapeRef,
       selectedGraph,
       output,
+
+      transitionToggles,
+      toggle,
+
+      truncate,
+      toggleTruncate,
     };
   },
 });
