@@ -84,7 +84,7 @@ export default defineComponent({
 
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
-    const transitions = ref<Record<string, unknown>>({});
+    const transitions = ref<Record<string, {state: string, log: {state: string, updated: number, inputs?: unknown, result?: unknown, errorMessage: unknown}[]}>>({});
     const output = ref("");
 
     const run = async () => {
@@ -102,10 +102,10 @@ export default defineComponent({
       // console.log({ code, ideaStrArchive, prompt });
 
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (!transitions.value[nodeId]) {
-          transitions.value[nodeId] = { state, log: [] };
-        } else {
+        if (transitions.value[nodeId]) {
           transitions.value[nodeId].state = state;
+        } else {
+          transitions.value[nodeId] = { state, log: [] };
         }
         transitions.value[nodeId].log.push({ inputs, result, state, errorMessage, updated: Date.now() });
 
@@ -146,12 +146,13 @@ export default defineComponent({
         return "bg-blue-500";
       }
       console.log(state);
+      return "";
     };
-    const transitionToggles = ref({});
+    const transitionToggles = ref<Record<string, boolean>>({});
     const toggle = (nodeId: string) => {
       transitionToggles.value[nodeId] = !transitionToggles.value[nodeId];
     };
-    const toggleTruncateData = ref({});
+    const toggleTruncateData = ref<Record<string, Record<string, boolean>>>({});
     const truncate = (nodeId: string, key: number) => {
       if (toggleTruncateData.value[nodeId] && toggleTruncateData.value[nodeId][String(key)]) {
         return "bg-gray-100";

@@ -92,7 +92,7 @@ export default [
       "sonarjs/no-use-of-empty-return-value": "error",
       "sonarjs/no-useless-catch": "error",
       "sonarjs/non-existent-operator": "error",
-      "sonarjs/prefer-immediate-return": "warn",
+      "sonarjs/prefer-immediate-return": "off",
       "sonarjs/prefer-object-literal": "error",
       "sonarjs/prefer-single-boolean-return": "error",
       "sonarjs/prefer-while": "error",
