@@ -2,11 +2,11 @@ import idea_first_prompt from "./text?raw";
 
 import seed_ideas_text from "./grokking/seed_ideas.json?raw";
 import promptText from "./grokking/prompt.json?raw";
-import code  from "./grokking/experiment.py?raw";
+import code from "./grokking/experiment.py?raw";
 
-export { code } 
+export { code };
 export const seedIdeas = JSON.parse(seed_ideas_text);
-export const prompt =  JSON.parse(promptText);
+export const prompt = JSON.parse(promptText);
 
 export const getGraphData = (maxNumGenerations: number, numReflections: number) => {
   const graphData = {

@@ -86,17 +86,13 @@ export default defineComponent({
       return graphChat;
     });
 
-    const {
-      textInputAgent,
-      inputPromise,
-      submit,
-    } = textInputAgentGenerator();
+    const { textInputAgent, inputPromise, submit } = textInputAgentGenerator();
     const callSubmit = () => {
       submit(inputPromise.value[0].id, userInput.value, () => {
         userInput.value = "";
       });
     };
-    
+
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
     const { streamData, streamAgentFilter, resetStreamData } = useStreamData();

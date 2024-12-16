@@ -2,7 +2,7 @@ import { AgentFunction, AgentFunctionContext } from "graphai";
 import { ref } from "vue";
 
 export const textInputAgentGenerator = () => {
-  const inputPromise = ref<({task: (message: string) => void, id: string, nodeId: string, agentId?: string})[]>([]);
+  const inputPromise = ref<{ task: (message: string) => void; id: string; nodeId: string; agentId?: string }[]>([]);
   const submit = (id: string, value: string, success?: () => void) => {
     if (inputPromise.value.length > 0) {
       const index = inputPromise.value.findIndex((inp) => inp.id === id); //shift();
@@ -22,10 +22,10 @@ export const textInputAgentGenerator = () => {
         resolved(message);
       };
       const { nodeId, agentId } = context.debugInfo;
-      inputPromise.value.push({task, id, nodeId, agentId} );
+      inputPromise.value.push({ task, id, nodeId, agentId });
     });
   };
-  
+
   const textInputAgent: AgentFunction = async (context) => {
     const result = await textPromise(context);
     console.log(result);
@@ -39,5 +39,4 @@ export const textInputAgentGenerator = () => {
     inputPromise,
     submit,
   };
-  
 };

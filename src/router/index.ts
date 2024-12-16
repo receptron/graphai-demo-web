@@ -11,7 +11,6 @@ import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
 import Sakana from "@/views/Sakana.vue";
 
-
 const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "",

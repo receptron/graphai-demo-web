@@ -51,8 +51,7 @@ export default defineComponent({
   name: "HomePage",
   components: {},
   setup() {
-
-    const graphData = getGraphData(10,5);
+    const graphData = getGraphData(10, 5);
 
     const selectedGraph = computed(() => {
       return graphData;
@@ -66,13 +65,10 @@ export default defineComponent({
     const transitions = ref<unknown[]>([]);
 
     const run = async () => {
-      const graphai = new GraphAI(
-        selectedGraph.value,
-        {
-          ...agents,
-          openAIAgent,
-        },
-      );
+      const graphai = new GraphAI(selectedGraph.value, {
+        ...agents,
+        openAIAgent,
+      });
       const ideaStrArchive = seedIdeas.map((m: unknown) => JSON.stringify(m));
 
       graphai.injectValue("idea_str_archive", ideaStrArchive);
@@ -81,7 +77,7 @@ export default defineComponent({
       graphai.injectValue("code", code);
 
       // console.log({ code, ideaStrArchive, prompt });
-      
+
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
           transitions.value[transitions.value.length - 1] += " → " + state;
@@ -119,7 +115,6 @@ export default defineComponent({
       graphaiResponse,
       cytoscapeRef,
       selectedGraph,
-
     };
   },
 });
