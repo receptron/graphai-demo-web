@@ -13,8 +13,13 @@
 
       <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
       <div class="w-10/12 m-auto text-left">Transitions</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
+      <div class="flex">
+        <div class="w-5/12 m-auto">
+          <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
+        </div>
+        <div class="w-5/12 m-auto">
+          <textarea class="border-2 p-2 w-full" rows="20">{{ output }}</textarea>
+        </div>
       </div>
 
       <div class="mt-2">Graph Data</div>
@@ -63,6 +68,7 @@ export default defineComponent({
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
     const transitions = ref<unknown[]>([]);
+    const output = ref("");
 
     const run = async () => {
       const graphai = new GraphAI(selectedGraph.value, {
@@ -86,14 +92,11 @@ export default defineComponent({
         }
         logs.value.push({ nodeId, state, inputs, result, errorMessage });
         updateCytoscape(nodeId, state);
-        console.log(nodeId, state, result);
+        // console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          if (nodeId === "llm_tools") {
-            if ((result as { tool: { arguments: string } })?.tool?.arguments) {
-              messages.value.push({ role: "bot", content: (result as { tool: { arguments: string } })?.tool.arguments });
-            } else {
-              messages.value.push({ role: "bot", content: (result as { text: string }).text });
-            }
+          if (nodeId === "task2") {
+            console.log(result.message.content);
+            output.value = result.message.content;
           }
         }
       };
@@ -115,6 +118,7 @@ export default defineComponent({
       graphaiResponse,
       cytoscapeRef,
       selectedGraph,
+      output,
     };
   },
 });
