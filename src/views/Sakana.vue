@@ -95,8 +95,8 @@ export default defineComponent({
         // console.log(nodeId, state, result);
         if (state === "completed" && result) {
           if (nodeId === "task2") {
-            console.log(result.message.content);
-            output.value = result.message.content;
+            // console.log(result.message.content);
+            output.value = (result as any).message.content;
           }
         }
       };
