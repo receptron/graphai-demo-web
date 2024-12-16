@@ -9,6 +9,8 @@ import Home3 from "@/views/Home3.vue";
 import Home4 from "@/views/Home4.vue";
 import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
+import Sakana from "@/views/Sakana.vue";
+
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -34,6 +36,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "random",
     component: Random,
+  },
+  {
+    path: "sakana",
+    component: Sakana,
   },
 ];
 
