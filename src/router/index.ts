@@ -10,6 +10,7 @@ import Home4 from "@/views/Home4.vue";
 import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
 import Sakana from "@/views/Sakana.vue";
+import Agents from "@/views/Agents.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -39,6 +40,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "sakana",
     component: Sakana,
+  },
+  {
+    path: "agents",
+    component: Agents,
   },
 ];
 

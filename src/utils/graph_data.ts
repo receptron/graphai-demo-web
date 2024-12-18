@@ -461,3 +461,41 @@ export const graphReception = {
     },
   },
 };
+
+
+export const graphAgent = {
+  version: 0.5,
+  loop: {
+    while: ":continue",
+  },
+  nodes: {
+    // Holds a boolean value, which specifies if we need to contine or not.
+    continue: {
+      value: true,
+      update: ":llm_tools.text",
+    },
+    messages: {
+      // Holds the conversation, the array of messages.
+      value: [],
+      update: ":llm_tools.messages",
+    },
+    userInput: {
+      // Receives an input from the user.
+      agent: "textInputAgent",
+      params: {
+        message: "You:",
+      },
+    },
+    llm_tools: {
+      // Sends those messages to LLM to get a response.
+      agent: "openAIAgent",
+      params: {
+        model: "gpt-4o",
+        forWeb: true,
+        apiKey: import.meta.env.VITE_OPEN_API_KEY,
+        tools,
+      },
+      inputs: { messages: ":messages", prompt: ":userInput.text" },
+    },
+  },
+};
