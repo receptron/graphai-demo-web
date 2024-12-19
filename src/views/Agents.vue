@@ -34,13 +34,6 @@
           </div>
         </div>
       </div>
-      <button
-        :class="isServer ? 'bg-sky-500 hover:bg-sky-700' : ' bg-red-200 hover:bg-red-300'"
-        class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
-        @click="isServer = !isServer"
-      >
-        Server
-      </button>
       <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
       <div class="w-10/12 m-auto text-left">Transitions</div>
       <div class="w-10/12 m-auto">
@@ -66,13 +59,12 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } from "graphai";
+import { GraphAI, AgentFunction, AgentFunctionInfo } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphAgent } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
-import { httpAgentFilter } from "@graphai/agent_filters";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
@@ -82,16 +74,15 @@ export default defineComponent({
   setup() {
     const messages = ref<{ role: string; content: string }[]>([]);
 
-    const agents = ref({})
+    const agentsInfo = ref({});
     fetch("http://localhost:8085/agents").then(async (res) => {
-      agents.value = (await res.json()).agents.map((agent) => {
+      agentsInfo.value = (await res.json()).agents.map((agent: AgentFunctionInfo) => {
         const { name, description, inputs } = agent;
         return { name, description, inputs };
       });
     });
-    
+
     const userInput = ref("");
-    const isServer = ref(false);
 
     const selectedGraph = computed(() => {
       return graphAgent;
@@ -127,50 +118,24 @@ export default defineComponent({
 
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
-    const demoAgentFilter: AgentFilterFunction = async (context, next) => {
-      await sleep(1000);
-      return next(context);
-    };
-
-    const agentFilters = computed(() => {
-      const ret: AgentFilterInfo[] = [
-        {
-          name: "demoAgentFilter",
-          agent: demoAgentFilter,
-        },
-      ];
-      if (isServer.value) {
-        ret.push({
-          name: "httpAgentFilter",
-          agent: httpAgentFilter,
-          filterParams: {
-            server: {
-              baseUrl: "http://localhost:8085/agents",
-            },
-          },
-          agentIds: ["openAIAgent"],
-        });
-      }
-      return ret;
-    });
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
     const transitions = ref<unknown[]>([]);
 
     const run = async () => {
-      const graphai = new GraphAI(
-        selectedGraph.value,
+      const graphai = new GraphAI(selectedGraph.value, {
+        ...agents,
+        openAIAgent,
+        textInputAgent: agentInfoWrapper(textInputAgent),
+      });
+      graphai.injectValue("messages", [
         {
-          ...agents,
-          openAIAgent,
-          textInputAgent: agentInfoWrapper(textInputAgent),
+          role: "system",
+          content:
+            "以下のデータから必要なagentを選んでください。名前、詳細、入力値がデータに書いてあります。積極的にユーザにエージェントをすすめて、一致するagentがあればその名前と詳細をユーザに教えて下さい\\n\n## AGENT ##\n\n" +
+            JSON.stringify(agentsInfo.value),
         },
-        { agentFilters: agentFilters.value },
-      );
-      graphai.injectValue("messages", [{
-        role: "system",
-        content: "以下のデータから必要なagentを選んでください。名前、詳細、入力値がデータに書いてあります。積極的にユーザにエージェントをすすめて、一致するagentがあればその名前と詳細をユーザに教えて下さい\\n\n## AGENT ##\n\n" + JSON.stringify(agents.value),
-      }]);
+      ]);
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
           transitions.value[transitions.value.length - 1] += " → " + state;
@@ -219,10 +184,7 @@ export default defineComponent({
       userInput,
       messages,
       inputPromise,
-
-      isServer,
-      agents,
-};
+    };
   },
 });
 </script>

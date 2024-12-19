@@ -462,7 +462,6 @@ export const graphReception = {
   },
 };
 
-
 export const graphAgent = {
   version: 0.5,
   loop: {

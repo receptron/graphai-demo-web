@@ -84,7 +84,9 @@ export default defineComponent({
 
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
-    const transitions = ref<Record<string, {state: string, log: {state: string, updated: number, inputs?: unknown, result?: unknown, errorMessage: unknown}[]}>>({});
+    const transitions = ref<
+      Record<string, { state: string; log: { state: string; updated: number; inputs?: unknown; result?: unknown; errorMessage: unknown }[] }>
+    >({});
     const output = ref("");
 
     const run = async () => {
@@ -112,11 +114,9 @@ export default defineComponent({
         logs.value.push({ inputs, result });
         updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
-        if (state === "completed" && result) {
-          if (nodeId === "task2") {
-            // console.log(result.message.content);
-            output.value = (result as { message: { content: string } }).message.content;
-          }
+        if (state === "completed" && result && nodeId === "task2") {
+          // console.log(result.message.content);
+          output.value = (result as { message: { content: string } }).message.content;
         }
       };
       const results = await graphai.run();

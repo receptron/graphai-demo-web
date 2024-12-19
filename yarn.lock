@@ -407,6 +407,11 @@
     cytoscape "^3.30.4"
     cytoscape-klay "^3.1.4"
 
+"@receptron/text_input_agent_generator@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@receptron/text_input_agent_generator/-/text_input_agent_generator-0.0.3.tgz#732bcba46fc26664a31c67c2ca84ca8668426a04"
+  integrity sha512-qXOC7QKPc7cgVODpwHUR5EI2f8WsVr3zLO+1L4cpT8BKR8V9pBfjrWv6BWjVeQdFDdKb1tziX3e0cRm4Q8GY5Q==
+
 "@rollup/rollup-android-arm-eabi@4.28.1":
   version "4.28.1"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.28.1.tgz#7f4c4d8cd5ccab6e95d6750dbe00321c1f30791e"

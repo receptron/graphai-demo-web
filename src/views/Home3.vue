@@ -22,12 +22,12 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="inputPromise.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
+          <div v-if="inputPromises.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
           <div class="flex">
-            <input v-model="userInput" @keyup.enter="callSubmit" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromise.length == 0" />
+            <input v-model="userInput" @keyup.enter="callSubmit" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromises.length == 0" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="inputPromise.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
+              :class="inputPromises.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
               @click="callSubmit"
             >
               Submit
@@ -65,7 +65,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFilterFunction, sleep, agentInfoWrapper } from "graphai";
+import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { graphChat } from "@/utils/graph_data";
@@ -74,7 +74,7 @@ import { openAIAgent } from "@graphai/openai_agent";
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { textInputAgentGenerator } from "../utils/textInputAgentGenerator";
+import { textInputAgentGenerator, InputPromises } from "@receptron/text_input_agent_generator";
 
 export default defineComponent({
   name: "HomePage",
@@ -86,9 +86,11 @@ export default defineComponent({
       return graphChat;
     });
 
-    const { textInputAgent, inputPromise, submit } = textInputAgentGenerator();
+    const inputPromises = ref<InputPromises>([]);
+    const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
+
     const callSubmit = () => {
-      submit(inputPromise.value[0].id, userInput.value, () => {
+      submit(inputPromises.value[0].id, userInput.value, () => {
         userInput.value = "";
       });
     };
@@ -97,15 +99,7 @@ export default defineComponent({
 
     const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
 
-    const demoAgentFilter: AgentFilterFunction = async (context, next) => {
-      await sleep(250);
-      return next(context);
-    };
     const agentFilters = [
-      {
-        name: "demoAgentFilter",
-        agent: demoAgentFilter,
-      },
       {
         name: "streamAgentFilter",
         agent: streamAgentFilter,
@@ -123,7 +117,7 @@ export default defineComponent({
         {
           ...agents,
           openAIAgent,
-          textInputAgent: agentInfoWrapper(textInputAgent),
+          textInputAgent,
         },
         { agentFilters },
       );
@@ -184,7 +178,7 @@ export default defineComponent({
       callSubmit,
       userInput,
       messages,
-      inputPromise,
+      inputPromises,
     };
   },
 });
