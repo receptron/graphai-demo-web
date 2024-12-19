@@ -80,31 +80,33 @@ export default defineComponent({
   name: "HomePage",
   components: {},
   setup() {
-    const userInput = ref("");
-
     const selectedGraph = computed(() => {
       return graphChat;
     });
 
+    // input
+    const userInput = ref("");
     const inputPromises = ref<InputPromises>([]);
     const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
-
     const callSubmit = () => {
       submit(inputPromises.value[0].id, userInput.value, () => {
         userInput.value = "";
       });
     };
+    // end of input
 
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
+    // streaming
     const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
-
     const agentFilters = [
       {
         name: "streamAgentFilter",
         agent: streamAgentFilter,
       },
     ];
+    // end of streaming
+
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
