@@ -133,7 +133,6 @@ export default defineComponent({
         updateCytoscape(nodeId, state);
         console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          console.log(result);
           if (nodeId === "llm") {
             isStreaming.value = false;
             messages.value.push((result as { message: { role: string; content: string } }).message);
@@ -149,9 +148,6 @@ export default defineComponent({
           if (state === "executing") {
             isStreaming.value = true;
           }
-          // if (state === "completed") {
-          // isStreaming.value = false;
-          // }
         }
       };
       const results = await graphai.run();
