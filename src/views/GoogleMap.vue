@@ -79,6 +79,13 @@ import { useStreamData } from "@/utils/stream";
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { textInputAgentGenerator, InputPromises } from "@receptron/text_input_agent_generator";
 
+type ToolResult = { tool: {id: string, name: string, arguments: unknown }}
+type MessageResult = { message: {content: string }}
+
+const isRecord = (value: unknown): value is Record<string, unknown> => (typeof value === 'object' && value !== null);
+const hasTool = (value: unknown): value is ToolResult => (isRecord(value) && 'tool' in value && isRecord(value.tool) && 'id' in value.tool);
+const hasMessage = (value: unknown): value is MessageResult => (isRecord(value) && 'message' in value && isRecord(value.message) && 'content' in value.message);
+
 export default defineComponent({
   name: "HomePage",
   components: {},
@@ -138,6 +145,7 @@ export default defineComponent({
       }
       if (func === "setPin") {
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker")  as google.maps.MarkerLibrary;
+        /* eslint no-new: 0 */
         new AdvancedMarkerElement({
           map,
           position: arg,
@@ -164,6 +172,7 @@ export default defineComponent({
         },
         { agentFilters },
       );
+      /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
           transitions.value[transitions.value.length - 1] += " → " + state;
@@ -176,11 +185,10 @@ export default defineComponent({
         if (state === "completed" && result) {
           if (nodeId === "llm") {
             isStreaming.value = false;
-            console.log(result);
-            if (result?.tool?.id) {
+            if (hasTool(result)) {
               messages.value.push({ role: "assistant", content: "[call api]" });
             }
-            if (result?.message?.content) {
+            if (hasMessage(result)) {
               messages.value.push((result as { message: { role: string; content: string } }).message);
             }
           }
