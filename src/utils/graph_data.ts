@@ -627,7 +627,6 @@ export const graphMap = {
       },
     },
     toolsMessage: {
-      if: ":llm.tool.id",
       agent: "stringTemplateAgent",
       params: {
         template: {
@@ -638,7 +637,7 @@ export const graphMap = {
               role: "tool",
               tool_call_id: ":llm.tool.id",
               name: ":llm.tool.name",
-              content: "success",
+              content: ":tools.result",
             },
           ],
         },

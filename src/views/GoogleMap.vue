@@ -139,8 +139,7 @@ export default defineComponent({
         });
       }
 
-      console.log(namedInputs);
-      return;
+      return { result: "success" };
     };
     const toolsAgent = agentInfoWrapper(toolsFunc);
     const messages = ref<{ role: string; content: string }[]>([]);
