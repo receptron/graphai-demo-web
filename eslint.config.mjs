@@ -22,7 +22,10 @@ export default [
       'typescript-eslint': tseslint.plugin,
     },
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        google: "readonly"
+      },
       parserOptions: {
         parser: tseslint.parser,
         project: './tsconfig.json',

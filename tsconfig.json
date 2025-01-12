@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "sourceMap": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "google.maps"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

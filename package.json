@@ -26,6 +26,7 @@
     "@types/cytoscape": "^3.21.8",
     "@types/cytoscape-fcose": "^2.2.4",
     "@types/cytoscape-klay": "^3.1.4",
+    "@types/google.maps": "^3.58.1",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "@vitejs/plugin-vue": "^5.2.1",
