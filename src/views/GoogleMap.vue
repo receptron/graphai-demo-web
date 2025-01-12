@@ -125,6 +125,7 @@ export default defineComponent({
     const toolsFunc = async ({ namedInputs }) => {
       const { tool } = namedInputs;
       const { arguments: arg, name } = tool;
+
       if (name === "setCenter") {
         map.setCenter(arg);
       }

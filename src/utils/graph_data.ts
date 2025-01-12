@@ -507,14 +507,13 @@ export const graphMap = {
   nodes: {
     continue: {
       value: true,
-      update: ":checkInput",
     },
     messages: {
       value: [
         {
           role: "system",
           content:
-            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly. ### Only one tool can be invoked at a time. ###",
+            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
         },
       ],
       update: ":reducer.array",
@@ -524,11 +523,6 @@ export const graphMap = {
       params: {
         message: "You:",
       },
-    },
-    checkInput: {
-      // Checks if the user wants to terminate the chat or not.
-      agent: "compareAgent",
-      inputs: { array: [":userInput.text", "!=", "/bye"] },
     },
     llm: {
       agent: "openAIAgent",
@@ -541,7 +535,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "setCenter",
+              name: "googleMap--setCenter",
               description: "set center location",
               parameters: {
                 type: "object",
@@ -562,7 +556,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "setZoom",
+              name: "googleMap--setZoom",
               description: "set zoom of google map",
               parameters: {
                 type: "object",
@@ -579,7 +573,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "setPin",
+              name: "googleMap--setPin",
               description: "set pin on map",
               parameters: {
                 type: "object",
@@ -601,12 +595,6 @@ export const graphMap = {
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
-    output: {
-      agent: "stringTemplateAgent",
-      inputs: {
-        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
-      },
-    },
     textMessage: {
       unless: ":llm.tool.id",
       console: { before: true, after: true },
@@ -624,6 +612,7 @@ export const graphMap = {
       agent: "toolsAgent",
       inputs: {
         tool: ":llm.tool",
+        hoge: ":llm.tool.name.split(--)"
       },
     },
     toolsMessage: {
