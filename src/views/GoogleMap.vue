@@ -79,12 +79,12 @@ import { useStreamData } from "@/utils/stream";
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { textInputAgentGenerator, InputPromises } from "@receptron/text_input_agent_generator";
 
-type ToolResult = { tool: {id: string, name: string, arguments: unknown }}
-type MessageResult = { message: {content: string }}
+type ToolResult = { tool: { id: string; name: string; arguments: unknown } };
+type MessageResult = { message: { content: string } };
 
-const isRecord = (value: unknown): value is Record<string, unknown> => (typeof value === 'object' && value !== null);
-const hasTool = (value: unknown): value is ToolResult => (isRecord(value) && 'tool' in value && isRecord(value.tool) && 'id' in value.tool);
-const hasMessage = (value: unknown): value is MessageResult => (isRecord(value) && 'message' in value && isRecord(value.message) && 'content' in value.message);
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
+const hasTool = (value: unknown): value is ToolResult => isRecord(value) && "tool" in value && isRecord(value.tool) && "id" in value.tool;
+const hasMessage = (value: unknown): value is MessageResult => isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message;
 
 export default defineComponent({
   name: "HomePage",
@@ -132,9 +132,9 @@ export default defineComponent({
     const toolsFunc: AgentFunction = async ({ namedInputs }) => {
       const { tool } = namedInputs;
       const { arguments: arg, name } = tool;
-      const [,func] = name.split("--");
+      const [, func] = name.split("--");
       if (map === null) {
-        return { result: "faild" }
+        return { result: "faild" };
       }
       console.log(func);
       if (func === "setCenter") {
@@ -144,7 +144,7 @@ export default defineComponent({
         map.setZoom(arg.zoom);
       }
       if (func === "setPin") {
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker")  as google.maps.MarkerLibrary;
+        const { AdvancedMarkerElement } = (await google.maps.importLibrary("marker")) as google.maps.MarkerLibrary;
         /* eslint no-new: 0 */
         new AdvancedMarkerElement({
           map,
