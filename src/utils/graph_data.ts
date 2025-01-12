@@ -498,3 +498,165 @@ export const graphAgent = {
     },
   },
 };
+
+export const graphMap = {
+  version: 0.5,
+  loop: {
+    while: ":continue",
+  },
+  nodes: {
+    continue: {
+      value: true,
+      update: ":checkInput",
+    },
+    messages: {
+      value: [
+        {
+          role: "system",
+          content:
+            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly. ### Only one tool can be invoked at a time. ###",
+        },
+      ],
+      update: ":reducer.array",
+    },
+    userInput: {
+      agent: "textInputAgent",
+      params: {
+        message: "You:",
+      },
+    },
+    checkInput: {
+      // Checks if the user wants to terminate the chat or not.
+      agent: "compareAgent",
+      inputs: { array: [":userInput.text", "!=", "/bye"] },
+    },
+    llm: {
+      agent: "openAIAgent",
+      isResult: true,
+      params: {
+        forWeb: true,
+        apiKey: import.meta.env.VITE_OPEN_API_KEY,
+        stream: true,
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "setCenter",
+              description: "set center location",
+              parameters: {
+                type: "object",
+                properties: {
+                  lat: {
+                    type: "number",
+                    description: "latitude of center",
+                  },
+                  lng: {
+                    type: "number",
+                    description: "longtitude of center",
+                  },
+                },
+                required: ["lat", "lng"],
+              },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "setZoom",
+              description: "set zoom of google map",
+              parameters: {
+                type: "object",
+                properties: {
+                  zoom: {
+                    type: "number",
+                    description: "zoom value",
+                  },
+                },
+                required: ["zoom"],
+              },
+            },
+          },
+          {
+            type: "function",
+            function: {
+              name: "setPin",
+              description: "set pin on map",
+              parameters: {
+                type: "object",
+                properties: {
+                  lat: {
+                    type: "number",
+                    description: "latitude of pin",
+                  },
+                  lng: {
+                    type: "number",
+                    description: "longtitude of pin",
+                  },
+                },
+                required: ["lat", "lng"],
+              },
+            },
+          },
+        ],
+      },
+      inputs: { messages: ":messages", prompt: ":userInput.text" },
+    },
+    output: {
+      agent: "stringTemplateAgent",
+      inputs: {
+        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
+      },
+    },
+    textMessage: {
+      unless: ":llm.tool.id",
+      console: { before: true, after: true },
+      agent: "stringTemplateAgent",
+      params: {
+        template: { messages: ["${one}", { role: "assistant", content: "${content}" }] },
+      },
+      inputs: {
+        one: ":userInput.message",
+        content: ":llm.message.content",
+      },
+    },
+    tools: {
+      if: ":llm.tool.id",
+      agent: "toolsAgent",
+      inputs: {
+        tool: ":llm.tool",
+      },
+    },
+    toolsMessage: {
+      if: ":llm.tool.id",
+      agent: "stringTemplateAgent",
+      params: {
+        template: {
+          messages: [
+            "${one}",
+            "${two}",
+            {
+              role: "tool",
+              tool_call_id: ":llm.tool.id",
+              name: ":llm.tool.name",
+              content: "success",
+            },
+          ],
+        },
+      },
+      inputs: {
+        one: ":userInput.message",
+        two: ":llm.message",
+      },
+    },
+    buffer: {
+      agent: "copyAgent",
+      anyInput: true,
+      inputs: { array: [":textMessage.messages", ":toolsMessage.messages"] },
+      console: { after: true },
+    },
+    reducer: {
+      agent: "pushAgent",
+      inputs: { array: ":messages", items: ":buffer.array.$0" },
+    },
+  },
+};

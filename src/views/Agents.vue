@@ -75,11 +75,12 @@ export default defineComponent({
     const messages = ref<{ role: string; content: string }[]>([]);
 
     const agentsInfo = ref({});
-    fetch("http://localhost:8085/agents").then(async (res) => {
+    fetch("http://localhost:8085/api/agents").then(async (res) => {
       agentsInfo.value = (await res.json()).agents.map((agent: AgentFunctionInfo) => {
-        const { name, description, inputs } = agent;
-        return { name, description, inputs };
+        const { name, description, inputs, output } = agent;
+        return { name, description, inputs, output };
       });
+      console.log(agentsInfo.value);
     });
 
     const userInput = ref("");
@@ -131,9 +132,12 @@ export default defineComponent({
       graphai.injectValue("messages", [
         {
           role: "system",
-          content:
-            "以下のデータから必要なagentを選んでください。名前、詳細、入力値がデータに書いてあります。積極的にユーザにエージェントをすすめて、一致するagentがあればその名前と詳細をユーザに教えて下さい\\n\n## AGENT ##\n\n" +
+          content: [
+            "以下のデータからユーザにとって必要なagentを選んでください。",
+            "name, description, inputs, outputが書いてあります。inputs, outputはopanapiのスキーマです。",
+            "積極的にユーザにエージェントをすすめて、一致するagentがあればその名前と詳細をユーザに教えて下さい\\n\n## AGENT ##\n\n",
             JSON.stringify(agentsInfo.value),
+          ].join("\n"),
         },
       ]);
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {

@@ -11,6 +11,7 @@ import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
 import Sakana from "@/views/Sakana.vue";
 import Agents from "@/views/Agents.vue";
+import GoogleMap from "@/views/GoogleMap.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -44,6 +45,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "agents",
     component: Agents,
+  },
+  {
+    path: "map",
+    component: GoogleMap,
   },
 ];
 
