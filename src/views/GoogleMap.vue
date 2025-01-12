@@ -68,7 +68,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 
-import { GraphAI, agentInfoWrapper } from "graphai";
+import { GraphAI, agentInfoWrapper, AgentFunction } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { graphMap } from "@/utils/graph_data";
@@ -85,7 +85,7 @@ export default defineComponent({
   setup() {
     const mapRef = ref();
 
-    let map = null;
+    let map: google.maps.Map | null = null;
     // https://developers.google.com/maps/documentation/javascript/reference/map?hl=ja#Map.setCenter
     onMounted(async () => {
       const { Map } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
@@ -122,19 +122,23 @@ export default defineComponent({
       },
     ];
     // end of streaming
-    const toolsFunc = async ({ namedInputs }) => {
+    const toolsFunc: AgentFunction = async ({ namedInputs }) => {
       const { tool } = namedInputs;
       const { arguments: arg, name } = tool;
-
-      if (name === "setCenter") {
+      const [,func] = name.split("--");
+      if (map === null) {
+        return { result: "faild" }
+      }
+      console.log(func);
+      if (func === "setCenter") {
         map.setCenter(arg);
       }
-      if (name === "setZoom") {
+      if (func === "setZoom") {
         map.setZoom(arg.zoom);
       }
-      if (name === "setPin") {
-        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-        const marker = new AdvancedMarkerElement({
+      if (func === "setPin") {
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker")  as google.maps.MarkerLibrary;
+        new AdvancedMarkerElement({
           map,
           position: arg,
         });

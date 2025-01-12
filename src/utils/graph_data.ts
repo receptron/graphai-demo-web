@@ -513,7 +513,7 @@ export const graphMap = {
         {
           role: "system",
           content:
-            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
+            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.  ### Only one tool can be invoked at a time. ###",
         },
       ],
       update: ":reducer.array",
@@ -612,7 +612,6 @@ export const graphMap = {
       agent: "toolsAgent",
       inputs: {
         tool: ":llm.tool",
-        hoge: ":llm.tool.name.split(--)"
       },
     },
     toolsMessage: {
