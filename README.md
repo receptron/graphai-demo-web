@@ -26,6 +26,12 @@ If you use OpenAI from a browser for chat or reception.
 VITE_OPEN_API_KEY=sk-xxx yarn run serve
 ```
 
+gogle map
+
+```
+VITE_GOOGLE_MAP_KEY=xxxx
+```
+
 If you use a server with reception
 
 ```
