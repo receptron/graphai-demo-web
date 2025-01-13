@@ -508,12 +508,12 @@ export const graphMap = {
     continue: {
       value: true,
     },
+    tools: {},
     messages: {
       value: [
         {
           role: "system",
           content:
-            //            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.  ### Only one tool can be invoked at a time. ###",
             "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
         },
       ],
@@ -532,67 +532,7 @@ export const graphMap = {
         forWeb: true,
         apiKey: import.meta.env.VITE_OPEN_API_KEY,
         stream: true,
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "googleMapAgent--setCenter",
-              description: "set center location",
-              parameters: {
-                type: "object",
-                properties: {
-                  lat: {
-                    type: "number",
-                    description: "latitude of center",
-                  },
-                  lng: {
-                    type: "number",
-                    description: "longtitude of center",
-                  },
-                },
-                required: ["lat", "lng"],
-              },
-            },
-          },
-          {
-            type: "function",
-            function: {
-              name: "googleMapAgent--setZoom",
-              description: "set zoom of google map",
-              parameters: {
-                type: "object",
-                properties: {
-                  zoom: {
-                    type: "number",
-                    description: "zoom value",
-                  },
-                },
-                required: ["zoom"],
-              },
-            },
-          },
-          {
-            type: "function",
-            function: {
-              name: "googleMapAgent--setPin",
-              description: "set pin on map",
-              parameters: {
-                type: "object",
-                properties: {
-                  lat: {
-                    type: "number",
-                    description: "latitude of pin",
-                  },
-                  lng: {
-                    type: "number",
-                    description: "longtitude of pin",
-                  },
-                },
-                required: ["lat", "lng"],
-              },
-            },
-          },
-        ],
+        tools: ":tools",
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
@@ -640,7 +580,7 @@ export const graphMap = {
       },
     },
     */
-    tools: {
+    tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",
       inputs: { rows: ":llm.tool_calls" },
@@ -677,7 +617,7 @@ export const graphMap = {
       console: { before: true },
       inputs: {
         array: [":userInput.message", ":llm.message"],
-        items: ":tools.message",
+        items: ":tool_calls.message",
       },
     },
     buffer: {
