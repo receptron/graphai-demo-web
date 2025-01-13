@@ -511,13 +511,6 @@ export const graphMap = {
     tools: {
       update: ":tools",
     },
-    debug: {
-      agent: "copyAgent",
-      inputs: {
-        tools: ":tools",
-      },
-      console: {before: true},
-    },
     messages: {
       value: [
         {
@@ -526,7 +519,7 @@ export const graphMap = {
             "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
         },
       ],
-      update: ":reducer.array",
+      update: ":toolWorkFlowStep.reducer.array",
     },
     userInput: {
       agent: "textInputAgent",
@@ -534,78 +527,91 @@ export const graphMap = {
         message: "You:",
       },
     },
-    llm: {
-      agent: "openAIAgent",
-      isResult: true,
-      params: {
-        forWeb: true,
-        apiKey: import.meta.env.VITE_OPEN_API_KEY,
-        stream: true,
-        tools: ":tools",
-      },
-      inputs: { messages: ":messages", prompt: ":userInput.text" },
-    },
-    textMessage: {
-      unless: ":llm.tool.id",
-      console: { before: true, after: true },
-      agent: "stringTemplateAgent",
-      params: {
-        template: { messages: ["${one}", { role: "assistant", content: "${content}" }] },
-      },
+    toolWorkFlowStep: {
+      agent: "nestedAgent",
       inputs: {
-        one: ":userInput.message",
-        content: ":llm.message.content",
-      },
-    },
-    tool_calls: {
-      if: ":llm.tool_calls",
-      agent: "mapAgent",
-      inputs: { rows: ":llm.tool_calls" },
-      params: {
-        compositeResult: true,
+        tools: ":tools",
+        messages: ":messages",
+        userInput: ":userInput",
       },
       graph: {
-        version: 0.5,
         nodes: {
-          tool: {
-            agent: ":row.name.split(--).$0",
+          llm: {
+            agent: "openAIAgent",
+            isResult: true,
+            params: {
+              forWeb: true,
+              apiKey: import.meta.env.VITE_OPEN_API_KEY,
+              stream: true,
+              tools: ":tools",
+            },
+            inputs: { messages: ":messages", prompt: ":userInput.text" },
+          },
+          textMessage: {
+            unless: ":llm.tool.id",
+            console: { before: true, after: true },
+            agent: "stringTemplateAgent",
+            params: {
+              template: { messages: ["${one}", { role: "assistant", content: "${content}" }] },
+            },
             inputs: {
-              arg: ":row.arguments",
-              func: ":row.name.split(--).$1",
-              tool_call: ":row",
+              one: ":userInput.message",
+              content: ":llm.message.content",
             },
           },
-          message: {
-            isResult: true,
-            console: { after: true },
-            agent: "copyAgent",
-            inputs: {
-              role: "tool",
-              tool_call_id: ":row.id",
-              name: ":row.name",
-              content: ":tool.result",
+          tool_calls: {
+            if: ":llm.tool_calls",
+            agent: "mapAgent",
+            inputs: { rows: ":llm.tool_calls" },
+            params: {
+              compositeResult: true,
             },
+            graph: {
+              version: 0.5,
+              nodes: {
+                tool: {
+                  agent: ":row.name.split(--).$0",
+                  inputs: {
+                    arg: ":row.arguments",
+                    func: ":row.name.split(--).$1",
+                    tool_call: ":row",
+                  },
+                },
+                message: {
+                  isResult: true,
+                  console: { after: true },
+                  agent: "copyAgent",
+                  inputs: {
+                    role: "tool",
+                    tool_call_id: ":row.id",
+                    name: ":row.name",
+                    content: ":tool.result",
+                  },
+                },
+              },
+            },
+          },
+          toolsMessage: {
+            agent: "pushAgent",
+            console: { before: true },
+            inputs: {
+              array: [":userInput.message", ":llm.message"],
+              items: ":tool_calls.message",
+            },
+          },
+          buffer: {
+            agent: "copyAgent",
+            anyInput: true,
+            inputs: { array: [":textMessage.messages", ":toolsMessage.array"] },
+            console: { after: true },
+          },
+          reducer: {
+            isResult: true,
+            agent: "pushAgent",
+            inputs: { array: ":messages", items: ":buffer.array.$0" },
           },
         },
-      },
-    },
-    toolsMessage: {
-      agent: "pushAgent",
-      console: { before: true },
-      inputs: {
-        array: [":userInput.message", ":llm.message"],
-        items: ":tool_calls.message",
-      },
-    },
-    buffer: {
-      agent: "copyAgent",
-      anyInput: true,
-      inputs: { array: [":textMessage.messages", ":toolsMessage.array"] },
-      console: { after: true },
-    },
-    reducer: {
-      agent: "pushAgent",
-      inputs: { array: ":messages", items: ":buffer.array.$0" },
-    },
-  },
+      }
+    }
+  }
 };
