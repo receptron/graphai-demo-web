@@ -508,7 +508,16 @@ export const graphMap = {
     continue: {
       value: true,
     },
-    tools: {},
+    tools: {
+      update: ":tools",
+    },
+    debug: {
+      agent: "copyAgent",
+      inputs: {
+        tools: ":tools",
+      },
+      console: {before: true},
+    },
     messages: {
       value: [
         {
@@ -548,38 +557,6 @@ export const graphMap = {
         content: ":llm.message.content",
       },
     },
-    /*
-    tools: {
-      if: ":llm.tools",
-      agent: ":llm.tool.name.split(--).$0",
-      inputs: {
-        arg: ":llm.tool.arguments",
-        func: ":llm.tool.name.split(--).$1"
-      },
-      console: { before: true},
-    },
-    toolsMessage: {
-      agent: "stringTemplateAgent",
-      params: {
-        template: {
-          messages: [
-            "${one}",
-            "${two}",
-            {
-              role: "tool",
-              tool_call_id: ":llm.tool.id",
-              name: ":llm.tool.name",
-              content: ":tools.result",
-            },
-          ],
-        },
-      },
-      inputs: {
-        one: ":userInput.message",
-        two: ":llm.message",
-      },
-    },
-    */
     tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",
