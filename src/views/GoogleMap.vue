@@ -79,11 +79,11 @@ import { useStreamData } from "@/utils/stream";
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { textInputAgentGenerator, InputPromises } from "@receptron/text_input_agent_generator";
 
-type ToolResult = { tool: { id: string; name: string; arguments: unknown } };
+type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
 type MessageResult = { message: { content: string } };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
-const hasTool = (value: unknown): value is ToolResult => isRecord(value) && "tool" in value && isRecord(value.tool) && "id" in value.tool;
+const hasToolCalls = (value: unknown): value is ToolResult => isRecord(value) && "tool_calls" in value && Array.isArray(value.tool_calls);
 const hasMessage = (value: unknown): value is MessageResult =>
   isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
 
@@ -183,8 +183,9 @@ export default defineComponent({
         if (state === "completed" && result) {
           if (nodeId === "llm") {
             isStreaming.value = false;
-            if (hasTool(result)) {
-              messages.value.push({ role: "assistant", content: "[call api]" });
+            if (hasToolCalls(result)) {
+              const calls = result.tool_calls.map(tool => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments) ].join(" ")).join(", ");
+              messages.value.push({ role: "assistant", content: "[call api]" + calls });
             }
             if (hasMessage(result) && result.message.content) {
               messages.value.push((result as { message: { role: string; content: string } }).message);
