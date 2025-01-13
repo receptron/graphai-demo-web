@@ -519,7 +519,7 @@ const toolWorkFlowStep = {
       console: { before: true, after: true },
       agent: "copyAgent",
       inputs: {
-        messages: [":userInput.message", { role: "assistant", content: ":llm.message.content"}]
+        messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
     },
     tool_calls: {
@@ -592,8 +592,7 @@ export const graphMap = {
       value: [
         {
           role: "system",
-          content:
-            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
+          content: "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
         },
       ],
       update: ":toolWorkFlowStep.reducer.array",
@@ -612,6 +611,6 @@ export const graphMap = {
         userInput: ":userInput",
       },
       graph: toolWorkFlowStep,
-    }
-  }
+    },
+  },
 };

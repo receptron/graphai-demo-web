@@ -157,7 +157,7 @@ export default defineComponent({
           },
         },
       );
-      graphai.injectValue("tools", googleMapAgent.tools)
+      graphai.injectValue("tools", googleMapAgent.tools);
       /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
