@@ -84,7 +84,8 @@ type MessageResult = { message: { content: string } };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 const hasTool = (value: unknown): value is ToolResult => isRecord(value) && "tool" in value && isRecord(value.tool) && "id" in value.tool;
-const hasMessage = (value: unknown): value is MessageResult => isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message;
+const hasMessage = (value: unknown): value is MessageResult =>
+  isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
 
 export default defineComponent({
   name: "HomePage",
@@ -129,14 +130,11 @@ export default defineComponent({
       },
     ];
     // end of streaming
-    const toolsFunc: AgentFunction = async ({ namedInputs }) => {
-      const { tool } = namedInputs;
-      const { arguments: arg, name } = tool;
-      const [, func] = name.split("--");
+    const googleMapFunc: AgentFunction = async ({ namedInputs }) => {
+      const { arg, func } = namedInputs;
       if (map === null) {
         return { result: "faild" };
       }
-      console.log(func);
       if (func === "setCenter") {
         map.setCenter(arg);
       }
@@ -154,7 +152,7 @@ export default defineComponent({
 
       return { result: "success" };
     };
-    const toolsAgent = agentInfoWrapper(toolsFunc);
+    const googleMapAgent = agentInfoWrapper(googleMapFunc);
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
@@ -168,7 +166,7 @@ export default defineComponent({
           ...agents,
           openAIAgent,
           textInputAgent,
-          toolsAgent,
+          googleMapAgent,
         },
         { agentFilters },
       );
@@ -188,7 +186,7 @@ export default defineComponent({
             if (hasTool(result)) {
               messages.value.push({ role: "assistant", content: "[call api]" });
             }
-            if (hasMessage(result)) {
+            if (hasMessage(result) && result.message.content) {
               messages.value.push((result as { message: { role: string; content: string } }).message);
             }
           }

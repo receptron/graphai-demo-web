@@ -513,7 +513,8 @@ export const graphMap = {
         {
           role: "system",
           content:
-            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.  ### Only one tool can be invoked at a time. ###",
+            //            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.  ### Only one tool can be invoked at a time. ###",
+            "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.",
         },
       ],
       update: ":reducer.array",
@@ -535,7 +536,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "googleMap--setCenter",
+              name: "googleMapAgent--setCenter",
               description: "set center location",
               parameters: {
                 type: "object",
@@ -556,7 +557,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "googleMap--setZoom",
+              name: "googleMapAgent--setZoom",
               description: "set zoom of google map",
               parameters: {
                 type: "object",
@@ -573,7 +574,7 @@ export const graphMap = {
           {
             type: "function",
             function: {
-              name: "googleMap--setPin",
+              name: "googleMapAgent--setPin",
               description: "set pin on map",
               parameters: {
                 type: "object",
@@ -607,12 +608,15 @@ export const graphMap = {
         content: ":llm.message.content",
       },
     },
+    /*
     tools: {
-      if: ":llm.tool.id",
-      agent: "toolsAgent",
+      if: ":llm.tools",
+      agent: ":llm.tool.name.split(--).$0",
       inputs: {
-        tool: ":llm.tool",
+        arg: ":llm.tool.arguments",
+        func: ":llm.tool.name.split(--).$1"
       },
+      console: { before: true},
     },
     toolsMessage: {
       agent: "stringTemplateAgent",
@@ -635,10 +639,51 @@ export const graphMap = {
         two: ":llm.message",
       },
     },
+    */
+    tools: {
+      if: ":llm.tool_calls",
+      agent: "mapAgent",
+      inputs: { rows: ":llm.tool_calls" },
+      params: {
+        compositeResult: true,
+      },
+      graph: {
+        version: 0.5,
+        nodes: {
+          tool: {
+            agent: ":row.name.split(--).$0",
+            inputs: {
+              arg: ":row.arguments",
+              func: ":row.name.split(--).$1",
+              tool_call: ":row",
+            },
+          },
+          message: {
+            isResult: true,
+            console: { after: true },
+            agent: "copyAgent",
+            inputs: {
+              role: "tool",
+              tool_call_id: ":row.id",
+              name: ":row.name",
+              content: ":tool.result",
+            },
+          },
+        },
+      },
+    },
+    toolsMessage: {
+      agent: "pushAgent",
+      console: { before: true },
+      inputs: {
+        array: [":userInput.message", ":llm.message"],
+        items: ":tools.message",
+      },
+    },
     buffer: {
       agent: "copyAgent",
       anyInput: true,
-      inputs: { array: [":textMessage.messages", ":toolsMessage.messages"] },
+      inputs: { array: [":textMessage.messages", ":toolsMessage.array"] },
       console: { after: true },
     },
     reducer: {
