@@ -68,11 +68,12 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 
-import { GraphAI, agentInfoWrapper, AgentFunction } from "graphai";
+import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { graphMap } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
+import googleMapAgent from "./google_map_agent";
 
 import { useStreamData } from "@/utils/stream";
 
@@ -83,7 +84,7 @@ type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }
 type MessageResult = { message: { content: string } };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
-const hasToolCalls = (value: unknown): value is ToolResult => isRecord(value) && "tool_calls" in value && Array.isArray(value.tool_calls);
+const hasToolCalls = (value: unknown): value is ToolResult => isRecord(value) && "tool_calls" in value && Array.isArray(value.tool_calls) && value.tool_calls.length > 0;
 const hasMessage = (value: unknown): value is MessageResult =>
   isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
 
@@ -102,6 +103,7 @@ export default defineComponent({
         zoom: 8,
         mapId: "DEMO_MAP_ID",
       });
+      run();
     });
 
     const selectedGraph = computed(() => {
@@ -130,29 +132,6 @@ export default defineComponent({
       },
     ];
     // end of streaming
-    const googleMapFunc: AgentFunction = async ({ namedInputs }) => {
-      const { arg, func } = namedInputs;
-      if (map === null) {
-        return { result: "faild" };
-      }
-      if (func === "setCenter") {
-        map.setCenter(arg);
-      }
-      if (func === "setZoom") {
-        map.setZoom(arg.zoom);
-      }
-      if (func === "setPin") {
-        const { AdvancedMarkerElement } = (await google.maps.importLibrary("marker")) as google.maps.MarkerLibrary;
-        /* eslint no-new: 0 */
-        new AdvancedMarkerElement({
-          map,
-          position: arg,
-        });
-      }
-
-      return { result: "success" };
-    };
-    const googleMapAgent = agentInfoWrapper(googleMapFunc);
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
     const logs = ref<unknown[]>([]);
@@ -168,7 +147,14 @@ export default defineComponent({
           textInputAgent,
           googleMapAgent,
         },
-        { agentFilters },
+        {
+          agentFilters,
+          config: {
+            googleMapAgent: {
+              map,
+            }
+          },
+        },
       );
       /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
@@ -213,8 +199,6 @@ export default defineComponent({
 
       resetCytoscape();
     };
-
-    run();
 
     return {
       run,
