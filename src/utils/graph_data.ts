@@ -508,7 +508,6 @@ const toolWorkFlowStep = {
       isResult: true,
       params: {
         forWeb: true,
-        apiKey: import.meta.env.VITE_OPEN_API_KEY,
         stream: true,
         tools: ":tools",
       },

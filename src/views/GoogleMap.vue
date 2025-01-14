@@ -154,6 +154,9 @@ export default defineComponent({
             googleMapAgent: {
               map,
             },
+            openAIAgent: {
+              apiKey: import.meta.env.VITE_OPEN_API_KEY,
+            },
           },
         },
       );
