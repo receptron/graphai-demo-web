@@ -500,7 +500,7 @@ export const graphAgent = {
 };
 ///
 
-const toolWorkFlowStep = {
+export const toolWorkFlowStep = {
   version: 0.5,
   nodes: {
     llm: {
@@ -603,13 +603,13 @@ export const graphMap = {
       },
     },
     toolWorkFlowStep: {
-      agent: "nestedAgent",
+      agent: "toolsAgent",
       inputs: {
         tools: ":tools",
         messages: ":messages",
         userInput: ":userInput",
       },
-      graph: toolWorkFlowStep,
+      graph: { version: 0, nodes: {} },
     },
   },
 };
