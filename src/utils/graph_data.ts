@@ -490,7 +490,6 @@ export const graphAgent = {
       params: {
         model: "gpt-4o",
         forWeb: true,
-        apiKey: import.meta.env.VITE_OPEN_API_KEY,
         tools,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },

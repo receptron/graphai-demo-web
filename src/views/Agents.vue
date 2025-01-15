@@ -128,6 +128,12 @@ export default defineComponent({
         ...agents,
         openAIAgent,
         textInputAgent: agentInfoWrapper(textInputAgent),
+      }, {
+        config: {
+          openAIAgent: {
+            apiKey: import.meta.env.VITE_OPEN_API_KEY,
+          },
+        },
       });
       graphai.injectValue("messages", [
         {
