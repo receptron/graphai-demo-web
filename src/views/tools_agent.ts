@@ -14,6 +14,7 @@ const toolsAgentInfo = {
   repository: "",
   tools: [],
   license: "",
+  hasGraphData: true,
 };
 
 export default toolsAgentInfo;

@@ -609,7 +609,6 @@ export const graphMap = {
         messages: ":messages",
         userInput: ":userInput",
       },
-      graph: { version: 0, nodes: {} },
     },
   },
 };
