@@ -4,7 +4,7 @@ const toolWorkFlowStep = {
   version: 0.5,
   nodes: {
     llm: {
-      agent: "openAIAgent",
+      agent: ":llmAgent",
       isResult: true,
       params: {
         forWeb: true,
@@ -15,7 +15,6 @@ const toolWorkFlowStep = {
     },
     textMessage: {
       unless: ":llm.tool.id",
-      console: { before: true, after: true },
       agent: "copyAgent",
       inputs: {
         messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
@@ -41,7 +40,6 @@ const toolWorkFlowStep = {
           },
           message: {
             isResult: true,
-            console: { after: true },
             agent: "copyAgent",
             inputs: {
               role: "tool",

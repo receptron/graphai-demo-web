@@ -367,7 +367,6 @@ export const graphChat = {
       isResult: true,
       params: {
         forWeb: true,
-        apiKey: import.meta.env.VITE_OPEN_API_KEY,
         stream: true,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
@@ -500,7 +499,6 @@ export const graphAgent = {
 };
 ///
 
-
 export const graphMap = {
   version: 0.5,
   loop: {
@@ -531,6 +529,7 @@ export const graphMap = {
     toolWorkFlowStep: {
       agent: "toolsAgent",
       inputs: {
+        llmAgent: "openAIAgent",
         tools: ":tools",
         messages: ":messages",
         userInput: ":userInput",
