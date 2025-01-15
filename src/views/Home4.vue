@@ -156,7 +156,14 @@ export default defineComponent({
           openAIAgent,
           textInputAgent: agentInfoWrapper(textInputAgent),
         },
-        { agentFilters: agentFilters.value },
+        {
+          agentFilters: agentFilters.value,
+          config: {
+            openAIAgent: {
+              apiKey: import.meta.env.VITE_OPEN_API_KEY,
+            },
+          },
+        },
       );
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {

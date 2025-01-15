@@ -15,6 +15,7 @@ const toolWorkFlowStep = {
     },
     textMessage: {
       unless: ":llm.tool.id",
+      console: { before: true, after: true },
       agent: "copyAgent",
       inputs: {
         messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
@@ -40,6 +41,7 @@ const toolWorkFlowStep = {
           },
           message: {
             isResult: true,
+            console: { after: true },
             agent: "copyAgent",
             inputs: {
               role: "tool",
