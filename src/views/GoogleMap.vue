@@ -73,8 +73,8 @@ import * as agents from "@graphai/vanilla";
 
 import { graphMap } from "@/utils/graph_data";
 import { openAIAgent } from "@graphai/openai_agent";
-import googleMapAgent from "./google_map_agent";
-import toolsAgent from "./tools_agent";
+import googleMapAgent from "../agents/google_map_agent";
+import toolsAgent from "../agents/tools_agent";
 
 import { useStreamData } from "@/utils/stream";
 
