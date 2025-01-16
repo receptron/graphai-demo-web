@@ -4,9 +4,9 @@ import Blank from "@/components/Blank.vue";
 import NotFound from "@/components/NotFound.vue";
 
 import Home from "@/views/Home.vue";
-import Home2 from "@/views/Home2.vue";
-import Home3 from "@/views/Home3.vue";
-import Home4 from "@/views/Home4.vue";
+import Step from "@/views/Step.vue";
+import Chat from "@/views/Chat.vue";
+import Reception from "@/views/Reception.vue";
 import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
 import Sakana from "@/views/Sakana.vue";
@@ -20,23 +20,23 @@ const routeChildren: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: "test",
-    component: Home2,
+    path: "step",
+    component: Step,
   },
   {
     path: "chat",
-    component: Home3,
+    component: Chat,
   },
   {
     path: "reception",
-    component: Home4,
+    component: Reception,
   },
   {
     path: "about",
     component: About,
   },
   {
-    path: "random",
+    path: "random", // big node
     component: Random,
   },
   {
