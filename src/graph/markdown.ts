@@ -9,7 +9,7 @@ export const graphMarkdown = {
     },
     md: {
       value: "```\n# hello\n```",
-      update: ":updatedMarkdown.text.$0",
+      update: ":updatedText.resultText.text",
     },
     system: {
       agent: "copyAgent",
@@ -48,27 +48,44 @@ export const graphMarkdown = {
         prompt: ":userInput.text",
       },
     },
-    newMarkdown: {
-      if: ":llm.text.codeBlock()",
-      console: true,
-      agent: "copyAgent",
+    updateText: {
+      agent: "nestedAgent",
       inputs: {
-        text: ":llm.text.codeBlock()",
+        newText: ":llm.text.codeBlock()",
+        oldText: ":md",
       },
-    },
-    oldMarkdown: {
-      console: true,
-      unless: ":llm.text.codeBlock()",
-      agent: "copyAgent",
-      inputs: {
-        text: ":md",
-      },
-    },
-    updatedMarkdown: {
-      agent: "copyAgent",
-      anyInput: true,
-      inputs: {
-        text: [":newMarkdown.text", ":oldMarkdown.text"],
+      graph: {
+        version: 0.5,
+        nodes: {
+          isNewText: {
+            if: ":newText",
+            agent: "copyAgent",
+            inputs: {
+              text: ":newText",
+            },
+          },
+          isOldText: {
+            unless: ":newText",
+            agent: "copyAgent",
+            inputs: {
+              text: ":oldText",
+            },
+          },
+          updatedText: {
+            agent: "copyAgent",
+            anyInput: true,
+            inputs: {
+              text: [":isNewText.text", ":isOldText.text"],
+            },
+          },
+          resultText: {
+            agent: "copyAgent",
+            anyInput: true,
+            inputs: {
+              text: updatedText.text.$0,
+            },
+          },
+        },
       },
     },
     reducer: {
