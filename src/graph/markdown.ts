@@ -49,44 +49,10 @@ export const graphMarkdown = {
       },
     },
     updateText: {
-      agent: "nestedAgent",
+      agent: "updateTextAgent",
       inputs: {
         newText: ":llm.text.codeBlock()",
         oldText: ":md",
-      },
-      graph: {
-        version: 0.5,
-        nodes: {
-          isNewText: {
-            if: ":newText",
-            agent: "copyAgent",
-            inputs: {
-              text: ":newText",
-            },
-          },
-          isOldText: {
-            unless: ":newText",
-            agent: "copyAgent",
-            inputs: {
-              text: ":oldText",
-            },
-          },
-          updatedText: {
-            agent: "copyAgent",
-            anyInput: true,
-            inputs: {
-              text: [":isNewText.text", ":isOldText.text"],
-            },
-          },
-          resultText: {
-            isResult: true,
-            agent: "copyAgent",
-            anyInput: true,
-            inputs: {
-              text: ":updatedText.text.$0",
-            },
-          },
-        },
       },
     },
     reducer: {

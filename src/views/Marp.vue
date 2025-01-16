@@ -50,6 +50,7 @@ import * as agents from "@graphai/vanilla";
 
 import { graphMarkdown } from "@/graph/markdown";
 import { openAIAgent } from "@graphai/openai_agent";
+import updateTextAgent from "../agents/update_text_agent";
 
 import { useStreamData } from "@/utils/stream";
 
@@ -101,6 +102,7 @@ export default defineComponent({
           ...agents,
           openAIAgent,
           textInputAgent,
+          updateTextAgent,
         },
         {
           agentFilters,
@@ -123,8 +125,9 @@ export default defineComponent({
             messages.value.push((result as { message: { role: string; content: string } }).message);
           }
         }
-        if (nodeId === "updatedMarkdown" && result) {
-          markdown.value = (result as {text: string[]}).text[0];
+        if (nodeId === "updateText" && result) {
+          console.log(result);
+          markdown.value = (result as { resultText: { text: string } }).resultText.text;
         }
         if (nodeId === "llm") {
           if (state === "queued") {
