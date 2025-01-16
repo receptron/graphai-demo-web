@@ -48,31 +48,23 @@ export const graphMarkdown = {
         prompt: ":userInput.text",
       },
     },
-    output: {
-      console: true,
-      agent: "copyAgent",
-      inputs: {
-        text: "${:llm.text.codeBlock()}",
-      },
-    },
     newMarkdown: {
-      if: ":output.text",
+      if: ":llm.text.codeBlock()",
       console: true,
       agent: "copyAgent",
       inputs: {
-        text: ":output.text",
+        text: ":llm.text.codeBlock()",
       },
     },
     oldMarkdown: {
       console: true,
-      unless: ":output.text",
+      unless: ":llm.text.codeBlock()",
       agent: "copyAgent",
       inputs: {
         text: ":md",
       },
     },
     updatedMarkdown: {
-      //console: true,
       agent: "copyAgent",
       anyInput: true,
       inputs: {
