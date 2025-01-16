@@ -49,7 +49,7 @@ export const graphMarkdown = {
       },
     },
     updateText: {
-      agent: "updateTextAgent",
+      agent: "stringUpdateTextAgent",
       inputs: {
         newText: ":llm.text.codeBlock()",
         oldText: ":md",
