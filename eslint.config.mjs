@@ -57,6 +57,7 @@ export default [
       "one-var": "off",
       "operator-assignment": "off",
       "no-undefined": "off",
+      "prefer-destructuring": "off",
       "sort-keys": "off",
       "sort-vars": "off",
       "sort-imports": "off",
