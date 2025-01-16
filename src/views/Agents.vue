@@ -124,17 +124,21 @@ export default defineComponent({
     const transitions = ref<unknown[]>([]);
 
     const run = async () => {
-      const graphai = new GraphAI(selectedGraph.value, {
-        ...agents,
-        openAIAgent,
-        textInputAgent: agentInfoWrapper(textInputAgent),
-      }, {
-        config: {
-          openAIAgent: {
-            apiKey: import.meta.env.VITE_OPEN_API_KEY,
+      const graphai = new GraphAI(
+        selectedGraph.value,
+        {
+          ...agents,
+          openAIAgent,
+          textInputAgent: agentInfoWrapper(textInputAgent),
+        },
+        {
+          config: {
+            openAIAgent: {
+              apiKey: import.meta.env.VITE_OPEN_API_KEY,
+            },
           },
         },
-      });
+      );
       graphai.injectValue("messages", [
         {
           role: "system",

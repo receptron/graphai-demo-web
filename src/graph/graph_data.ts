@@ -1,5 +1,5 @@
 import { GraphData } from "graphai";
-import { randomInt } from "./graph";
+import { randomInt } from "../utils/graph";
 
 export const graph_data: GraphData = {
   version: 0.5,
@@ -336,8 +336,3 @@ Array.from(messages.keys()).forEach((key) => {
     },
   };
 });
-
-
-
-
-

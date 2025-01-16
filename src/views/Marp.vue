@@ -93,7 +93,7 @@ export default defineComponent({
     const graphaiResponse = ref({});
     const isStreaming = ref(false);
     const markdown = ref("#hello");
-    
+
     const run = async () => {
       const graphai = new GraphAI(
         selectedGraph.value,
@@ -124,8 +124,7 @@ export default defineComponent({
           }
         }
         if (nodeId === "updatedMarkdown" && result) {
-          
-          markdown.value = result.text[0];
+          markdown.value = (result as {text: string[]}).text[0];
         }
         if (nodeId === "llm") {
           if (state === "queued") {
@@ -156,7 +155,6 @@ export default defineComponent({
       markdown,
 
       md: new MarkdownIt(),
-
     };
   },
 });

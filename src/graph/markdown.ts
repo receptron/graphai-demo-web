@@ -45,7 +45,8 @@ export const graphMarkdown = {
       inputs: {
         system: ":system.value",
         messages: ":messages",
-        prompt: ":userInput.text" },
+        prompt: ":userInput.text",
+      },
     },
     output: {
       console: true,
@@ -59,7 +60,7 @@ export const graphMarkdown = {
       console: true,
       agent: "copyAgent",
       inputs: {
-        text: ":output.text"
+        text: ":output.text",
       },
     },
     oldMarkdown: {
@@ -67,7 +68,7 @@ export const graphMarkdown = {
       unless: ":output.text",
       agent: "copyAgent",
       inputs: {
-        text: ":md"
+        text: ":md",
       },
     },
     updatedMarkdown: {
