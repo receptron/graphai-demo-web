@@ -277,6 +277,11 @@
     "@graphai/llm_utils" "^0.0.2"
     openai "^4.77.0"
 
+"@graphai/tools_agent@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.0.tgz#e5bad463991dd912233ce3910e10666a009a0314"
+  integrity sha512-qspjqIdVCFtqjOKFwJFBkqy46WQ/uKTbHbXzyazaLo17dpTELrr+h0L5+uspTRH4uhJwzvu+n4s9gJYqz8F5NQ==
+
 "@graphai/vanilla@^0.2.7":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.7.tgz#49a4360b4f451fd02a2885874444756b752bef05"

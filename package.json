@@ -11,6 +11,7 @@
   "dependencies": {
     "@graphai/agent_filters": "^0.0.9",
     "@graphai/openai_agent": "^0.2.3",
+    "@graphai/tools_agent": "^0.2.0",
     "@graphai/vanilla": "^0.2.7",
     "@receptron/graphai_vue_cytoscape": "^0.0.16",
     "@receptron/text_input_agent_generator": "^0.0.3",
