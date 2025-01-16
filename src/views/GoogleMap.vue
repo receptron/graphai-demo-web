@@ -71,7 +71,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { graphGoogleMap } from "@/utils/graph_data";
+import { graphGoogleMap } from "@/graph/map";
 import { openAIAgent } from "@graphai/openai_agent";
 import googleMapAgent from "../agents/google_map_agent";
 import { toolsAgent } from "@graphai/tools_agent";

@@ -63,7 +63,7 @@ import { GraphAI, AgentFunction, AgentFunctionInfo } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
-import { graphAgent } from "@/utils/graph_data";
+import { graphAgent } from "@/graph/agent";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";

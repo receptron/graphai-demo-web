@@ -48,7 +48,7 @@ import { defineComponent, ref, computed } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { graphMarkdown } from "@/utils/graph_data";
+import { graphMarkdown } from "@/graph/markdown";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";

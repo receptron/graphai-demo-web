@@ -70,7 +70,7 @@ import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } f
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
-import { graphReception } from "@/utils/graph_data";
+import { graphReception } from "@/graph/reception";
 import { openAIAgent } from "@graphai/openai_agent";
 import { httpAgentFilter } from "@graphai/agent_filters";
 

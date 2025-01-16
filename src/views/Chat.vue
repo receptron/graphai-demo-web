@@ -68,7 +68,7 @@ import { defineComponent, ref, computed } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { graphChat } from "@/utils/graph_data";
+import { graphChat } from "@/graph/chat";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
