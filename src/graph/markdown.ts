@@ -9,7 +9,7 @@ export const graphMarkdown = {
     },
     md: {
       value: "```\n# hello\n```",
-      update: ":updatedText.resultText.text",
+      update: ":updateText.resultText.text",
     },
     system: {
       agent: "copyAgent",
@@ -79,10 +79,11 @@ export const graphMarkdown = {
             },
           },
           resultText: {
+            isResult: true,
             agent: "copyAgent",
             anyInput: true,
             inputs: {
-              text: updatedText.text.$0,
+              text: ":updatedText.text.$0",
             },
           },
         },
