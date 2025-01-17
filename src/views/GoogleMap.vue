@@ -79,7 +79,7 @@ import { toolsAgent } from "@graphai/tools_agent";
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { textInputAgentGenerator, InputPromises } from "@receptron/text_input_agent_generator";
+import { textInputAgentGenerator, InputEvents } from "@receptron/event_agent_generator";
 
 type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
 type MessageResult = { message: { content: string } };
@@ -114,7 +114,7 @@ export default defineComponent({
 
     // input
     const userInput = ref("");
-    const inputPromises = ref<InputPromises>([]);
+    const inputPromises = ref<InputEvents>([]);
     const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
     const callSubmit = () => {
       submit(inputPromises.value[0].id, userInput.value, () => {
