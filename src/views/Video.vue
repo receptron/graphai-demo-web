@@ -77,7 +77,8 @@ import * as agents from "@graphai/vanilla";
 import { graphGoogleMap } from "@/graph/map";
 import { openAIAgent } from "@graphai/openai_agent";
 import videoAgent from "../agents/video_agent";
-import { toolsAgent } from "@graphai/tools_agent";
+import toolsAgent from "../agents/tools_agent";
+//import { toolsAgent } from "@graphai/tools_agent";
 
 import { useStreamData } from "@/utils/stream";
 
@@ -107,7 +108,7 @@ export default defineComponent({
     const play = () => {
       videoRef.value.play();
     };
-    
+
     const selectedGraph = computed(() => {
       return graphGoogleMap;
     });
@@ -174,7 +175,7 @@ export default defineComponent({
         updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          if (nodeId === "llm") {
+          if (nodeId === "llm" || nodeId === "llm2") {
             isStreaming.value = false;
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
@@ -209,7 +210,7 @@ export default defineComponent({
 
     return {
       play,
-      
+
       run,
       logs,
       transitions,
