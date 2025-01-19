@@ -74,7 +74,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { getToolsChatGraph } from "@/graph/map";
+import { getToolsChatGraph } from "@/graph/tools";
 import { openAIAgent } from "@graphai/openai_agent";
 import videoAgent from "../agents/video_agent";
 import toolsAgent from "../agents/tools_agent";
