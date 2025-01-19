@@ -25,7 +25,7 @@ const videoAgent: AgentFunction<unknown, { result: string }, { arg: { time: numb
   }
   if (func === "getCurrentTime") {
     return {
-      result: "curren time is " + String(videoElement.currentTime) + "(s)",
+      result: JSON.stringify({ currenTimeSeconds: videoElement.currentTime}),
       hasNext: true,
     };
   }

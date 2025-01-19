@@ -20,7 +20,6 @@ const toolWorkFlowStep = {
         messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
     },
-    // just tools
     tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",

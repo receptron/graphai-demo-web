@@ -77,8 +77,8 @@ import * as agents from "@graphai/vanilla";
 import { getToolsChatGraph } from "@/graph/tools";
 import { openAIAgent } from "@graphai/openai_agent";
 import videoAgent from "../agents/video_agent";
-import toolsAgent from "../agents/tools_agent";
-//import { toolsAgent } from "@graphai/tools_agent";
+// import toolsAgent from "../agents/tools_agent";
+import { toolsAgent } from "@graphai/tools_agent";
 
 import { useStreamData } from "@/utils/stream";
 

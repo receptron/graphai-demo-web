@@ -277,10 +277,10 @@
     "@graphai/llm_utils" "^0.0.2"
     openai "^4.77.0"
 
-"@graphai/tools_agent@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.0.tgz#e5bad463991dd912233ce3910e10666a009a0314"
-  integrity sha512-qspjqIdVCFtqjOKFwJFBkqy46WQ/uKTbHbXzyazaLo17dpTELrr+h0L5+uspTRH4uhJwzvu+n4s9gJYqz8F5NQ==
+"@graphai/tools_agent@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.1.tgz#1ae7c4ccf33425b5bdce5e3d669bdb2a6c888fd4"
+  integrity sha512-UORrSI//UqKYZt0cyqHYVaGByiCV2Xtj+7AIlAnuqeKOsDpfRcqHhEr4gizWLy+gsdO71BlFhagqeb464P9p9g==
 
 "@graphai/vanilla@^0.2.9":
   version "0.2.9"
@@ -441,10 +441,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@receptron/event_agent_generator@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.1.tgz#0c7f50d198192825b5ccb4794e3cf8ab04e4b875"
-  integrity sha512-PJsW8UonYYsTeEH/oUfG7VtMamk9cXOWOnPC1I8gu5YgmP7HNjejBpVWZGSuH5rqQtmttncvV/lEkZYFL+OHRQ==
+"@receptron/event_agent_generator@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.2.tgz#c18dd53ef0899d96bf63604f617fe2ff74af6078"
+  integrity sha512-XWjrJvbBSaxzTTmDASFQyVjA4ActXbS5WZWPLGgGoqoUvOl4rsyYWGNksqmRput98pwMPkTC/Mj1+EmdB49JgQ==
 
 "@receptron/graphai_vue_cytoscape@^0.0.16":
   version "0.0.16"
@@ -453,11 +453,6 @@
   dependencies:
     cytoscape "^3.30.4"
     cytoscape-klay "^3.1.4"
-
-"@receptron/text_input_agent_generator@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@receptron/text_input_agent_generator/-/text_input_agent_generator-0.0.3.tgz#732bcba46fc26664a31c67c2ca84ca8668426a04"
-  integrity sha512-qXOC7QKPc7cgVODpwHUR5EI2f8WsVr3zLO+1L4cpT8BKR8V9pBfjrWv6BWjVeQdFDdKb1tziX3e0cRm4Q8GY5Q==
 
 "@rollup/pluginutils@^5.1.4":
   version "5.1.4"
@@ -2028,10 +2023,10 @@ magic-string@^0.30.11:
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.0"
 
-markdown-it-async@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/markdown-it-async/-/markdown-it-async-0.1.3.tgz#743956a0c28b0dabb4351755a79b5d25ef46d7d5"
-  integrity sha512-R0oC5NCrGhAZGZXQ923+RUNbv6vAFCyHebC2SA9Q2TR7yYBowAboLhrsRJrfB9s9cL3epF+JaHrg5WSeoh+CRA==
+markdown-it-async@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-async/-/markdown-it-async-1.0.0.tgz#811ca660d6e07a585732532551fbf3c266934146"
+  integrity sha512-E6IbFxSOdygoQFqBh2UmVUz90jl4VKZwHQb5vjify1hrGOHK373bFjkW1FPWkYxhL7lNx0G+ut2tUo6mJ0adUQ==
   dependencies:
     "@types/markdown-it" "^14.1.2"
     markdown-it "^14.1.0"
@@ -2770,10 +2765,10 @@ universalify@^2.0.0:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.1.tgz#168efc2180964e6386d061e094df61afe239b18d"
   integrity sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==
 
-unplugin-vue-markdown@^28.0.0:
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/unplugin-vue-markdown/-/unplugin-vue-markdown-28.0.0.tgz#48f0084d36ec66ad5eeaab030bec74dac21721a0"
-  integrity sha512-8UsgvTpe/0om4qAE1YOMfDB/R5W/L3G5fTkBQ9cShjqKsklnbkizVZe7B/CepIreVolJZNQBzc5ZQqA5PCSCmQ==
+unplugin-vue-markdown@^28.1.0:
+  version "28.1.0"
+  resolved "https://registry.yarnpkg.com/unplugin-vue-markdown/-/unplugin-vue-markdown-28.1.0.tgz#930b73ac789e1bba2d3e029b7da56c0434e58050"
+  integrity sha512-OcweFC2A/PJB6+/swBbgA5UPryYdhktzR4eqKhpk44zCh5JBljnWhArM5z4py7IwgCQr5XFuXc5u3spggv8Tvg==
   dependencies:
     "@mdit-vue/plugin-component" "^2.1.3"
     "@mdit-vue/plugin-frontmatter" "^2.1.3"
@@ -2781,7 +2776,7 @@ unplugin-vue-markdown@^28.0.0:
     "@rollup/pluginutils" "^5.1.4"
     "@types/markdown-it" "^14.1.2"
     markdown-it "^14.1.0"
-    markdown-it-async "^0.1.3"
+    markdown-it-async "^1.0.0"
     unplugin "^2.1.2"
 
 unplugin@^2.1.2:
