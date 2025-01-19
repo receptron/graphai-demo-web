@@ -175,9 +175,9 @@ export default defineComponent({
         }
         logs.value.push({ nodeId, state, inputs, result, errorMessage });
         updateCytoscape(nodeId, state);
-        // console.log(nodeId, state, result);
+
         if (state === "completed" && result) {
-          if (nodeId === "llm" || nodeId === "llm2") {
+          if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
             isStreaming.value = false;
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
