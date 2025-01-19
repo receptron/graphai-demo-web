@@ -71,7 +71,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { graphGoogleMap } from "@/graph/map";
+import { getToolsChatGraph } from "@/graph/map";
 import { openAIAgent } from "@graphai/openai_agent";
 import googleMapAgent from "../agents/google_map_agent";
 import { toolsAgent } from "@graphai/tools_agent";
@@ -89,6 +89,9 @@ const hasToolCalls = (value: unknown): value is ToolResult =>
   isRecord(value) && "tool_calls" in value && Array.isArray(value.tool_calls) && value.tool_calls.length > 0;
 const hasMessage = (value: unknown): value is MessageResult =>
   isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
+
+const systemPrompt = "You are an operator for Google Maps. Follow the user's instructions and call the necessary functions accordingly.";
+const graphData = getToolsChatGraph(systemPrompt);
 
 export default defineComponent({
   name: "HomePage",
@@ -109,7 +112,7 @@ export default defineComponent({
     });
 
     const selectedGraph = computed(() => {
-      return graphGoogleMap;
+      return graphData;
     });
 
     // input

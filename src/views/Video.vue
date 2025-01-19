@@ -74,7 +74,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
-import { graphGoogleMap } from "@/graph/map";
+import { getToolsChatGraph } from "@/graph/map";
 import { openAIAgent } from "@graphai/openai_agent";
 import videoAgent from "../agents/video_agent";
 import toolsAgent from "../agents/tools_agent";
@@ -94,6 +94,9 @@ const hasToolCalls = (value: unknown): value is ToolResult =>
 const hasMessage = (value: unknown): value is MessageResult =>
   isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
 
+const systemPrompt = "You are an operator for Html Video. Follow the user's instructions and call the necessary functions accordingly.";
+const graphData = getToolsChatGraph(systemPrompt);
+
 export default defineComponent({
   name: "HomePage",
   components: {},
@@ -109,7 +112,7 @@ export default defineComponent({
     };
 
     const selectedGraph = computed(() => {
-      return graphGoogleMap;
+      return graphData;
     });
 
     // input
