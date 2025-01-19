@@ -25,16 +25,18 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="inputPromises.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
-          <div class="flex">
-            <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromises.length == 0" />
-            <button
-              class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="inputPromises.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
-              @click="callSubmit"
-            >
-              Submit
-            </button>
+          <div v-if="Object.values(events).length > 0">
+            <div v-for="(event, k) in Object.values(events)" :key="k">
+              <div v-if="event.type === 'text'" class="flex">
+                <input v-model="userInput" class="border-2 p-2 rounded-md m-4 flex-1" :placeholder="event.nodeId" />
+                <button
+                  class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none m-4 bg-sky-500"
+                  @click="submitText(event)"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +81,7 @@ import { toolsAgent } from "@graphai/tools_agent";
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { textInputAgentGenerator, InputEvents } from "@receptron/event_agent_generator";
+import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
 
 type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
 type MessageResult = { message: { content: string } };
@@ -102,8 +104,8 @@ export default defineComponent({
     let map: google.maps.Map | null = null;
     // https://developers.google.com/maps/documentation/javascript/reference/map?hl=ja#Map.setCenter
     onMounted(async () => {
-      const { Map } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
-      map = new Map(mapRef.value as HTMLElement, {
+      const { Map: GoogleMap } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
+      map = new GoogleMap(mapRef.value as HTMLElement, {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8,
         mapId: "DEMO_MAP_ID",
@@ -117,12 +119,20 @@ export default defineComponent({
 
     // input
     const userInput = ref("");
-    const inputPromises = ref<InputEvents>([]);
-    const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
-    const callSubmit = () => {
-      submit(inputPromises.value[0].id, userInput.value, () => {
-        userInput.value = "";
-      });
+
+    const events = ref<Record<string, EventData>>({});
+    const { eventAgent } = eventAgentGenerator((id, data) => {
+      events.value[id] = data;
+    });
+    const submitText = (event: EventData) => {
+      const data = {
+        text: userInput.value,
+        message: { role: "user", content: userInput.value },
+      };
+      event.onEnd(data);
+      /* eslint-disable @typescript-eslint/no-dynamic-delete */
+      delete events.value[event.id];
+      userInput.value = "";
     };
     // end of input
 
@@ -149,7 +159,7 @@ export default defineComponent({
         {
           ...agents,
           openAIAgent,
-          textInputAgent,
+          eventAgent,
           googleMapAgent,
           toolsAgent,
         },
@@ -221,11 +231,12 @@ export default defineComponent({
       streamData,
       isStreaming,
 
-      callSubmit,
+      submitText,
       userInput,
       messages,
-      inputPromises,
+
       mapRef,
+      events,
     };
   },
 });
