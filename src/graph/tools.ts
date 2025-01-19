@@ -21,9 +21,10 @@ export const getToolsChatGraph = (systemPrompt: string) => {
         update: ":toolWorkFlowStep.reducer.array",
       },
       userInput: {
-        agent: "textInputAgent",
+        agent: "eventAgent",
         params: {
           message: "You:",
+          type: "text",
         },
       },
       toolWorkFlowStep: {
