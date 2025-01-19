@@ -20,6 +20,7 @@ const toolWorkFlowStep = {
         messages: [":userInput.message", { role: "assistant", content: ":llm.message.content" }],
       },
     },
+    // just tools
     tool_calls: {
       if: ":llm.tool_calls",
       agent: "mapAgent",
@@ -52,6 +53,7 @@ const toolWorkFlowStep = {
         },
       },
     },
+    // tools response if hasNext in response.
     toolsMessage: {
       agent: "pushAgent",
       inputs: {
@@ -59,26 +61,45 @@ const toolWorkFlowStep = {
         items: ":tool_calls.message",
       },
     },
-    llm2: {
+    hasNext: {
+      agent: (namedInputs: {array: {hasNext: boolean}[]}) => {
+        return namedInputs.array.some(ele => ele.hasNext);
+      },
+      inputs: {
+        array: ":tool_calls.tool"
+      },
+    },
+    toolsResponseLlm: {
+      if: ":hasNext",
       agent: ":llmAgent",
       params: {
         forWeb: true,
       },
       inputs: { messages: ":toolsMessage.array" },
-      console: { after: true },
     },
     toolsResMessage: {
       agent: "pushAgent",
       inputs: {
         array: ":toolsMessage.array",
-        item: ":llm2.message",
+        item: ":toolsResponseLlm.message",
       },
     },
-
+    justTools: {
+      unless: ":hasNext",
+      agent: "copyAgent",
+      inputs: {
+        array: ":toolsMessage.array",
+      }
+    },
+    mergeToolsResponse: {
+      agent: "copyAgent",
+      anyInput: true,
+      inputs: { array: [":toolsResMessage.array", ":justTools.array"] },
+    },
     buffer: {
       agent: "copyAgent",
       anyInput: true,
-      inputs: { array: [":textMessage.messages", ":toolsResMessage.array"] },
+      inputs: { array: [":textMessage.messages", ":mergeToolsResponse.array.$0"] },
       console: { after: true },
     },
     reducer: {

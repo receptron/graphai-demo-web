@@ -7,11 +7,6 @@
       <button @click="play">play</button>
     </div>
     <div class="items-center justify-center">
-      <div>
-        <div class="w-10/12 h-60 bg-white rounded-md mt-4 p-2 mx-auto border-2">
-          <div ref="cytoscapeRef" class="w-full h-full" />
-        </div>
-      </div>
       <div class="mt-2">
         <div class="w-10/12 m-auto text-left">
           <div v-for="(m, k) in messages" :key="k">
@@ -26,6 +21,11 @@
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="logClear">Clear</button>
       </div>
 
+      <div>
+        <div class="w-10/12 h-60 bg-white rounded-md mt-4 p-2 mx-auto border-2">
+          <div ref="cytoscapeRef" class="w-full h-full" />
+        </div>
+      </div>
       <div>
         <div class="w-10/12 m-auto my-4">
           <div v-if="inputPromises.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
