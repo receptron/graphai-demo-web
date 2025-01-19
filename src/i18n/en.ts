@@ -13,6 +13,7 @@ const lang = {
     reception: "Reception",
     sakana: "Sakana",
     map: "GoogleMap",
+    video: "Video",
     markdown: "Markdown",
     signin: "SignIn",
     signout: "SignOut",
