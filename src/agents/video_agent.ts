@@ -1,6 +1,7 @@
 import { AgentFunction } from "graphai";
 
-const videoAgent: AgentFunction<unknown, { result: string }, { arg: unknown; func: string }, { map: google.maps.Map }> = async ({ namedInputs, config }) => {
+/* eslint-disable require-await */
+const videoAgent: AgentFunction<unknown, { result: string }, { arg: {time: number}; func: string }, { videoElement: HTMLVideoElement }> = async ({ namedInputs, config }) => {
   if (!config) {
     return { result: "failed" };
   }

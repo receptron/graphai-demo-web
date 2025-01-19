@@ -100,9 +100,8 @@ export default defineComponent({
   setup() {
     const videoRef = ref();
 
-    let map: google.maps.Map | null = null;
     // https://developers.google.com/maps/documentation/javascript/reference/map?hl=ja#Map.setCenter
-    onMounted(async () => {
+    onMounted(() => {
       run();
     });
     const play = () => {
