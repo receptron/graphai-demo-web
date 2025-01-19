@@ -71,11 +71,11 @@ const toolWorkFlowStep = {
       graph: {
         nodes: {
           hasNext: {
-            agent: (namedInputs: {array: {hasNext: boolean}[]}) => {
-              return namedInputs.array.some(ele => ele.hasNext);
+            agent: (namedInputs: { array: { hasNext: boolean }[] }) => {
+              return namedInputs.array.some((ele) => ele.hasNext);
             },
             inputs: {
-              array: ":toolsResponse"
+              array: ":toolsResponse",
             },
           },
           toolsResponseLLM: {
@@ -98,7 +98,7 @@ const toolWorkFlowStep = {
             agent: "copyAgent",
             inputs: {
               array: ":toolsMessage.array",
-            }
+            },
           },
           mergeToolsResponse: {
             isResult: true,
@@ -106,8 +106,8 @@ const toolWorkFlowStep = {
             anyInput: true,
             inputs: { array: [":toolsResMessage.array", ":skipToolsResponseLLM.array"] },
           },
-        }
-      }
+        },
+      },
     },
     buffer: {
       agent: "copyAgent",
