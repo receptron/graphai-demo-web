@@ -43,7 +43,7 @@
             v-model="markdown"
             class="w-full resize-none overflow-hidden border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
             placeholder="Write your markdown here..."
-            @input="adjustTextareaHeight($event)"
+            @input="adjustTextareaHeight()"
             ref="textareaRef"
           ></textarea>
         </div>
@@ -89,10 +89,11 @@ export default defineComponent({
     });
 
     const textareaRef = ref<HTMLTextAreaElement | null>(null);
-    const adjustTextareaHeight = (event: Event) => {
-      const textarea = event.target as HTMLTextAreaElement;
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    const adjustTextareaHeight = () => {
+      if (textareaRef.value) {
+        textareaRef.value.style.height = "auto";
+        textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`;
+      }
     };
     onMounted(() => {
       if (textareaRef.value) {
@@ -117,6 +118,7 @@ export default defineComponent({
       /* eslint-disable @typescript-eslint/no-dynamic-delete */
       delete events.value[event.id];
       userInput.value = "";
+      adjustTextareaHeight();
     };
     // end of input
 
@@ -167,6 +169,7 @@ export default defineComponent({
           }
         }
         if (nodeId === "updateText" && result) {
+          console.log(result);
           markdown.value = (result as { text: string }).text;
         }
         if (nodeId === "llm") {
