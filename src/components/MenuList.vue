@@ -8,7 +8,7 @@
     <MenuItem @click="handleClose" link="/sakana" icon="set_meal" title="menu.sakana" />
     <MenuItem @click="handleClose" link="/step" icon="man" title="menu.test" />
     <MenuItem @click="handleClose" link="/random" icon="man" title="menu.random" />
-    <MenuItem @click="handleClose" link="/marp" icon="man" title="menu.markdown" />
+    <MenuItem @click="handleClose" link="/markdown" icon="man" title="menu.markdown" />
   </div>
 </template>
 

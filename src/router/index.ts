@@ -12,7 +12,7 @@ import About from "@/views/About.vue";
 import Sakana from "@/views/Sakana.vue";
 import Agents from "@/views/Agents.vue";
 import GoogleMap from "@/views/GoogleMap.vue";
-import Marp from "@/views/Marp.vue";
+import Markdown from "@/views/Markdown.vue";
 import Video from "@/views/Video.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
@@ -57,8 +57,8 @@ const routeChildren: Array<RouteRecordRaw> = [
     component: Video,
   },
   {
-    path: "marp",
-    component: Marp,
+    path: "markdown",
+    component: Markdown,
   },
 ];
 
