@@ -13,21 +13,23 @@
       <!-- Input Section -->
       <div class="input-section bg-white rounded-md shadow-md p-4 mb-6">
         <div v-for="(event, k) in Object.values(events)" :key="k">
-          <div class="font-bold text-red-600 mb-2">Write message to bot!!</div>
-          <div class="flex items-center">
-            <input
-              v-model="userInput"
-              class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              :disabled="Object.values(events).length === 0"
-              placeholder="Type your message here..."
-            />
-            <button
-              class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
-              :class="Object.values(events).length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
-              @click="callSubmit(event)"
-            >
-              Submit
-            </button>
+          <div v-if="event.type === 'text'">
+            <div class="font-bold text-red-600 mb-2">Write message to bot!!</div>
+            <div class="flex items-center">
+              <input
+                v-model="userInput"
+                class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                :disabled="Object.values(events).length === 0"
+                placeholder="Type your message here..."
+                />
+              <button
+                class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
+                :class="Object.values(events).length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
+                @click="callSubmit(event)"
+                >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -112,6 +114,7 @@ export default defineComponent({
         message: { role: "user", content: userInput.value },
       };
       event.onEnd(data);
+      /* eslint-disable @typescript-eslint/no-dynamic-delete */
       delete events.value[event.id];
       userInput.value = "";
     };

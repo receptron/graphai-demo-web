@@ -33,6 +33,7 @@ export const graphMarkdown = {
       agent: "eventAgent",
       params: {
         message: "You:",
+        type: "text",
       },
     },
     llm: {
