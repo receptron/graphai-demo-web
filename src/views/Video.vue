@@ -17,7 +17,7 @@
       </div>
       <div class="mt-2 hidden">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
-        <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="logClear">Clear</button>
+
       </div>
 
       <div>
@@ -43,28 +43,11 @@
           <div ref="cytoscapeRef" class="w-full h-full" />
         </div>
       </div>
-      <div class="w-10/12 m-auto text-left">Transitions</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
-      </div>
       <div>
         <div>streamData</div>
         <div class="w-10/12 m-auto">
           <textarea class="border-2 p-2 w-full" rows="10">{{ streamData }}</textarea>
         </div>
-      </div>
-
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto font-mono">
-        <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
-      <div>Logs</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
       </div>
     </div>
   </div>
@@ -97,17 +80,13 @@ const hasMessage = (value: unknown): value is MessageResult =>
 
 const systemPrompt = "You are an operator for Html Video. Follow the user's instructions and call the necessary functions accordingly.";
 const graphData = getToolsChatGraph(systemPrompt);
-console.log(graphData);
+
 export default defineComponent({
   name: "HomePage",
   components: {},
   setup() {
     const videoRef = ref();
 
-    // https://developers.google.com/maps/documentation/javascript/reference/map?hl=ja#Map.setCenter
-    onMounted(() => {
-      run();
-    });
 
     const selectedGraph = computed(() => {
       return graphData;
@@ -132,7 +111,7 @@ export default defineComponent({
     };
     // end of input
 
-    const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
+    const { updateCytoscape, cytoscapeRef } = useCytoscape(selectedGraph);
 
     // streaming
     const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
@@ -144,9 +123,7 @@ export default defineComponent({
     ];
     // end of streaming
     const messages = ref<{ role: string; content: string }[]>([]);
-    const graphaiResponse = ref({});
-    const logs = ref<unknown[]>([]);
-    const transitions = ref<unknown[]>([]);
+
     const isStreaming = ref(false);
 
     const run = async () => {
@@ -173,13 +150,7 @@ export default defineComponent({
       );
       graphai.injectValue("tools", videoAgent.tools);
       /* eslint sonarjs/cognitive-complexity: 0 */
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
-          transitions.value[transitions.value.length - 1] += " → " + state;
-        } else {
-          transitions.value.push(nodeId + ": " + state);
-        }
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
+      graphai.onLogCallback = ({ nodeId, state, result }) => {
         updateCytoscape(nodeId, state);
 
         if (state === "completed" && result) {
@@ -206,22 +177,14 @@ export default defineComponent({
           }
         }
       };
-      const results = await graphai.run();
-      graphaiResponse.value = results;
+      await graphai.run();
     };
-    const logClear = () => {
-      logs.value = [];
-      transitions.value = [];
-
-      resetCytoscape();
-    };
+    onMounted(() => {
+      run();
+    });
 
     return {
       run,
-      logs,
-      transitions,
-      logClear,
-      graphaiResponse,
       cytoscapeRef,
       selectedGraph,
       streamData,
