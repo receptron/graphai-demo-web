@@ -17,7 +17,6 @@
       </div>
       <div class="mt-2 hidden">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
-
       </div>
 
       <div>
@@ -86,7 +85,6 @@ export default defineComponent({
   components: {},
   setup() {
     const videoRef = ref();
-
 
     const selectedGraph = computed(() => {
       return graphData;

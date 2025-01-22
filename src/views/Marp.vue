@@ -4,37 +4,31 @@
       <!-- Chat Section -->
       <div class="chat-section bg-white rounded-md shadow-md p-4 mb-6">
         <div v-for="(m, k) in messages" :key="k" class="message my-2">
-          <div v-if="m.role === 'user'" class="user-message bg-blue-100 rounded-lg px-4 py-2 text-left">
-            👱 {{ m.content }}
-          </div>
-          <div v-else class="bot-message bg-gray-100 rounded-lg px-4 py-2 text-left ml-12">
-            🤖 {{ m.content }}
-          </div>
+          <div v-if="m.role === 'user'" class="user-message bg-blue-100 rounded-lg px-4 py-2 text-left">👱 {{ m.content }}</div>
+          <div v-else class="bot-message bg-gray-100 rounded-lg px-4 py-2 text-left ml-12">🤖 {{ m.content }}</div>
         </div>
-        <div v-if="isStreaming" class="bot-message bg-gray-100 rounded-lg px-4 py-2 text-left ml-12">
-          🤖 {{ streamData["llm"] }}
-        </div>
+        <div v-if="isStreaming" class="bot-message bg-gray-100 rounded-lg px-4 py-2 text-left ml-12">🤖 {{ streamData["llm"] }}</div>
       </div>
 
       <!-- Input Section -->
       <div class="input-section bg-white rounded-md shadow-md p-4 mb-6">
-        <div v-if="inputPromises.length > 0" class="font-bold text-red-600 mb-2">
-          Write message to bot!!
-        </div>
-        <div class="flex items-center">
-          <input
-            v-model="userInput"
-            class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            :disabled="inputPromises.length == 0"
-            placeholder="Type your message here..."
-          />
-          <button
-            class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
-            :class="inputPromises.length == 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
-            @click="callSubmit"
-          >
-            Submit
-          </button>
+        <div v-for="(event, k) in Object.values(events)" :key="k">
+          <div class="font-bold text-red-600 mb-2">Write message to bot!!</div>
+          <div class="flex items-center">
+            <input
+              v-model="userInput"
+              class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              :disabled="Object.values(events).length === 0"
+              placeholder="Type your message here..."
+            />
+            <button
+              class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
+              :class="Object.values(events).length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
+              @click="callSubmit(event)"
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
 
@@ -49,7 +43,7 @@
             placeholder="Write your markdown here..."
             @input="adjustTextareaHeight($event)"
             ref="textareaRef"
-            ></textarea>
+          ></textarea>
         </div>
 
         <!-- Markdown Preview -->
@@ -68,7 +62,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 
@@ -77,12 +70,11 @@ import * as agents from "@graphai/vanilla";
 
 import { graphMarkdown } from "@/graph/markdown";
 import { openAIAgent } from "@graphai/openai_agent";
-// import updateTextAgent from "../agents/update_text_agent";
 
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { textInputAgentGenerator, InputEvents } from "@receptron/event_agent_generator";
+import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
 
 import MarkdownIt from "markdown-it";
 
@@ -97,24 +89,31 @@ export default defineComponent({
     const textareaRef = ref<HTMLTextAreaElement | null>(null);
     const adjustTextareaHeight = (event: Event) => {
       const textarea = event.target as HTMLTextAreaElement;
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     };
     onMounted(() => {
       if (textareaRef.value) {
-        textareaRef.value.style.height = 'auto';
+        textareaRef.value.style.height = "auto";
         textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`;
       }
     });
-    
+
     // input
     const userInput = ref("");
-    const inputPromises = ref<InputEvents>([]);
-    const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
-    const callSubmit = () => {
-      submit(inputPromises.value[0].id, userInput.value, () => {
-        userInput.value = "";
-      });
+    const events = ref<Record<string, EventData>>({});
+    const { eventAgent } = eventAgentGenerator((id, data) => {
+      events.value[id] = data;
+    });
+
+    const callSubmit = (event: EventData) => {
+      const data = {
+        text: userInput.value,
+        message: { role: "user", content: userInput.value },
+      };
+      event.onEnd(data);
+      delete events.value[event.id];
+      userInput.value = "";
     };
     // end of input
 
@@ -141,7 +140,7 @@ export default defineComponent({
         {
           ...agents,
           openAIAgent,
-          textInputAgent,
+          eventAgent,
         },
         {
           agentFilters,
@@ -192,7 +191,9 @@ export default defineComponent({
       callSubmit,
       userInput,
       messages,
-      inputPromises,
+      // inputPromises,
+      events,
+
       markdown,
 
       md: new MarkdownIt(),

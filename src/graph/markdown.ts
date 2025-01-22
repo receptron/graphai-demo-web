@@ -30,7 +30,7 @@ export const graphMarkdown = {
       update: ":reducer.array",
     },
     userInput: {
-      agent: "textInputAgent",
+      agent: "eventAgent",
       params: {
         message: "You:",
       },
