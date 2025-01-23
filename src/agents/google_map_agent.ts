@@ -41,9 +41,9 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
     const { Place } = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary;
 
     const request = {
-      textQuery: arg.textQuery,
+      textQuery: (arg as any).textQuery,
       fields: ["displayName", "location", "businessStatus", "formattedAddress"],
-      includedType: arg.includedType,
+      includedType: (arg as any).includedType,
       locationBias: center,
       isOpenNow: true,
       language: "ja-JP",
