@@ -119,6 +119,11 @@ export default defineComponent({
       delete events.value[event.id];
       userInput.value = "";
       adjustTextareaHeight();
+
+      const formEvent = Object.values(events.value)[0];
+      formEvent.onEnd({text: markdown.value})
+
+       delete events.value[formEvent.id];
     };
     // end of input
 

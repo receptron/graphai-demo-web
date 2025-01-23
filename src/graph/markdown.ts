@@ -11,6 +11,16 @@ export const graphMarkdown = {
       value: "```\n# hello\n```",
       update: ":updateText.text",
     },
+    messages: {
+      value: [],
+      update: ":reducer.array",
+    },
+    markdownText: {
+      agent: "eventAgent",
+      params: {
+        type: "form",
+      },
+    },
     system: {
       agent: "copyAgent",
       inputs: {
@@ -21,13 +31,9 @@ export const graphMarkdown = {
           "",
           "今までのmarkdown",
           "",
-          "${:md}",
+          "${:markdownText.text}",
         ].join("\n"),
       },
-    },
-    messages: {
-      value: [],
-      update: ":reducer.array",
     },
     userInput: {
       agent: "eventAgent",
