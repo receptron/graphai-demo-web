@@ -21,12 +21,12 @@
                 class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
                 :disabled="events.length === 0"
                 placeholder="Type your message here..."
-                />
+              />
               <button
                 class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
                 :class="events.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
                 @click="submit()"
-                >
+              >
                 Submit
               </button>
             </div>
@@ -114,7 +114,7 @@ export default defineComponent({
     });
 
     const submit = () => {
-      events.value.forEach(event => {
+      events.value.forEach((event) => {
         if (event.type === "text") {
           const data = {
             text: userInput.value,
@@ -123,7 +123,7 @@ export default defineComponent({
           event.onEnd(data);
         }
         if (event.type === "markdown") {
-          event.onEnd({text: markdown.value})
+          event.onEnd({ text: markdown.value });
         }
       });
       events.value = [];

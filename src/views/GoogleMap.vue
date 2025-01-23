@@ -106,7 +106,7 @@ export default defineComponent({
     onMounted(async () => {
       const { Map: GoogleMap } = (await google.maps.importLibrary("maps")) as google.maps.MapsLibrary;
       map = new GoogleMap(mapRef.value as HTMLElement, {
-        center: { lat: -34.397, lng: 150.644 },
+        center: { lat: 35.6712, lng: 139.7665 },
         zoom: 8,
         mapId: "DEMO_MAP_ID",
       });
@@ -187,7 +187,7 @@ export default defineComponent({
         updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
         if (state === "completed" && result) {
-          if (nodeId === "llm") {
+          if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
             isStreaming.value = false;
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
