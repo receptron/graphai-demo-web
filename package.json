@@ -14,7 +14,7 @@
     "@graphai/tools_agent": "^0.2.1",
     "@graphai/vanilla": "^0.2.9",
     "@receptron/event_agent_generator": "^0.0.2",
-    "@receptron/graphai_vue_cytoscape": "^0.0.16",
+    "@receptron/graphai_vue_cytoscape": "^0.0.17",
     "@vueuse/head": "^2.0.0",
     "core-js": "^3.40.0",
     "graphai": "^0.6.19",
