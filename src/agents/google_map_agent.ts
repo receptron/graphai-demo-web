@@ -41,9 +41,9 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
     const { Place } = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary;
 
     const request = {
-      textQuery: (arg as any).textQuery,
+      textQuery: (arg as {textQuery: string}).textQuery,
       fields: ["displayName", "location", "businessStatus", "formattedAddress"],
-      includedType: (arg as any).includedType,
+      includedType: (arg as {includedType: string}).includedType,
       locationBias: center,
       isOpenNow: true,
       language: "ja-JP",
@@ -60,7 +60,7 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
 
       // Loop through and get all the results.
       const dataSet = places.map((place) => {
-        const markerView = new AdvancedMarkerElement({
+        new AdvancedMarkerElement({
           map,
           position: place.location,
           title: place.displayName,
