@@ -1,7 +1,7 @@
 export const graphMarkdown = {
   version: 0.5,
   loop: {
-    while: true,
+    while: "true",
   },
   nodes: {
     md: {
