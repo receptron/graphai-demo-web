@@ -1164,10 +1164,10 @@
   resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.1.tgz#1ae7c4ccf33425b5bdce5e3d669bdb2a6c888fd4"
   integrity sha512-UORrSI//UqKYZt0cyqHYVaGByiCV2Xtj+7AIlAnuqeKOsDpfRcqHhEr4gizWLy+gsdO71BlFhagqeb464P9p9g==
 
-"@graphai/vanilla@^0.2.10":
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.10.tgz#15b92a4ed6f5b62b772731d728d6433951968749"
-  integrity sha512-5zt2hIcXxkDo8rukLqiQ4jR6jD/WeCcUoveyMVdW34XjLiVwc/8GMQDE/xhvm7zQeAZWPCeU9QamupfQwfKSPA==
+"@graphai/vanilla@^0.2.11":
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.11.tgz#b45a3824245135d2b5c9dd50a2e5af9a7061421e"
+  integrity sha512-ijI/8gH+KbUQb+pIq1FkN/rFwMMGuWr33xy8Y9modb5wdN4fV9LJPLBg+uv6Y+4kpDl0DHTExft7r0STMHcV4A==
   dependencies:
     "@graphai/agent_utils" "0.0.3"
 
@@ -1352,10 +1352,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@receptron/event_agent_generator@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.3.tgz#bb94e41ebb2f9e6b022fcd8005e9d256e46cb2cf"
-  integrity sha512-XkZBhSSR8Sv9q9/cYaDb3t5/Ua2z14E8cvxGiuyhPPaI3NWXgHFHmtULascYlGC5ZdVGZbwlbJJnp3U+C8WNNQ==
+"@receptron/event_agent_generator@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.4.tgz#119690810d78fa6c31c598de0669c7eae91b267a"
+  integrity sha512-TnKEB73ztifGDFt+LihTL2m11E2tyaclW0nCph0rulJLFla9Kw8FoINLPuB4JYoK6IrUDIUuSlt55Dj7+SENIA==
 
 "@receptron/graphai_vue_cytoscape@^0.0.17":
   version "0.0.17"
