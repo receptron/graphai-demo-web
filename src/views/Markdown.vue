@@ -25,7 +25,7 @@
               <button
                 class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
                 :class="Object.values(events).length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
-                @click="callSubmit(event)"
+                @click="submit()"
                 >
                 Submit
               </button>
@@ -106,24 +106,30 @@ export default defineComponent({
     const userInput = ref("");
     const events = ref<Record<string, EventData>>({});
     const { eventAgent } = eventAgentGenerator((id, data) => {
+      if (data.type === "markdown") {
+        const { namedInputs } = data;
+        markdown.value = namedInputs.markdown;
+      }
       events.value[id] = data;
     });
 
-    const callSubmit = (event: EventData) => {
-      const data = {
-        text: userInput.value,
-        message: { role: "user", content: userInput.value },
-      };
-      event.onEnd(data);
-      /* eslint-disable @typescript-eslint/no-dynamic-delete */
-      delete events.value[event.id];
+    const submit = () => {
+      Object.values(events.value).forEach(event => {
+        if (event.type === "text") {
+          const data = {
+            text: userInput.value,
+            message: { role: "user", content: userInput.value },
+          };
+          event.onEnd(data);
+        }
+        if (event.type === "markdown") {
+          event.onEnd({text: markdown.value})
+        }
+        /* eslint-disable @typescript-eslint/no-dynamic-delete */
+        delete events.value[event.id];
+      });
       userInput.value = "";
       adjustTextareaHeight();
-
-      const formEvent = Object.values(events.value)[0];
-      formEvent.onEnd({text: markdown.value})
-
-       delete events.value[formEvent.id];
     };
     // end of input
 
@@ -163,7 +169,6 @@ export default defineComponent({
       );
       graphai.onLogCallback = ({ nodeId, state, result }) => {
         updateCytoscape(nodeId, state);
-        console.log(nodeId, state, result);
         if (state === "completed" && result) {
           if (nodeId === "llm") {
             isStreaming.value = false;
@@ -172,10 +177,6 @@ export default defineComponent({
           if (nodeId === "userInput") {
             messages.value.push((result as { message: { role: string; content: string } }).message);
           }
-        }
-        if (nodeId === "updateText" && result) {
-          console.log(result);
-          markdown.value = (result as { text: string }).text;
         }
         if (nodeId === "llm") {
           if (state === "queued") {
@@ -199,7 +200,7 @@ export default defineComponent({
       streamData,
       isStreaming,
 
-      callSubmit,
+      submit,
       userInput,
       messages,
       // inputPromises,

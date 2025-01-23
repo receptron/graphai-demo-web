@@ -18,7 +18,10 @@ export const graphMarkdown = {
     markdownText: {
       agent: "eventAgent",
       params: {
-        type: "form",
+        type: "markdown",
+      },
+      inputs: {
+        markdown: ":md",
       },
     },
     system: {
@@ -56,6 +59,7 @@ export const graphMarkdown = {
       },
     },
     updateText: {
+      console: true,
       agent: "stringUpdateTextAgent",
       inputs: {
         newText: ":llm.text.codeBlock()",
