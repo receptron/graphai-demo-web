@@ -1,14 +1,11 @@
 export const graphMarkdown = {
   version: 0.5,
   loop: {
-    while: ":continue",
+    while: true,
   },
   nodes: {
-    continue: {
-      value: true,
-    },
     md: {
-      value: "```\n# hello\n```",
+      value: "# hello",
       update: ":updateText.text",
     },
     messages: {

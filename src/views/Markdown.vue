@@ -12,19 +12,19 @@
 
       <!-- Input Section -->
       <div class="input-section bg-white rounded-md shadow-md p-4 mb-6">
-        <div v-for="(event, k) in Object.values(events)" :key="k">
+        <div v-for="(event, k) in events" :key="k">
           <div v-if="event.type === 'text'">
             <div class="font-bold text-red-600 mb-2">Write message to bot!!</div>
             <div class="flex items-center">
               <input
                 v-model="userInput"
                 class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                :disabled="Object.values(events).length === 0"
+                :disabled="events.length === 0"
                 placeholder="Type your message here..."
                 />
               <button
                 class="ml-2 px-4 py-2 rounded-md text-white font-bold transition-all duration-200"
-                :class="Object.values(events).length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
+                :class="events.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-700'"
                 @click="submit()"
                 >
                 Submit
@@ -104,17 +104,17 @@ export default defineComponent({
 
     // input
     const userInput = ref("");
-    const events = ref<Record<string, EventData>>({});
+    const events = ref<EventData[]>([]);
     const { eventAgent } = eventAgentGenerator((id, data) => {
       if (data.type === "markdown") {
         const { namedInputs } = data;
         markdown.value = namedInputs.markdown;
       }
-      events.value[id] = data;
+      events.value.push(data);
     });
 
     const submit = () => {
-      Object.values(events.value).forEach(event => {
+      events.value.forEach(event => {
         if (event.type === "text") {
           const data = {
             text: userInput.value,
@@ -125,9 +125,8 @@ export default defineComponent({
         if (event.type === "markdown") {
           event.onEnd({text: markdown.value})
         }
-        /* eslint-disable @typescript-eslint/no-dynamic-delete */
-        delete events.value[event.id];
       });
+      events.value = [];
       userInput.value = "";
       adjustTextareaHeight();
     };
@@ -203,7 +202,6 @@ export default defineComponent({
       submit,
       userInput,
       messages,
-      // inputPromises,
       events,
 
       markdown,
