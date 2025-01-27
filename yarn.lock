@@ -1133,12 +1133,12 @@
     "@eslint/core" "^0.10.0"
     levn "^0.4.1"
 
-"@graphai/agent_filters@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@graphai/agent_filters/-/agent_filters-0.0.9.tgz#6b27bed2f6411703b0b0e7ced2e9bf55887782c8"
-  integrity sha512-jXG0PL6xXvoXEGMfM7RDBq3V+XcvgYK365qLFUtL/qehb/p1IqtETLP3QG8Ty/6iBJ7OmLgSenMkGs5zMXz/bg==
+"@graphai/agent_filters@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@graphai/agent_filters/-/agent_filters-0.2.0.tgz#ba6d4a53edc1275995ca3385cac43e8cccb25d10"
+  integrity sha512-4+7E2WNl2R5R30pkt1jiUT7xK+PzOTmShCgBnv7AIwKRwQZsnVtaU9VNKC8QRRyHxhOrWukDbrlPrsSOAlQoVQ==
   dependencies:
-    "@noble/hashes" "^1.6.1"
+    "@noble/hashes" "^1.7.1"
     ajv "^8.16.0"
 
 "@graphai/agent_utils@0.0.3":
@@ -1151,23 +1151,23 @@
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-0.0.2.tgz#3923a225c2a5063f81bc2d89111a8a2f4bbdcb4f"
   integrity sha512-V8mFEgPjnyS6PVdiIo5ug4WExgTh4qJcqkuqJ2iyFkRJgWL+R4IF/MRxt0BVgVjpOwjeXjzYkRYhJZ6GD6xIdg==
 
-"@graphai/openai_agent@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-0.2.3.tgz#f4309a250f27adc80d30f59b48293dde6c67cea4"
-  integrity sha512-z+fEmDd8d31QYdziOZ4+c1KFpdho7uMMwvpfDLmSXsXfAUT9gKXRRjxu1f5Go1yS5GLtjU0tZb8yS/b4300mpA==
+"@graphai/openai_agent@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-0.2.4.tgz#a3aa7dec6883e47fb80fcfbc9731a94f943dc563"
+  integrity sha512-P0BMowuPbwPOurIMtTsmWtMk2e3CCnUxeRoi5Cv0AyturmstOAE2ISeIWIOcTpcijoIDrhnEEV9iQtgTUiDSDg==
   dependencies:
     "@graphai/llm_utils" "^0.0.2"
-    openai "^4.77.0"
+    openai "^4.80.1"
 
 "@graphai/tools_agent@^0.2.1":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.1.tgz#1ae7c4ccf33425b5bdce5e3d669bdb2a6c888fd4"
   integrity sha512-UORrSI//UqKYZt0cyqHYVaGByiCV2Xtj+7AIlAnuqeKOsDpfRcqHhEr4gizWLy+gsdO71BlFhagqeb464P9p9g==
 
-"@graphai/vanilla@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.11.tgz#b45a3824245135d2b5c9dd50a2e5af9a7061421e"
-  integrity sha512-ijI/8gH+KbUQb+pIq1FkN/rFwMMGuWr33xy8Y9modb5wdN4fV9LJPLBg+uv6Y+4kpDl0DHTExft7r0STMHcV4A==
+"@graphai/vanilla@^0.2.12":
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.12.tgz#f9dbc653f23cef5e87c06deaaf1bd2aaa42823f7"
+  integrity sha512-k7dRehC+Y2Nfre4fgfLxd9ITDZmqMGdY/RxMumE1GUYAuCNEaksNV7k350wqgOHR134k8C5HJ+9Y0vURYc0ykw==
   dependencies:
     "@graphai/agent_utils" "0.0.3"
 
@@ -1321,10 +1321,10 @@
   dependencies:
     eslint-scope "5.1.1"
 
-"@noble/hashes@^1.6.1":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.0.tgz#5d9e33af2c7d04fee35de1519b80c958b2e35e39"
-  integrity sha512-HXydb0DgzTpDPwbVeDGCG1gIu7X6+AuU6Zl6av/E/KG8LMsvPntvq+w17CHRpKBmN6Ybdrt1eP3k4cj8DJa78w==
+"@noble/hashes@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.1.tgz#5738f6d765710921e7a751e00c20ae091ed8db0f"
+  integrity sha512-B8XBPsn4vT/KJAGqDzbwztd+6Yte3P4V7iafm24bxgDe/mlRuK6xmWPuCNrKt2vDafZ8MfJLlchDG/vYafQEjQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -3168,10 +3168,10 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^0.6.19:
-  version "0.6.19"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-0.6.19.tgz#a04bb134394017965aac6d453f27c4a04dc40f02"
-  integrity sha512-Xg+1EXEH+ABgviTm9X6cDX8QGV5+BlqdLaCDw8MIA8efuZNIo1JDFw6GbmyTZ/66r921QI0DVZ4irDYdJed7nA==
+graphai@^0.6.21:
+  version "0.6.21"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-0.6.21.tgz#a9a17a9ac23a9b403e0750d2c770717ecb7bfc7a"
+  integrity sha512-ocEZEA+fSjYB5G1otDQbXm2oauC8+03LFVvCPDrJXI4fdGBC+JIwTGLpIQL9DUAtRs91ebufVT+uKWsf1VFt8Q==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -3901,10 +3901,10 @@ object.values@^1.1.6:
     define-properties "^1.2.1"
     es-object-atoms "^1.0.0"
 
-openai@^4.77.0:
-  version "4.78.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.78.1.tgz#44c3b195d239891be9c9c53722539ad8a1fcc5f2"
-  integrity sha512-drt0lHZBd2lMyORckOXFPQTmnGLWSLt8VK0W9BhOKWpMFBEoHMoz5gxMPmVq5icp+sOrsbMnsmZTVHUlKvD1Ow==
+openai@^4.80.1:
+  version "4.80.1"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.80.1.tgz#0869ae7d4efbe1794dbec9b648aa329d369cea36"
+  integrity sha512-+6+bbXFwbIE88foZsBEt36bPkgZPdyFN82clAXG61gnHb2gXdZApDyRrcAHqEtpYICywpqaNo57kOm9dtnb7Cw==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
