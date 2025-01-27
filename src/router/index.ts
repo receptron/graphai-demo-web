@@ -14,6 +14,7 @@ import Agents from "@/views/Agents.vue";
 import GoogleMap from "@/views/GoogleMap.vue";
 import Markdown from "@/views/Markdown.vue";
 import Video from "@/views/Video.vue";
+import InterView from "@/views/InterView.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -59,6 +60,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "markdown",
     component: Markdown,
+  },
+  {
+    path: "interview",
+    component: InterView,
   },
 ];
 

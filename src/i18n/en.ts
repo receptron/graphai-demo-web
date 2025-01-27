@@ -15,6 +15,7 @@ const lang = {
     map: "GoogleMap",
     video: "Video",
     markdown: "Markdown",
+    interview: "Interview",
     signin: "SignIn",
     signout: "SignOut",
     about: "Abount",
