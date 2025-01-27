@@ -4,11 +4,6 @@
       <div ref="mapRef" class="w-full h-[33vh]"></div>
     </div>
     <div class="items-center justify-center">
-      <div>
-        <div class="w-10/12 h-60 bg-white rounded-md mt-4 p-2 mx-auto border-2">
-          <div ref="cytoscapeRef" class="w-full h-full" />
-        </div>
-      </div>
       <div class="mt-2">
         <div class="w-10/12 m-auto text-left">
           <div v-for="(m, k) in messages" :key="k">
@@ -38,6 +33,11 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div>
+        <div class="w-10/12 h-60 bg-white rounded-md mt-4 p-2 mx-auto border-2">
+          <div ref="cytoscapeRef" class="w-full h-full" />
         </div>
       </div>
       <div class="w-10/12 m-auto text-left">Transitions</div>
