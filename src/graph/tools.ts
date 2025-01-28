@@ -18,7 +18,7 @@ export const getToolsChatGraph = (systemPrompt: string) => {
             content: systemPrompt,
           },
         ],
-        update: ":toolWorkFlowStep.reducer.array",
+        update: ":toolWorkFlowStep.messages",
       },
       userInput: {
         agent: "eventAgent",
@@ -28,6 +28,7 @@ export const getToolsChatGraph = (systemPrompt: string) => {
         },
       },
       toolWorkFlowStep: {
+        console: true,
         agent: "toolsAgent",
         inputs: {
           llmAgent: "openAIAgent",
