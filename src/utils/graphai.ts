@@ -49,7 +49,7 @@ export const textInputEvent = () => {
   const events = computed(() => {
     return Object.values(eventsObj.value);
   });
-  
+
   return {
     eventAgent,
     userInput,

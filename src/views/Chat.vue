@@ -34,10 +34,7 @@
         <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
       </div>
       <div>
-        <div>streamData</div>
-        <div class="w-10/12 m-auto">
-          <textarea class="border-2 p-2 w-full" rows="10">{{ streamData }}</textarea>
-        </div>
+        <Stream :stream-data="streamData" />
       </div>
 
       <div class="mt-2">Graph Data</div>
@@ -67,11 +64,13 @@ import { textInputEvent, useChatPlugin, useLogs } from "../utils/graphai";
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
 import Chat from "../components/Chat.vue";
+import Stream from "../components/Stream.vue";
 
 export default defineComponent({
   name: "HomePage",
   components: {
-    Chat
+    Chat,
+    Stream,
   },
   setup() {
     const selectedGraph = computed(() => {
@@ -79,7 +78,7 @@ export default defineComponent({
     });
     const streamNodes = ["llm"];
     const outputNodes = ["llm", "userInput"];
-    
+
     const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { messages, chatMessagePlugin } = useChatPlugin();
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);

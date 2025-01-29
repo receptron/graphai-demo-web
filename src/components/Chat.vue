@@ -14,16 +14,20 @@ import { defineComponent, PropType } from "vue";
 export default defineComponent({
   props: {
     messages: {
-      type: Array<{role: string, content: string}>,
+      type: Array<{ role: string; content: string }>,
       default: () => [],
     },
     isStreaming: {
       type: Object as PropType<Record<string, boolean>>,
-      default: () => { return {}},
+      default: () => {
+        return {};
+      },
     },
     streamData: {
       type: Object as PropType<Record<string, string>>,
-      default: () => { return {}},
+      default: () => {
+        return {};
+      },
     },
     streamNodeIds: {
       type: Array<string>,
