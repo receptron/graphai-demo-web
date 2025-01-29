@@ -38,18 +38,13 @@
         </div>
       </div>
 
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
+      <GraphData :selected-graph="selectedGraph" />
       <div>Result</div>
       <div class="w-10/12 m-auto">
         <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
       </div>
-      <div>Log</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
-      </div>
+      <Logs :logs="logs" />
+
     </div>
   </div>
 </template>
@@ -70,9 +65,15 @@ import { useStreamData, useGraphData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
+import GraphData from "../components/GraphData.vue";
+import Logs from "../components/Logs.vue";
+
 export default defineComponent({
   name: "HomePage",
-  components: {},
+  components: {
+    GraphData,
+    Logs,
+  },
   setup() {
     const { graphdata_any, words } = useGraphData();
     const graph_random = generateGraph();
