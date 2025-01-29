@@ -7,12 +7,7 @@
         </div>
       </div>
       <div class="mt-2">
-        <div class="w-10/12 m-auto text-left">
-          <div v-for="(m, k) in messages" :key="k">
-            <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
-            <div class="ml-20" v-else>🤖{{ m.content }}</div>
-          </div>
-        </div>
+        <chat :messages="messages" />
       </div>
       <div class="mt-2 hidden">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
@@ -65,6 +60,7 @@ import { httpAgentFilter } from "@graphai/agent_filters";
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { useLogs } from "../utils/graphai";
 
+import Chat from "../components/Chat.vue";
 import Transitions from "../components/Transitions.vue";
 import GraphData from "../components/GraphData.vue";
 import Result from "../components/Result.vue";
@@ -73,6 +69,7 @@ import Logs from "../components/Logs.vue";
 export default defineComponent({
   name: "HomePage",
   components: {
+    Chat,
     Transitions,
     GraphData,
     Result,
