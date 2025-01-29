@@ -50,10 +50,6 @@
       <div class="w-10/12 m-auto font-mono">
         <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
       </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
       <div>Logs</div>
       <div class="w-10/12 m-auto">
         <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
@@ -63,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, computed } from "vue";
 
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
@@ -83,20 +79,20 @@ export default defineComponent({
     const selectedGraph = computed(() => {
       return graphChat;
     });
-
+    const streamNodes = ["llm"];
+    const outputNodes = ["llm", "userInput"];
+    
     const { eventAgent, userInput, events, submitText } = textInputEvent();
-    const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
-    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
     const { messages, chatMessagePlugin } = useChatPlugin();
+    const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
+    const { logs, transitions, updateLog, resetLog } = useLogs();
+    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
     const agentFilters = [
       {
         name: "streamAgentFilter",
         agent: streamAgentFilter,
       },
     ];
-    const { logs, transitions, updateLog, resetLog } = useLogs();
-
-    const graphaiResponse = ref({});
 
     const run = async () => {
       const graphai = new GraphAI(
@@ -117,10 +113,9 @@ export default defineComponent({
       );
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(updateLog);
-      graphai.registerCallback(streamPlugin(["llm"]));
-      graphai.registerCallback(chatMessagePlugin(["llm", "userInput"]));
-      const results = await graphai.run();
-      graphaiResponse.value = results;
+      graphai.registerCallback(streamPlugin(streamNodes));
+      graphai.registerCallback(chatMessagePlugin(outputNodes));
+      await graphai.run();
     };
     const logClear = () => {
       resetLog();
@@ -134,7 +129,6 @@ export default defineComponent({
       logs,
       transitions,
       logClear,
-      graphaiResponse,
       cytoscapeRef,
       selectedGraph,
       streamData,
