@@ -12,7 +12,7 @@ export const graphChat = {
       update: ":reducer.array",
     },
     userInput: {
-      agent: "textInputAgent",
+      agent: "eventAgent",
       params: {
         message: "You:",
       },

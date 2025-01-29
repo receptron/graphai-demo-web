@@ -12,7 +12,7 @@
             <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
             <div class="ml-20" v-else>🤖{{ m.content }}</div>
           </div>
-          <div class="ml-20" v-if="isStreaming">🤖{{ streamData["llm"] }}</div>
+          <div class="ml-20" v-if="isStreaming['llm']">🤖{{ streamData["llm"] }}</div>
         </div>
       </div>
       <div class="mt-2 hidden">
@@ -22,13 +22,13 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="inputPromises.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
+          <div v-if="events.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
           <div class="flex">
-            <input v-model="userInput" @keyup.enter="callSubmit" class="border-2 p-2 rounded-md flex-1" :disabled="inputPromises.length == 0" />
+            <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="events.length == 0" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="inputPromises.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
-              @click="callSubmit"
+              :class="events.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
+              @click="submitText(Object.values(events)[0])"
             >
               Submit
             </button>
@@ -72,9 +72,10 @@ import { graphChat } from "@/graph/chat";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
+import { textInputEvent, useChatPlugin } from "./utils";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { textInputAgentGenerator, InputEvents } from "@receptron/event_agent_generator";
+import { useLogs } from "./utils";
 
 export default defineComponent({
   name: "HomePage",
@@ -84,34 +85,19 @@ export default defineComponent({
       return graphChat;
     });
 
-    // input
-    const userInput = ref("");
-    const inputPromises = ref<InputEvents>([]);
-    const { textInputAgent, submit } = textInputAgentGenerator(inputPromises.value);
-    const callSubmit = () => {
-      submit(inputPromises.value[0].id, userInput.value, () => {
-        userInput.value = "";
-      });
-    };
-    // end of input
-
+    const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
-
-    // streaming
-    const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
+    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
+    const { messages, chatMessagePlugin } = useChatPlugin();
     const agentFilters = [
       {
         name: "streamAgentFilter",
         agent: streamAgentFilter,
       },
     ];
-    // end of streaming
+    const { logs, transitions, updateLog, resetLog } = useLogs();
 
-    const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
-    const logs = ref<unknown[]>([]);
-    const transitions = ref<unknown[]>([]);
-    const isStreaming = ref(false);
 
     const run = async () => {
       const graphai = new GraphAI(
@@ -119,7 +105,7 @@ export default defineComponent({
         {
           ...agents,
           openAIAgent,
-          textInputAgent,
+          eventAgent,
         },
         {
           agentFilters,
@@ -131,39 +117,14 @@ export default defineComponent({
         },
       );
       graphai.registerCallback(updateCytoscape);
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
-          transitions.value[transitions.value.length - 1] += " → " + state;
-        } else {
-          transitions.value.push(nodeId + ": " + state);
-        }
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        console.log(nodeId, state, result);
-        if (state === "completed" && result) {
-          if (nodeId === "llm") {
-            isStreaming.value = false;
-            messages.value.push((result as { message: { role: string; content: string } }).message);
-          }
-          if (nodeId === "userInput") {
-            messages.value.push((result as { message: { role: string; content: string } }).message);
-          }
-        }
-        if (nodeId === "llm") {
-          if (state === "queued") {
-            resetStreamData("llm");
-          }
-          if (state === "executing") {
-            isStreaming.value = true;
-          }
-        }
-      };
+      graphai.registerCallback(updateLog);
+      graphai.registerCallback(streamPlugin(["llm"]));
+      graphai.registerCallback(chatMessagePlugin(["llm", "userInput"]));
       const results = await graphai.run();
       graphaiResponse.value = results;
     };
     const logClear = () => {
-      logs.value = [];
-      transitions.value = [];
-
+      resetLog();
       resetCytoscape();
     };
 
@@ -180,10 +141,10 @@ export default defineComponent({
       streamData,
       isStreaming,
 
-      callSubmit,
+      submitText,
       userInput,
       messages,
-      inputPromises,
+      events,
     };
   },
 });
