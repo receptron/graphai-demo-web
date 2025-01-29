@@ -12,7 +12,7 @@
             <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
             <div class="ml-20" v-else>🤖{{ m.content }}</div>
           </div>
-          <div class="ml-20" v-if="isStreaming">🤖{{ streamData["llm"] }}</div>
+          <div class="ml-20" v-if="isStreaming['llm']">🤖{{ streamData["llm"] }}</div>
         </div>
       </div>
       <div class="mt-2 hidden">
@@ -64,18 +64,11 @@ import videoAgent from "../agents/video_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
 import { useStreamData } from "@/utils/stream";
+import { textInputEvent } from "./utils";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
 
-type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
-type MessageResult = { message: { content: string } };
-
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
-const hasToolCalls = (value: unknown): value is ToolResult =>
-  isRecord(value) && "tool_calls" in value && Array.isArray(value.tool_calls) && value.tool_calls.length > 0;
-const hasMessage = (value: unknown): value is MessageResult =>
-  isRecord(value) && "message" in value && isRecord(value.message) && "content" in value.message && Boolean(value.message.content);
+import { hasToolCalls, hasMessage } from "./tools";
 
 const systemPrompt = "You are an operator for Html Video. Follow the user's instructions and call the necessary functions accordingly.";
 const graphData = getToolsChatGraph(systemPrompt);
@@ -90,40 +83,17 @@ export default defineComponent({
       return graphData;
     });
 
-    // input
-    const userInput = ref("");
-
-    const events = ref<Record<string, EventData>>({});
-    const { eventAgent } = eventAgentGenerator((id, data) => {
-      events.value[id] = data;
-    });
-    const submitText = (event: EventData) => {
-      const data = {
-        text: userInput.value,
-        message: { role: "user", content: userInput.value },
-      };
-      event.onEnd(data);
-      /* eslint-disable @typescript-eslint/no-dynamic-delete */
-      delete events.value[event.id];
-      userInput.value = "";
-    };
-    // end of input
-
+    const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { updateCytoscape, cytoscapeRef } = useCytoscape(selectedGraph);
-
-    // streaming
-    const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
+    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
     const agentFilters = [
       {
         name: "streamAgentFilter",
         agent: streamAgentFilter,
       },
     ];
-    // end of streaming
+
     const messages = ref<{ role: string; content: string }[]>([]);
-
-    const isStreaming = ref(false);
-
     const run = async () => {
       const graphai = new GraphAI(
         selectedGraph.value,
@@ -148,11 +118,10 @@ export default defineComponent({
       );
       graphai.injectValue("tools", videoAgent.tools);
       graphai.registerCallback(updateCytoscape);
-      /* eslint sonarjs/cognitive-complexity: 0 */
+      graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
       graphai.onLogCallback = ({ nodeId, state, result }) => {
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
-            isStreaming.value = false;
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
               messages.value.push({ role: "assistant", content: "[call api]" + calls });
@@ -163,14 +132,6 @@ export default defineComponent({
           }
           if (nodeId === "userInput") {
             messages.value.push((result as { message: { role: string; content: string } }).message);
-          }
-        }
-        if (nodeId === "llm") {
-          if (state === "queued") {
-            resetStreamData("llm");
-          }
-          if (state === "executing") {
-            isStreaming.value = true;
           }
         }
       };
