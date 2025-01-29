@@ -4,7 +4,7 @@ import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator
 
 export const useLogs = () => {
   const logs = ref<unknown[]>([]);
-  const transitions = ref<unknown[]>([]);
+  const transitions = ref<string[]>([]);
 
   const updateLog = (log: TransactionLog) => {
     const { nodeId, state, inputs, result, errorMessage } = log;
