@@ -78,7 +78,7 @@ import { toolsAgent } from "@graphai/tools_agent";
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { useLogs, textInputEvent } from "./utils";
+import { useLogs, textInputEvent } from "../utils/graphai";
 
 import { hasToolCalls, hasMessage } from "./tools";
 

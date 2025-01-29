@@ -64,7 +64,7 @@ import videoAgent from "../agents/video_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
 import { useStreamData } from "@/utils/stream";
-import { textInputEvent } from "./utils";
+import { textInputEvent } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 

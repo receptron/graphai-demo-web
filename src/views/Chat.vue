@@ -22,12 +22,12 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="events.length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
+          <div v-if="Object.values(events).length > 0" class="font-bold text-red-600 hidden">Write message to bot!!</div>
           <div class="flex">
-            <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="events.length == 0" />
+            <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="Object.values(events).length == 0" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="events.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
+              :class="Object.values(events).length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
               @click="submitText(Object.values(events)[0])"
             >
               Submit
@@ -72,10 +72,9 @@ import { graphChat } from "@/graph/chat";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
-import { textInputEvent, useChatPlugin } from "./utils";
+import { textInputEvent, useChatPlugin, useLogs } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { useLogs } from "./utils";
 
 export default defineComponent({
   name: "HomePage",
