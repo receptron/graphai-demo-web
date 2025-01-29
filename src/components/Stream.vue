@@ -4,6 +4,7 @@
     <textarea class="border-2 p-2 w-full" rows="10">{{ streamData }}</textarea>
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 export default defineComponent({

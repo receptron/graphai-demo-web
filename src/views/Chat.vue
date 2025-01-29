@@ -29,22 +29,10 @@
           </div>
         </div>
       </div>
-      <div class="w-10/12 m-auto text-left">Transitions</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
-      </div>
-      <div>
-        <Stream :stream-data="streamData" />
-      </div>
-
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto font-mono">
-        <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
-      <div>Logs</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
-      </div>
+      <Transitions :transitions="transitions" />
+      <Stream :stream-data="streamData" />
+      <GraphData :selected-graph="selectedGraph" />
+      <Logs :logs="logs" />
     </div>
   </div>
 </template>
@@ -65,12 +53,18 @@ import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
 import Chat from "../components/Chat.vue";
 import Stream from "../components/Stream.vue";
+import Transitions from "../components/Transitions.vue";
+import GraphData from "../components/GraphData.vue";
+import Logs from "../components/Logs.vue";
 
 export default defineComponent({
   name: "HomePage",
   components: {
     Chat,
     Stream,
+    Transitions,
+    GraphData,
+    Logs,
   },
   setup() {
     const selectedGraph = computed(() => {
