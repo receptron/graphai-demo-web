@@ -44,7 +44,6 @@
         <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
       </div>
       <Logs :logs="logs" />
-
     </div>
   </div>
 </template>
