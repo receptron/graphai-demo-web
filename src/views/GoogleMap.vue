@@ -14,17 +14,12 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="events.length > 0">
-            <div v-for="(event, k) in events" :key="k">
-              <div v-if="event.type === 'text'" class="flex">
-                <input v-model="userInput" class="border-2 p-2 rounded-md m-4 flex-1" :placeholder="event.nodeId" />
-                <button
-                  class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none m-4 bg-sky-500"
-                  @click="submitText(event)"
-                >
-                  Submit
-                </button>
-              </div>
+          <div v-for="(event, k) in events" :key="k">
+            <div v-if="event.type === 'text'" class="flex">
+              <input v-model="userInput" class="border-2 p-2 rounded-md m-4 flex-1" :placeholder="event.nodeId" />
+              <button class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none m-4 bg-sky-500" @click="submitText(event)">
+                Submit
+              </button>
             </div>
           </div>
         </div>

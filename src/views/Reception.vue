@@ -42,23 +42,11 @@
         Server
       </button>
       <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
-      <div class="w-10/12 m-auto text-left">Transitions</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ transitions.join("\n") }}</textarea>
-      </div>
 
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto font-mono">
-        <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
-      <div>Logs</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
-      </div>
+      <Transitions :transitions="transitions" />
+      <GraphData :selected-graph="selectedGraph" />
+      <Result :graphai-response="graphaiResponse" />
+      <Logs :logs="logs" />
     </div>
   </div>
 </template>
@@ -75,10 +63,21 @@ import { openAIAgent } from "@graphai/openai_agent";
 import { httpAgentFilter } from "@graphai/agent_filters";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
+import { useLogs } from "../utils/graphai";
+
+import Transitions from "../components/Transitions.vue";
+import GraphData from "../components/GraphData.vue";
+import Result from "../components/Result.vue";
+import Logs from "../components/Logs.vue";
 
 export default defineComponent({
   name: "HomePage",
-  components: {},
+  components: {
+    Transitions,
+    GraphData,
+    Result,
+    Logs,
+  },
   setup() {
     const userInput = ref("");
     const isServer = ref(false);
@@ -145,8 +144,8 @@ export default defineComponent({
     });
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
-    const logs = ref<unknown[]>([]);
-    const transitions = ref<unknown[]>([]);
+
+    const { logs, transitions, updateLog, resetLog } = useLogs();
 
     const run = async () => {
       const graphai = new GraphAI(
@@ -166,14 +165,8 @@ export default defineComponent({
         },
       );
       graphai.registerCallback(updateCytoscape);
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
-          transitions.value[transitions.value.length - 1] += " → " + state;
-        } else {
-          transitions.value.push(nodeId + ": " + state);
-        }
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        console.log(nodeId, state, result);
+      graphai.registerCallback(updateLog);
+      graphai.onLogCallback = ({ nodeId, state, result }) => {
         if (state === "completed" && result) {
           if (nodeId === "llm_tools") {
             if ((result as { tool: { arguments: string } })?.tool?.arguments) {
@@ -192,9 +185,7 @@ export default defineComponent({
       graphaiResponse.value = results;
     };
     const logClear = () => {
-      logs.value = [];
-      transitions.value = [];
-
+      resetLog();
       resetCytoscape();
     };
 
