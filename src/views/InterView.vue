@@ -12,8 +12,8 @@
             <div v-if="m.role !== 'interviewer'" class="mr-8">👱{{ m.content }}</div>
             <div class="ml-20" v-else>🤖{{ m.content }}</div>
           </div>
-          <div class="ml-20" v-if="isStreaming && currentRole === 'interviewer'">🤖{{ streamData["translate"] }}</div>
-          <div class="mr-8" v-if="isStreaming && currentRole !== 'interviewer'">👱{{ streamData["translate"] }}</div>
+          <div class="ml-20" v-if="isStreaming['translate'] && currentRole === 'interviewer'">🤖{{ streamData["translate"] }}</div>
+          <div class="mr-8" v-if="isStreaming['translate'] && currentRole !== 'interviewer'">👱{{ streamData["translate"] }}</div>
         </div>
       </div>
       <div class="mt-2 hidden">
@@ -73,7 +73,7 @@ export default defineComponent({
     const { updateCytoscape, cytoscapeRef } = useCytoscape(selectedGraph);
 
     // streaming
-    const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
+    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
     const agentFilters = [
       {
         name: "streamAgentFilter",
@@ -83,8 +83,6 @@ export default defineComponent({
     // end of streaming
 
     const messages = ref<{ role: string; content: string }[]>([]);
-    const isStreaming = ref(false);
-
     const run = async () => {
       const graphai = new GraphAI(
         selectedGraph.value,
@@ -104,23 +102,17 @@ export default defineComponent({
         },
       );
       graphai.injectValue("name", userInput.value);
-      
-      graphai.onLogCallback = ({ nodeId, state, result }) => {
+      graphai.registerCallback(({ nodeId, state }) => {
         updateCytoscape(nodeId, state);
+      });
+      graphai.registerCallback(({ nodeId, state, result }) => {
         if (state === "completed" && result && nodeId === "output") {
-          isStreaming.value = false;
           messages.value.push(result as {role: string, content: string});
           currentRole.value = (result as {role: string}).role === "interviewer" ? "": "interviewer";
         }
-        if (nodeId === "translate") {
-          if (state === "queued") {
-            resetStreamData("translate");
-          }
-          if (state === "executing") {
-            isStreaming.value = true;
-          }
-        }
-      };
+      });
+      graphai.registerCallback(streamPlugin(["translate"]));
+
       await graphai.run();
     };
 
