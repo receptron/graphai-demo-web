@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { TransactionLog } from "graphai";
 import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
 
@@ -32,9 +32,9 @@ export const useLogs = () => {
 export const textInputEvent = () => {
   const userInput = ref("");
 
-  const events = ref<Record<string, EventData>>({});
+  const eventsObj = ref<Record<string, EventData>>({});
   const { eventAgent } = eventAgentGenerator((id, data) => {
-    events.value[id] = data;
+    eventsObj.value[id] = data;
   });
   const submitText = (event: EventData) => {
     const data = {
@@ -43,10 +43,13 @@ export const textInputEvent = () => {
     };
     event.onEnd(data);
     /* eslint-disable @typescript-eslint/no-dynamic-delete */
-    delete events.value[event.id];
+    delete eventsObj.value[event.id];
     userInput.value = "";
   };
-
+  const events = computed(() => {
+    return Object.values(eventsObj.value);
+  });
+  
   return {
     eventAgent,
     userInput,

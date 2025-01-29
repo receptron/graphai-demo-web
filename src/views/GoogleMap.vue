@@ -21,8 +21,8 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
-          <div v-if="Object.values(events).length > 0">
-            <div v-for="(event, k) in Object.values(events)" :key="k">
+          <div v-if="events.length > 0">
+            <div v-for="(event, k) in events" :key="k">
               <div v-if="event.type === 'text'" class="flex">
                 <input v-model="userInput" class="border-2 p-2 rounded-md m-4 flex-1" :placeholder="event.nodeId" />
                 <button
