@@ -43,18 +43,9 @@
         </div>
       </div>
 
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto font-mono">
-        <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
-      <div>Logs</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
-      </div>
+      <GraphData :selected-graph="selectedGraph" />
+      <Result :graphai-response="graphaiResponse" />
+      <Logs :logs="logs" />
     </div>
   </div>
 </template>
@@ -70,9 +61,17 @@ import { getGraphData, code, seedIdeas, prompt } from "../utils/sakana/graph";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
+import GraphData from "../components/GraphData.vue";
+import Result from "../components/Result.vue";
+import Logs from "../components/Logs.vue";
+
 export default defineComponent({
   name: "HomePage",
-  components: {},
+  components: {
+    GraphData,
+    Result,
+    Logs,
+  },
   setup() {
     const graphData = getGraphData(10, 5);
 
@@ -102,21 +101,22 @@ export default defineComponent({
       graphai.injectValue("code", code);
 
       graphai.registerCallback(updateCytoscape);
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
+      graphai.registerCallback((log) => {
+        const { nodeId, state, inputs, result, errorMessage } = log;
         if (transitions.value[nodeId]) {
           transitions.value[nodeId].state = state;
         } else {
           transitions.value[nodeId] = { state, log: [] };
         }
         transitions.value[nodeId].log.push({ inputs, result, state, errorMessage, updated: Date.now() });
-
         logs.value.push({ inputs, result });
-        // console.log(nodeId, state, result);
+      });
+      graphai.registerCallback((log) => {
+        const { nodeId, state, result } = log;
         if (state === "completed" && result && nodeId === "task2") {
-          // console.log(result.message.content);
           output.value = (result as { message: { content: string } }).message.content;
         }
-      };
+      });
       const results = await graphai.run();
       graphaiResponse.value = results;
     };
