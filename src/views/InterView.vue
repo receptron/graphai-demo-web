@@ -48,6 +48,7 @@ import { graph_data } from "@/graph/interview";
 import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
+import { useChatPlugin } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
@@ -82,7 +83,7 @@ export default defineComponent({
     ];
     // end of streaming
 
-    const messages = ref<{ role: string; content: string }[]>([]);
+    const { messages, chatMessagePlugin } = useChatPlugin();
     const run = async () => {
       const graphai = new GraphAI(
         selectedGraph.value,
@@ -103,10 +104,10 @@ export default defineComponent({
       );
       graphai.injectValue("name", userInput.value);
       graphai.registerCallback(updateCytoscape);
-      graphai.registerCallback(({ nodeId, state, result }) => {
-        if (state === "completed" && result && nodeId === "output") {
-          messages.value.push(result as { role: string; content: string });
-          currentRole.value = (result as { role: string }).role === "interviewer" ? "" : "interviewer";
+      graphai.registerCallback(chatMessagePlugin(["output"]));
+      graphai.registerCallback(({ nodeId, result }) => {
+        if (nodeId === "context" && result) {
+          currentRole.value = (result as { person1: { name: string } }).person1.name;
         }
       });
       graphai.registerCallback(streamPlugin(["translate"]));
