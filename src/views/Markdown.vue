@@ -166,8 +166,8 @@ export default defineComponent({
           },
         },
       );
+      graphai.registerCallback(updateCytoscape);
       graphai.onLogCallback = ({ nodeId, state, result }) => {
-        updateCytoscape(nodeId, state);
         if (state === "completed" && result) {
           if (nodeId === "llm") {
             isStreaming.value = false;

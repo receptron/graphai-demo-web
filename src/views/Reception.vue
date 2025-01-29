@@ -165,6 +165,7 @@ export default defineComponent({
           },
         },
       );
+      graphai.registerCallback(updateCytoscape);
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
           transitions.value[transitions.value.length - 1] += " → " + state;
@@ -172,7 +173,6 @@ export default defineComponent({
           transitions.value.push(nodeId + ": " + state);
         }
         logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        updateCytoscape(nodeId, state);
         console.log(nodeId, state, result);
         if (state === "completed" && result) {
           if (nodeId === "llm_tools") {

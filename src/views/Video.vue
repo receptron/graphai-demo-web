@@ -147,9 +147,9 @@ export default defineComponent({
         },
       );
       graphai.injectValue("tools", videoAgent.tools);
+      graphai.registerCallback(updateCytoscape);
       /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, result }) => {
-        updateCytoscape(nodeId, state);
 
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {

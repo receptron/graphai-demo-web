@@ -176,6 +176,7 @@ export default defineComponent({
         },
       );
       graphai.injectValue("tools", googleMapAgent.tools);
+      graphai.registerCallback(updateCytoscape);
       /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
@@ -184,7 +185,6 @@ export default defineComponent({
           transitions.value.push(nodeId + ": " + state);
         }
         logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {

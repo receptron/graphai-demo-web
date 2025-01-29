@@ -101,8 +101,7 @@ export default defineComponent({
       graphai.injectValue("taskDescription", prompt.task_description);
       graphai.injectValue("code", code);
 
-      // console.log({ code, ideaStrArchive, prompt });
-
+      graphai.registerCallback(updateCytoscape);
       graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
         if (transitions.value[nodeId]) {
           transitions.value[nodeId].state = state;
@@ -112,7 +111,6 @@ export default defineComponent({
         transitions.value[nodeId].log.push({ inputs, result, state, errorMessage, updated: Date.now() });
 
         logs.value.push({ inputs, result });
-        updateCytoscape(nodeId, state);
         // console.log(nodeId, state, result);
         if (state === "completed" && result && nodeId === "task2") {
           // console.log(result.message.content);

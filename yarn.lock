@@ -1357,10 +1357,10 @@
   resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.4.tgz#119690810d78fa6c31c598de0669c7eae91b267a"
   integrity sha512-TnKEB73ztifGDFt+LihTL2m11E2tyaclW0nCph0rulJLFla9Kw8FoINLPuB4JYoK6IrUDIUuSlt55Dj7+SENIA==
 
-"@receptron/graphai_vue_cytoscape@^0.0.17":
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@receptron/graphai_vue_cytoscape/-/graphai_vue_cytoscape-0.0.17.tgz#8f269bd7c4c4fd7706ea92fbe1a961999bb71293"
-  integrity sha512-qvbvqXujQvhL0RjRL3e7tUrhIhwX/Wso9lnXEQULsdgR+x3+pPPNX6pLIni1ctj5fya4bXrKLgo44d7opa2BAQ==
+"@receptron/graphai_vue_cytoscape@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@receptron/graphai_vue_cytoscape/-/graphai_vue_cytoscape-0.2.0.tgz#896a996ca0b9a1ac963dc781527e850190b1855b"
+  integrity sha512-KFHkPGXEKRzNlbJn5WDCbOR1gVRy00dpCjJ5pBl5cvIqzhQLJzGrIrTgUO5Us7h2Y/BbQW+pGzhRz+xan43tHw==
   dependencies:
     cytoscape "^3.30.4"
     cytoscape-klay "^3.1.4"

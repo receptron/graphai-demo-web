@@ -102,9 +102,7 @@ export default defineComponent({
         },
       );
       graphai.injectValue("name", userInput.value);
-      graphai.registerCallback(({ nodeId, state }) => {
-        updateCytoscape(nodeId, state);
-      });
+      graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(({ nodeId, state, result }) => {
         if (state === "completed" && result && nodeId === "output") {
           messages.value.push(result as {role: string, content: string});

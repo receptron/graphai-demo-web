@@ -148,11 +148,8 @@ export default defineComponent({
         },
         { agentFilters },
       );
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        updateCytoscape(nodeId, state);
-        console.log(nodeId, state);
-      };
+      graphai.registerCallback(updateCytoscape);
+      graphai.registerCallback((log) => {logs.value.push(log)});
       const results = await graphai.run();
       graphaiResponse.value = results;
     };
