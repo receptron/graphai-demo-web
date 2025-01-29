@@ -10,7 +10,8 @@
             <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
             <div class="ml-20" v-else>🤖{{ m.content }}</div>
           </div>
-          <div class="ml-20" v-if="isStreaming">🤖{{ streamData["llm"] }}</div>
+          <div class="ml-20" v-if="isStreaming['llm']">🤖{{ streamData["llm"] }}</div>
+          <div class="ml-20" v-if="isStreaming['toolsResponseLLM']">🤖{{ streamData["toolsResponseLLM"] }}</div>
         </div>
       </div>
       <div class="mt-2 hidden">
@@ -141,7 +142,7 @@ export default defineComponent({
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
     // streaming
-    const { streamData, streamAgentFilter, resetStreamData } = useStreamData();
+    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
     const agentFilters = [
       {
         name: "streamAgentFilter",
@@ -151,7 +152,6 @@ export default defineComponent({
     // end of streaming
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
-    const isStreaming = ref(false);
 
     const run = async () => {
       const graphai = new GraphAI(
@@ -178,11 +178,12 @@ export default defineComponent({
       graphai.injectValue("tools", googleMapAgent.tools);
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(updateLog);
+      graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
       /* eslint sonarjs/cognitive-complexity: 0 */
-      graphai.onLogCallback = ({ nodeId, state, result }) => {
+      graphai.registerCallback((log) => {
+        const { nodeId, state, result } = log;
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
-            isStreaming.value = false;
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
               messages.value.push({ role: "assistant", content: "[call api]" + calls });
@@ -195,15 +196,7 @@ export default defineComponent({
             messages.value.push((result as { message: { role: string; content: string } }).message);
           }
         }
-        if (nodeId === "llm") {
-          if (state === "queued") {
-            resetStreamData("llm");
-          }
-          if (state === "executing") {
-            isStreaming.value = true;
-          }
-        }
-      };
+      });
       const results = await graphai.run();
       graphaiResponse.value = results;
     };
