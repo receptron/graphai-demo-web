@@ -1159,10 +1159,10 @@
     "@graphai/llm_utils" "^0.0.2"
     openai "^4.80.1"
 
-"@graphai/tools_agent@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.2.tgz#875e0eb69e9bcf72fec489484b29bb5fbf640b41"
-  integrity sha512-TKFhP+ZUIPAoIbTe890vElEGHXXT3n918Fd5G1qku4FLWBVjfTqZ4Vbu+5hxET63SJnadIrpf8PnGhFGfJtkxg==
+"@graphai/tools_agent@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.3.tgz#be708a18550130cd0a1700a8ef1bd3adc5c15b07"
+  integrity sha512-Jh+ONf7uySw+1lpUwkb0gypDIyu3veLelpCi2tWm2ndIp/NgDDCbFokkNsXzhbYv8mFlYkgFcITkmHi2DiXQkg==
 
 "@graphai/vanilla@^0.2.14":
   version "0.2.14"

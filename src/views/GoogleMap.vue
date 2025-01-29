@@ -78,8 +78,7 @@ import { toolsAgent } from "@graphai/tools_agent";
 import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
-import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
-import { useLogs } from "./logs";
+import { useLogs, textInputEvent } from "./utils";
 
 type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
 type MessageResult = { message: { content: string } };
@@ -115,26 +114,9 @@ export default defineComponent({
       return graphData;
     });
 
-    // input
-    const userInput = ref("");
+    const { eventAgent, userInput, events, submitText } = textInputEvent();
 
-    const events = ref<Record<string, EventData>>({});
-    const { eventAgent } = eventAgentGenerator((id, data) => {
-      events.value[id] = data;
-    });
-    const submitText = (event: EventData) => {
-      const data = {
-        text: userInput.value,
-        message: { role: "user", content: userInput.value },
-      };
-      event.onEnd(data);
-      /* eslint-disable @typescript-eslint/no-dynamic-delete */
-      delete events.value[event.id];
-      userInput.value = "";
-    };
-    // end of input
     const { logs, transitions, updateLog, resetLog } = useLogs();
-
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
     // streaming
@@ -192,7 +174,7 @@ export default defineComponent({
       graphai.registerCallback(updateLog);
       graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
       graphai.registerCallback(setMessages);
-      
+
       await graphai.run();
     };
     const logClear = () => {

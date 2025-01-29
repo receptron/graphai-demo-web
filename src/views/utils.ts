@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { TransactionLog } from "graphai";
+import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
 
 export const useLogs = () => {
   const logs = ref<unknown[]>([]);
@@ -25,5 +26,31 @@ export const useLogs = () => {
     transitions,
     updateLog,
     resetLog,
+  };
+};
+
+export const textInputEvent = () => {
+  const userInput = ref("");
+
+  const events = ref<Record<string, EventData>>({});
+  const { eventAgent } = eventAgentGenerator((id, data) => {
+    events.value[id] = data;
+  });
+  const submitText = (event: EventData) => {
+    const data = {
+      text: userInput.value,
+      message: { role: "user", content: userInput.value },
+    };
+    event.onEnd(data);
+    /* eslint-disable @typescript-eslint/no-dynamic-delete */
+    delete events.value[event.id];
+    userInput.value = "";
+  };
+
+  return {
+    eventAgent,
+    userInput,
+    events,
+    submitText,
   };
 };
