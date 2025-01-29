@@ -7,13 +7,7 @@
         </div>
       </div>
       <div class="mt-2">
-        <div class="w-10/12 m-auto text-left">
-          <div v-for="(m, k) in messages" :key="k">
-            <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
-            <div class="ml-20" v-else>🤖{{ m.content }}</div>
-          </div>
-          <div class="ml-20" v-if="isStreaming['llm']">🤖{{ streamData["llm"] }}</div>
-        </div>
+        <chat :messages="messages" :is-streaming="isStreaming" :stream-data="streamData" :stream-node-ids="streamNodes" />
       </div>
       <div class="mt-2 hidden">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
@@ -72,9 +66,13 @@ import { textInputEvent, useChatPlugin, useLogs } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
+import Chat from "../components/Chat.vue";
+
 export default defineComponent({
   name: "HomePage",
-  components: {},
+  components: {
+    Chat
+  },
   setup() {
     const selectedGraph = computed(() => {
       return graphChat;
@@ -138,6 +136,7 @@ export default defineComponent({
       userInput,
       messages,
       events,
+      streamNodes,
     };
   },
 });
