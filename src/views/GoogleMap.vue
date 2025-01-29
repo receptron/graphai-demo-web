@@ -56,10 +56,6 @@
       <div class="w-10/12 m-auto font-mono">
         <textarea class="border-2 p-2 rounded-md w-full" rows="20">{{ selectedGraph }}</textarea>
       </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
       <div>Logs</div>
       <div class="w-10/12 m-auto">
         <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
@@ -71,7 +67,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 
-import { GraphAI } from "graphai";
+import { GraphAI, TransactionLog } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { getToolsChatGraph } from "@/graph/tools";
@@ -149,9 +145,25 @@ export default defineComponent({
         agent: streamAgentFilter,
       },
     ];
-    // end of streaming
+
     const messages = ref<{ role: string; content: string }[]>([]);
-    const graphaiResponse = ref({});
+    const setMessages = (log: TransactionLog) => {
+      const { nodeId, state, result } = log;
+      if (state === "completed" && result) {
+        if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
+          if (hasToolCalls(result)) {
+            const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
+            messages.value.push({ role: "assistant", content: "[call api]" + calls });
+          }
+          if (hasMessage(result) && result.message.content) {
+            messages.value.push((result as { message: { role: string; content: string } }).message);
+          }
+        }
+        if (nodeId === "userInput") {
+          messages.value.push((result as { message: { role: string; content: string } }).message);
+        }
+      }
+    };
 
     const run = async () => {
       const graphai = new GraphAI(
@@ -179,26 +191,9 @@ export default defineComponent({
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(updateLog);
       graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
-      /* eslint sonarjs/cognitive-complexity: 0 */
-      graphai.registerCallback((log) => {
-        const { nodeId, state, result } = log;
-        if (state === "completed" && result) {
-          if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
-            if (hasToolCalls(result)) {
-              const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
-              messages.value.push({ role: "assistant", content: "[call api]" + calls });
-            }
-            if (hasMessage(result) && result.message.content) {
-              messages.value.push((result as { message: { role: string; content: string } }).message);
-            }
-          }
-          if (nodeId === "userInput") {
-            messages.value.push((result as { message: { role: string; content: string } }).message);
-          }
-        }
-      });
-      const results = await graphai.run();
-      graphaiResponse.value = results;
+      graphai.registerCallback(setMessages);
+      
+      await graphai.run();
     };
     const logClear = () => {
       resetLog();
@@ -210,7 +205,7 @@ export default defineComponent({
       logs,
       transitions,
       logClear,
-      graphaiResponse,
+
       cytoscapeRef,
       selectedGraph,
       streamData,
