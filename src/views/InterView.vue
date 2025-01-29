@@ -105,8 +105,8 @@ export default defineComponent({
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(({ nodeId, state, result }) => {
         if (state === "completed" && result && nodeId === "output") {
-          messages.value.push(result as {role: string, content: string});
-          currentRole.value = (result as {role: string}).role === "interviewer" ? "": "interviewer";
+          messages.value.push(result as { role: string; content: string });
+          currentRole.value = (result as { role: string }).role === "interviewer" ? "" : "interviewer";
         }
       });
       graphai.registerCallback(streamPlugin(["translate"]));

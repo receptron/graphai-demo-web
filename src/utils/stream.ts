@@ -35,7 +35,7 @@ export const useStreamData = () => {
           isStreaming.value[nodeId] = true;
         }
       }
-    }
+    };
   };
 
   return {
@@ -46,7 +46,6 @@ export const useStreamData = () => {
     isStreaming,
   };
 };
-
 
 // stream2
 

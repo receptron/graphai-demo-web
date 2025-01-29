@@ -83,7 +83,7 @@ export const graph_data = {
           reducer: {
             // Append the responce to the messages.
             agent: "pushAgent",
-            inputs: { array: ":messages", item: { content: ":llm.message.content", role: ":llm.message.role" }},
+            inputs: { array: ":messages", item: { content: ":llm.message.content", role: ":llm.message.role" } },
           },
           swappedContext: {
             // Swaps the context

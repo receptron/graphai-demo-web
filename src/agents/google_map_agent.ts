@@ -41,9 +41,9 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
     const { Place } = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary;
 
     const request = {
-      textQuery: (arg as {textQuery: string}).textQuery,
+      textQuery: (arg as { textQuery: string }).textQuery,
       fields: ["displayName", "location", "businessStatus", "formattedAddress"],
-      includedType: (arg as {includedType: string}).includedType,
+      includedType: (arg as { includedType: string }).includedType,
       locationBias: center,
       isOpenNow: true,
       language: "ja-JP",
@@ -85,9 +85,9 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
     const { Place } = (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary;
 
     const request = {
-      textQuery: (arg as {textQuery: string}).textQuery,
+      textQuery: (arg as { textQuery: string }).textQuery,
       fields: ["displayName", "location", "businessStatus", "formattedAddress"],
-      includedType: (arg as {includedType: string}).includedType,
+      includedType: (arg as { includedType: string }).includedType,
       locationBias: center,
       isOpenNow: true,
       language: "ja-JP",
@@ -205,7 +205,7 @@ const mapTypes = [
   "university",
   "veterinary_care",
   "zoo",
-]
+];
 
 const googleMapAgentInfo = {
   name: "googleMapAgent",

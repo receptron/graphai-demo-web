@@ -82,6 +82,7 @@ import { useStreamData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";
+import { useLogs } from "./logs";
 
 type ToolResult = { tool_calls: { id: string; name: string; arguments: unknown }[] };
 type MessageResult = { message: { content: string } };
@@ -135,6 +136,7 @@ export default defineComponent({
       userInput.value = "";
     };
     // end of input
+    const { logs, transitions, updateLog, resetLog } = useLogs();
 
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
 
@@ -149,8 +151,6 @@ export default defineComponent({
     // end of streaming
     const messages = ref<{ role: string; content: string }[]>([]);
     const graphaiResponse = ref({});
-    const logs = ref<unknown[]>([]);
-    const transitions = ref<unknown[]>([]);
     const isStreaming = ref(false);
 
     const run = async () => {
@@ -177,15 +177,9 @@ export default defineComponent({
       );
       graphai.injectValue("tools", googleMapAgent.tools);
       graphai.registerCallback(updateCytoscape);
+      graphai.registerCallback(updateLog);
       /* eslint sonarjs/cognitive-complexity: 0 */
-      graphai.onLogCallback = ({ nodeId, state, inputs, result, errorMessage }) => {
-        if (logs.value.length > 0 && (logs.value[logs.value.length - 1] as { nodeId: string }).nodeId === nodeId) {
-          transitions.value[transitions.value.length - 1] += " → " + state;
-        } else {
-          transitions.value.push(nodeId + ": " + state);
-        }
-        logs.value.push({ nodeId, state, inputs, result, errorMessage });
-        // console.log(nodeId, state, result);
+      graphai.onLogCallback = ({ nodeId, state, result }) => {
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
             isStreaming.value = false;
@@ -214,9 +208,7 @@ export default defineComponent({
       graphaiResponse.value = results;
     };
     const logClear = () => {
-      logs.value = [];
-      transitions.value = [];
-
+      resetLog();
       resetCytoscape();
     };
 

@@ -150,7 +150,6 @@ export default defineComponent({
       graphai.registerCallback(updateCytoscape);
       /* eslint sonarjs/cognitive-complexity: 0 */
       graphai.onLogCallback = ({ nodeId, state, result }) => {
-
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
             isStreaming.value = false;

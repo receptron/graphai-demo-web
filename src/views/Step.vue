@@ -149,7 +149,9 @@ export default defineComponent({
         { agentFilters },
       );
       graphai.registerCallback(updateCytoscape);
-      graphai.registerCallback((log) => {logs.value.push(log)});
+      graphai.registerCallback((log) => {
+        logs.value.push(log);
+      });
       const results = await graphai.run();
       graphaiResponse.value = results;
     };
