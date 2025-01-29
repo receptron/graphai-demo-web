@@ -76,8 +76,10 @@ export const graph_data = {
             // Displays the response to the user.
             agent: "copyAgent",
             inputs: {
-              content: ":translate.text",
-              role: ":context.person1.name",
+              message: {
+                content: ":translate.text",
+                role: ":context.person1.name",
+              },
             },
           },
           reducer: {
