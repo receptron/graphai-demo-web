@@ -119,7 +119,8 @@ export default defineComponent({
       graphai.injectValue("tools", videoAgent.tools);
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
-      graphai.onLogCallback = ({ nodeId, state, result }) => {
+      graphai.registerCallback((log) => {
+        const { nodeId, state, result } = log;
         if (state === "completed" && result) {
           if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
             if (hasToolCalls(result)) {
@@ -134,7 +135,7 @@ export default defineComponent({
             messages.value.push((result as { message: { role: string; content: string } }).message);
           }
         }
-      };
+      });
       await graphai.run();
     };
     onMounted(() => {
