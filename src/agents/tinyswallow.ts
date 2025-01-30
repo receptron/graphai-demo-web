@@ -78,9 +78,8 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     role: "assistant" as const,
     content: text,
   };
-  console.log(message);
   messagesCopy.push(message);
-  console.log(messagesCopy);
+
   return {
     message,
     messages: messagesCopy,
