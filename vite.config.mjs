@@ -4,6 +4,9 @@ import path from "path";
 import checker from "vite-plugin-checker";
 
 export default defineConfig({
+  build: {
+      commonjsOptions: { transformMixedEsModules: true },
+  },
   plugins: [
     vue(),
     checker({
