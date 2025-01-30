@@ -33,6 +33,7 @@
             </button>
           </div>
         </div>
+        {{ loading }}
       </div>
     </div>
   </div>
@@ -45,7 +46,7 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { graph_data } from "@/graph/interview2";
-import tinyswallowAgent from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, CallbackReport } from "../agents/tinyswallow";
 
 import { useStreamData } from "@/utils/stream";
 import { useChatPlugin } from "../utils/graphai";
@@ -112,6 +113,12 @@ export default defineComponent({
       await graphai.run();
     };
 
+    const loading = ref("");
+    modelLoad((report: CallbackReport) => {
+      loading.value = report.text;
+      console.log(report.text);
+    });
+
     return {
       run,
 
@@ -125,6 +132,8 @@ export default defineComponent({
       messages,
       currentRole,
       isSubmit,
+
+      loading,
     };
   },
 });
