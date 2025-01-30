@@ -48,8 +48,8 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
   }
 
   const updateEngineInitProgressCallback: webllm.InitProgressCallback = (report: webllm.InitProgressReport) => {
-    console.log("initialize", report.progress);
-    console.log(report.text);
+    // console.log("initialize", report.progress);
+    // console.log(report.text);
     callback(report);
   };
   if (engine === null) {

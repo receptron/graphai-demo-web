@@ -28,6 +28,7 @@
             </button>
           </div>
         </div>
+        {{ loading }}
       </div>
       <Transitions :transitions="transitions" />
       <Stream :stream-data="streamData" />
@@ -38,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
@@ -113,8 +114,10 @@ export default defineComponent({
 
     run();
 
+    const loading = ref("");
     modelLoad((report: CallbackReport) => {
-      console.log(report);
+      loading.value = report.text;
+      console.log(report.text);
     });
 
     return {
@@ -132,6 +135,8 @@ export default defineComponent({
       messages,
       events,
       streamNodes,
+
+      loading,
     };
   },
 });
