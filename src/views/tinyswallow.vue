@@ -42,7 +42,7 @@ import { defineComponent, computed } from "vue";
 
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import tinyswallowAgent from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, CallbackReport } from "../agents/tinyswallow";
 
 import { graphChat } from "@/graph/chat_tinyswallow";
 
@@ -112,6 +112,10 @@ export default defineComponent({
     };
 
     run();
+
+    modelLoad((report: CallbackReport) => {
+      console.log(report);
+    });
 
     return {
       run,
