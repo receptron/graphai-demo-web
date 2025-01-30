@@ -12,6 +12,7 @@ const lang = {
     random: "BigNode",
     reception: "Reception",
     sakana: "Sakana",
+    tinyswallow: "tinyswallow",
     map: "GoogleMap",
     video: "Video",
     markdown: "Markdown",
