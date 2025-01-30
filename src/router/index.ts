@@ -15,6 +15,7 @@ import GoogleMap from "@/views/GoogleMap.vue";
 import Markdown from "@/views/Markdown.vue";
 import Video from "@/views/Video.vue";
 import InterView from "@/views/InterView.vue";
+import llm from "@/views/tinyswallow.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -64,6 +65,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "interview",
     component: InterView,
+  },
+  {
+    path: "llm",
+    component: llm,
   },
 ];
 
