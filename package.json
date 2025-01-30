@@ -13,6 +13,7 @@
     "@graphai/openai_agent": "^0.2.4",
     "@graphai/tools_agent": "^0.2.3",
     "@graphai/vanilla": "^0.2.14",
+    "@mlc-ai/web-llm": "^0.2.78",
     "@receptron/event_agent_generator": "^0.0.4",
     "@receptron/graphai_vue_cytoscape": "^0.2.0",
     "@vueuse/head": "^2.0.0",
