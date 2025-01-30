@@ -41,7 +41,6 @@ export const getGraphData = (maxNumGenerations: number, numReflections: number) 
           prompt: ":ideaPrompt",
           system: ":ideaSystemPrompt",
           forWeb: true,
-          apiKey: import.meta.env.VITE_OPEN_API_KEY,
         },
       },
       jsonParse: {
@@ -88,7 +87,6 @@ export const getGraphData = (maxNumGenerations: number, numReflections: number) 
                 system: ":ideaSystemPrompt",
                 model: "gpt-4o-mini",
                 forWeb: true,
-                apiKey: import.meta.env.VITE_OPEN_API_KEY,
               },
               inputs: {
                 messages: ":history",

@@ -45,7 +45,6 @@ import * as agents from "@graphai/vanilla";
 import tinyswallowAgent from "../agents/tinyswallow";
 
 import { graphChat } from "@/graph/chat_tinyswallow";
-import { openAIAgent } from "@graphai/openai_agent";
 
 import { useStreamData } from "@/utils/stream";
 import { textInputEvent, useChatPlugin, useLogs } from "../utils/graphai";
@@ -76,32 +75,6 @@ export default defineComponent({
     const streamNodes = ["llm"];
     const outputNodes = ["llm", "userInput"];
 
-    /*
-    (async () => {
-      const { engine } = await useEngine();
-      
-      const messages = [
-        {
-          content: "こんにちは",
-          role: "user" as const,
-        } 
-      ] ;
-      
-      const completion = await engine.chat.completions.create({
-        stream: true,
-        messages,
-        stream_options: { include_usage: true },
-        temperature: 0.7,
-        top_p: 0.95,
-        logit_bias: {"14444": -100},
-        // repetition_penalty: 1.2,
-        frequency_penalty: 0.5,
-      });
-      for await (const chunk of completion) {
-        console.log(chunk)
-      }
-      })()
-    */
     const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { messages, chatMessagePlugin } = useChatPlugin();
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
@@ -119,17 +92,12 @@ export default defineComponent({
         selectedGraph.value,
         {
           ...agents,
-          openAIAgent,
           eventAgent,
           tinyswallowAgent,
         },
         {
           agentFilters,
-          config: {
-            openAIAgent: {
-              apiKey: import.meta.env.VITE_OPEN_API_KEY,
-            },
-          },
+          config: {},
         },
       );
       graphai.registerCallback(updateCytoscape);
