@@ -22,6 +22,9 @@
 
       <div>
         <div class="w-10/12 m-auto my-4">
+          <div class="text-left font-bold">
+            誰のインタビューをする?
+          </div>
           <div class="flex">
             <input v-model="userInput" @keyup.enter="callSubmit" class="border-2 p-2 rounded-md flex-1" :disabled="isSubmit" />
             <button
@@ -30,12 +33,15 @@
               :disabled="!ready"
               @click="callSubmit"
             >
-              Submit
+              送信
             </button>
           </div>
         </div>
         <div v-if="!ready">
           モデル読込中
+        </div>
+        <div v-else>
+            準備完了
         </div>
         {{ loading }}
       </div>
