@@ -25,10 +25,7 @@
       </div>
 
       <div v-if="selectedGraphName === 'stream'">
-        <div>streamData</div>
-        <div class="w-10/12 m-auto">
-          <textarea class="border-2 p-2 w-full" rows="20">{{ streamData }}</textarea>
-        </div>
+        <Stream :stream-data="streamData" />
       </div>
       <div v-if="selectedGraphName === 'stream2'">
         <div>streamData</div>
@@ -37,25 +34,15 @@
         </div>
       </div>
 
-      <div class="mt-2">Graph Data</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ selectedGraph }}</textarea>
-      </div>
-      <div>Result</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ graphaiResponse }}</textarea>
-      </div>
-      <div>Log</div>
-      <div class="w-10/12 m-auto">
-        <textarea class="border-2 p-2 w-full" rows="20">{{ logs }}</textarea>
-      </div>
+      <GraphData :selected-graph="selectedGraph" />
+      <Result :graphai-response="graphaiResponse" />
+      <Logs :logs="logs" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
-
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
@@ -69,9 +56,19 @@ import { useStreamData, useGraphData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
+import Stream from "../components/Stream.vue";
+import GraphData from "../components/GraphData.vue";
+import Result from "../components/Result.vue";
+import Logs from "../components/Logs.vue";
+
 export default defineComponent({
   name: "HomePage",
-  components: {},
+  components: {
+    Stream,
+    GraphData,
+    Result,
+    Logs,
+  },
   setup() {
     const { graphdata_any, words } = useGraphData();
     const graph_random = generateGraph();
