@@ -26,12 +26,16 @@
             <input v-model="userInput" @keyup.enter="callSubmit" class="border-2 p-2 rounded-md flex-1" :disabled="isSubmit" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="isSubmit ? 'bg-sky-200' : 'bg-sky-500'"
+              :class="!ready || isSubmit ? 'bg-sky-200' : 'bg-sky-500'"
+              :disabled="!ready"
               @click="callSubmit"
             >
               Submit
             </button>
           </div>
+        </div>
+        <div v-if="!ready">
+          モデル読込中
         </div>
         {{ loading }}
       </div>
@@ -46,7 +50,7 @@ import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
 
 import { graph_data } from "@/graph/interview2";
-import tinyswallowAgent, { modelLoad, CallbackReport } from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, loadEngine, CallbackReport } from "../agents/tinyswallow";
 
 import { useStreamData } from "@/utils/stream";
 import { useChatPlugin } from "../utils/graphai";
@@ -61,6 +65,7 @@ export default defineComponent({
       return graph_data;
     });
 
+    loadEngine();
     // input
     const userInput = ref("トム・クルーズ");
     const isSubmit = ref(false);
@@ -114,7 +119,11 @@ export default defineComponent({
     };
 
     const loading = ref("");
+    const ready = ref(false);
     modelLoad((report: CallbackReport) => {
+      if (report.progress === 1) {
+        ready.value = true;
+      }
       loading.value = report.text;
       console.log(report.text);
     });
@@ -134,6 +143,7 @@ export default defineComponent({
       isSubmit,
 
       loading,
+      ready,
     };
   },
 });
