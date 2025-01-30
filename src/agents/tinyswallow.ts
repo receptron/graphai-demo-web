@@ -16,6 +16,14 @@ const appConfig = {
 };
 
 let engine: null | webllm.MLCEngine = null;
+
+let callback = (__report: webllm.InitProgressReport) => {
+  console.log("not implement callback");
+};
+export type CallbackReport = webllm.InitProgressReport;
+export const modelLoad  = (_callback: (report: webllm.InitProgressReport) => void) => {
+  callback = _callback;
+};
 export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, namedInputs, config }) => {
   const { system, prompt, messages } = {
     ...params,
@@ -39,9 +47,10 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     });
   }
 
-  const updateEngineInitProgressCallback: webllm.InitProgressCallback = (report) => {
-    console.log("initialize", report.progress);
-    console.log(report.text);
+  const updateEngineInitProgressCallback: webllm.InitProgressCallback = (report: webllm.InitProgressReport) => {
+    // console.log("initialize", report.progress);
+    // console.log(report.text);
+    callback(report);
   };
   if (engine === null) {
     /* eslint new-cap: 0 */

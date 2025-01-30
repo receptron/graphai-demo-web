@@ -28,6 +28,7 @@
             </button>
           </div>
         </div>
+        {{ loading }}
       </div>
       <Transitions :transitions="transitions" />
       <Stream :stream-data="streamData" />
@@ -38,11 +39,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import tinyswallowAgent from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, CallbackReport } from "../agents/tinyswallow";
 
 import { graphChat } from "@/graph/chat_tinyswallow";
 
@@ -113,6 +114,12 @@ export default defineComponent({
 
     run();
 
+    const loading = ref("");
+    modelLoad((report: CallbackReport) => {
+      loading.value = report.text;
+      console.log(report.text);
+    });
+
     return {
       run,
       logs,
@@ -128,6 +135,8 @@ export default defineComponent({
       messages,
       events,
       streamNodes,
+
+      loading,
     };
   },
 });
