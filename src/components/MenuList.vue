@@ -7,7 +7,7 @@
     <MenuItem @click="handleClose" link="/chat" icon="man" title="menu.chat" />
     <MenuItem @click="handleClose" link="/reception" icon="man" title="menu.reception" />
     <MenuItem @click="handleClose" link="/sakana" icon="set_meal" title="menu.sakana" />
-    <MenuItem @click="handleClose" link="/tinyswallow" icon="set_meal" title="menu.tinyswallow" />
+    <MenuItem @click="handleClose" link="/llm" icon="set_meal" title="menu.tinyswallow" />
     <MenuItem @click="handleClose" link="/step" icon="man" title="menu.test" />
     <MenuItem @click="handleClose" link="/random" icon="man" title="menu.random" />
     <MenuItem @click="handleClose" link="/markdown" icon="man" title="menu.markdown" />
