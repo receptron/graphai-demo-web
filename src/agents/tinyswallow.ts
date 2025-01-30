@@ -9,14 +9,13 @@ const appConfig = {
       model: "https://huggingface.co/SakanaAI/TinySwallow-1.5B-Instruct-q4f32_1-MLC",
       model_id: "TinySwallow-1.5B",
       model_lib:
-      // https://github.com/mlc-ai/binary-mlc-llm-libs/tree/main/web-llm-models/v0_2_48
-          webllm.modelLibURLPrefix +
-          webllm.modelVersion +
-          "/Qwen2-1.5B-Instruct-q4f32_1-ctx4k_cs1k-webgpu.wasm",
+        // https://github.com/mlc-ai/binary-mlc-llm-libs/tree/main/web-llm-models/v0_2_48
+        webllm.modelLibURLPrefix + webllm.modelVersion + "/Qwen2-1.5B-Instruct-q4f32_1-ctx4k_cs1k-webgpu.wasm",
     },
   ],
 };
 
+let engine: null | webllm.MLCEngine = null;
 export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, namedInputs, config }) => {
   const { system, prompt, messages } = {
     ...params,
@@ -27,7 +26,7 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     ...(config || {}),
     ...params,
   };
-  
+
   const userPrompt = getMergeValue(namedInputs, params, "mergeablePrompts", prompt);
   const systemPrompt = getMergeValue(namedInputs, params, "mergeableSystem", system);
 
@@ -44,11 +43,14 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     console.log("initialize", report.progress);
     console.log(report.text);
   };
-  /* eslint new-cap: 0 */
-  const engine = await webllm.CreateMLCEngine("TinySwallow-1.5B", {
-    appConfig,
-    initProgressCallback: updateEngineInitProgressCallback,
-  });
+  if (engine === null) {
+    /* eslint new-cap: 0 */
+    /* eslint require-atomic-updates: 0 */
+    engine = await webllm.CreateMLCEngine("TinySwallow-1.5B", {
+      appConfig,
+      initProgressCallback: updateEngineInitProgressCallback,
+    });
+  }
 
   const completion = await engine.chat.completions.create({
     stream: true,
@@ -56,7 +58,7 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     stream_options: { include_usage: true },
     temperature: 0.7,
     top_p: 0.95,
-    logit_bias: {"14444": -100},
+    logit_bias: { "14444": -100 },
     // repetition_penalty: 1.2,
     frequency_penalty: 0.5,
   });
@@ -84,7 +86,6 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     messages: messagesCopy,
     text,
   };
-  
 };
 
 const tinyswallowAgentInfo: AgentFunctionInfo = {
@@ -95,8 +96,7 @@ const tinyswallowAgentInfo: AgentFunctionInfo = {
   output: {},
   params: {},
   outputFormat: {},
-  samples: [
-  ],
+  samples: [],
   description: "Tinyswallow Agent",
   category: ["llm"],
   author: "Receptron team",
