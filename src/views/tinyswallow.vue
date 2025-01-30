@@ -25,16 +25,18 @@
               :disabled="!ready"
               @click="submitText(events[0])"
             >
-              Submit
+              送信
             </button>
           </div>
         </div>
         <div v-if="!ready">
           モデル読込中
         </div>
-        {{ loading }}
+        <div v-else>
+            準備完了
+        </div>
         <div>
-
+          {{ loading }}
         </div>
       </div>
       <Transitions :transitions="transitions" />
