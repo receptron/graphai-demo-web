@@ -21,14 +21,21 @@
             <input v-model="userInput" class="border-2 p-2 rounded-md flex-1" :disabled="events.length == 0" />
             <button
               class="text-white font-bold items-center rounded-md px-4 py-2 ml-1 hover:bg-sky-700 flex-none"
-              :class="events.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
+              :class="!ready || events.length == 0 ? 'bg-sky-200' : 'bg-sky-500'"
+              :disabled="!ready"
               @click="submitText(events[0])"
             >
               Submit
             </button>
           </div>
         </div>
+        <div v-if="!ready">
+          モデル読込中
+        </div>
         {{ loading }}
+        <div>
+
+        </div>
       </div>
       <Transitions :transitions="transitions" />
       <Stream :stream-data="streamData" />
@@ -43,7 +50,7 @@ import { defineComponent, computed, ref } from "vue";
 
 import { GraphAI } from "graphai";
 import * as agents from "@graphai/vanilla";
-import tinyswallowAgent, { modelLoad, CallbackReport } from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, loadEngine, CallbackReport } from "../agents/tinyswallow";
 
 import { graphChat } from "@/graph/chat_tinyswallow";
 
@@ -76,6 +83,7 @@ export default defineComponent({
     const streamNodes = ["llm"];
     const outputNodes = ["llm", "userInput"];
 
+    loadEngine();
     const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { messages, chatMessagePlugin } = useChatPlugin();
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
@@ -115,7 +123,11 @@ export default defineComponent({
     run();
 
     const loading = ref("");
+    const ready = ref(false);
     modelLoad((report: CallbackReport) => {
+      if (report.progress === 1) {
+        ready.value = true;
+      }
       loading.value = report.text;
       console.log(report.text);
     });
@@ -137,6 +149,7 @@ export default defineComponent({
       streamNodes,
 
       loading,
+      ready,
     };
   },
 });

@@ -24,6 +24,24 @@ export type CallbackReport = webllm.InitProgressReport;
 export const modelLoad  = (_callback: (report: webllm.InitProgressReport) => void) => {
   callback = _callback;
 };
+
+export const updateEngineInitProgressCallback: webllm.InitProgressCallback = (report: webllm.InitProgressReport) => {
+  // console.log("initialize", report.progress);
+  // console.log(report.text);
+  callback(report);
+};
+export const loadEngine = async () => {
+  if (engine === null) {
+    /* eslint new-cap: 0 */
+    /* eslint require-atomic-updates: 0 */
+    engine = await webllm.CreateMLCEngine("TinySwallow-1.5B", {
+      appConfig,
+    initProgressCallback: updateEngineInitProgressCallback,
+    });
+  }
+  return engine;
+};
+
 export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, namedInputs, config }) => {
   const { system, prompt, messages } = {
     ...params,
@@ -47,20 +65,10 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
     });
   }
 
-  const updateEngineInitProgressCallback: webllm.InitProgressCallback = (report: webllm.InitProgressReport) => {
-    // console.log("initialize", report.progress);
-    // console.log(report.text);
-    callback(report);
-  };
   if (engine === null) {
-    /* eslint new-cap: 0 */
-    /* eslint require-atomic-updates: 0 */
-    engine = await webllm.CreateMLCEngine("TinySwallow-1.5B", {
-      appConfig,
-      initProgressCallback: updateEngineInitProgressCallback,
-    });
-  }
-
+    engine = await loadEngine();
+  };
+  
   const completion = await engine.chat.completions.create({
     stream: true,
     messages: messagesCopy,
