@@ -37,9 +37,20 @@
         <div>
           <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
         </div>
+        <div>
+          <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="load">Load</button>
+        </div>
+        <div class="text-left">
+          Inputs(JSON format):
+          <textarea class="border-2 w-full" :class="validInputs ? '' : 'border-4 border-red-700'" v-model="inputsText"></textarea>
+        </div>
+        <div class="text-left">
+          Params(JSON format):
+          <textarea class="border-2 w-full" :class="validParams ? '' : 'border-4 border-red-700'" v-model="paramsText"></textarea>
+        </div>
         <div class="text-left">
           Result:
-          <textarea class="border-2 w-full">{{ res }}</textarea>
+          <textarea class="border-2 w-full">{{ resultText }}</textarea>
         </div>
       </div>
     </div>
@@ -73,7 +84,10 @@ export default defineComponent({
     const selectedSample = computed(() => {
       return selectedAgent.value.samples[selectedSampleKey.value];
     });
-    const res = ref("");
+
+    const inputsText = ref("");
+    const paramsText = ref("");
+    const resultText = ref("");
 
     const messages = ref<{ role: string; content: string }[]>([]);
 
@@ -90,23 +104,57 @@ export default defineComponent({
       }
     };
 
-    const run = async () => {
-      console.log(selectedSample.value);
-      console.log(selectedAgent.value);
-      const agent = selectedAgent.value.agent;
+    const load = () => {
+      // const agent = selectedAgent.value.agent;
       const { inputs, params } = selectedSample.value;
+      // console.log(inputs, params);
 
-      const result = await agent({ ...defaultTestContext, namedInputs: inputs, params });
-      console.log(result);
-      res.value = JSON.stringify(result);
+      inputsText.value = JSON.stringify(inputs);
+      paramsText.value = JSON.stringify(params);
     };
+
+    const validInputs = computed(() => {
+      try {
+        console.log(inputsText);
+        JSON.parse(inputsText.value);
+        return true;
+      } catch (__error) {
+        return false;
+      }
+    });
+    const validParams = computed(() => {
+      try {
+        JSON.parse(paramsText.value);
+        return true;
+      } catch (__error) {
+        return false;
+      }
+    });
+
+    const run = async () => {
+      if (!validInputs.value || !validParams.value) {
+        return;
+      }
+
+      const agent = selectedAgent.value.agent;
+      const result = await agent({ ...defaultTestContext, namedInputs: JSON.parse(inputsText.value), params: JSON.parse(paramsText.value) });
+      resultText.value = JSON.stringify(result);
+    };
+
     return {
       selectedAgentKey,
       selectedAgent,
 
       selectedSampleKey,
-      res,
+      resultText,
+      inputsText,
+      paramsText,
+
+      validInputs,
+      validParams,
+
       run,
+      load,
 
       submit,
       userInput,

@@ -42,6 +42,7 @@ export default [
         {
           argsIgnorePattern: "^__",
           varsIgnorePattern: "^__",
+          caughtErrorsIgnorePattern: "^__",
         },
       ],
       "@typescript-eslint/no-explicit-any": "error",
@@ -89,6 +90,7 @@ export default [
       "sonarjs/no-nested-template-literals": "error",
       "sonarjs/no-one-iteration-loop": "error",
       "sonarjs/no-redundant-boolean": "error",
+      "sonarjs/no-ignored-exceptions": "off",
       "sonarjs/no-redundant-jump": "error",
       "sonarjs/no-same-line-conditional": "error",
       "sonarjs/no-small-switch": "error",
