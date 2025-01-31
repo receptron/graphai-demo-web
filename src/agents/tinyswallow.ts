@@ -21,7 +21,7 @@ let callback = (__report: webllm.InitProgressReport) => {
   console.log("not implement callback");
 };
 export type CallbackReport = webllm.InitProgressReport;
-export const modelLoad  = (_callback: (report: webllm.InitProgressReport) => void) => {
+export const modelLoad = (_callback: (report: webllm.InitProgressReport) => void) => {
   callback = _callback;
 };
 
@@ -36,7 +36,7 @@ export const loadEngine = async () => {
     /* eslint require-atomic-updates: 0 */
     engine = await webllm.CreateMLCEngine("TinySwallow-1.5B", {
       appConfig,
-    initProgressCallback: updateEngineInitProgressCallback,
+      initProgressCallback: updateEngineInitProgressCallback,
     });
   }
   return engine;
@@ -67,8 +67,8 @@ export const tinyswallowAgent: AgentFunction = async ({ filterParams, params, na
 
   if (engine === null) {
     engine = await loadEngine();
-  };
-  
+  }
+
   const completion = await engine.chat.completions.create({
     stream: true,
     messages: messagesCopy,

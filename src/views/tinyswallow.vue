@@ -29,12 +29,8 @@
             </button>
           </div>
         </div>
-        <div v-if="!ready">
-          モデル読込中
-        </div>
-        <div v-else>
-            準備完了
-        </div>
+        <div v-if="!ready">モデル読込中</div>
+        <div v-else>準備完了</div>
         <div>
           {{ loading }}
         </div>
