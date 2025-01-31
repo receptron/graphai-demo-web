@@ -4,12 +4,12 @@
       <div class="w-full flex-1">
         <div class="bg-blue-300">
           <div class="relative flex items-center">
-            <div @click="toggleMenu()" class="inline-flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center">
+            <div @click="toggleMenu()" class="inline-flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center">
               <span class="material-icons text-warmgray-900 text-opacity-60">menu</span>
             </div>
             <div class="w-full items-center">GraphAI Demo</div>
             <div v-show="menu" class="fixed top-0 left-0 z-30 flex h-screen w-screen">
-              <div class="bg-warmgray-100 flex w-64 flex-col bg-white shadow">
+              <div class="bg-warmgray-100 flex w-64 flex-col bg-white shadow-sm">
                 <MenuList @close-menu="toggleMenu()" />
               </div>
               <div @click="toggleMenu()" class="flex-1 cursor-pointer bg-black bg-opacity-40"></div>
