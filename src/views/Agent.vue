@@ -56,16 +56,9 @@
 </template>
 
 <script lang="ts">
+import { defaultTestContext } from "graphai";
 import { defineComponent, ref, computed } from "vue";
-
-import { GraphAI, AgentFunction, AgentFunctionInfo } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { agentInfoWrapper } from "graphai/lib/utils/utils";
-
-import { graphAgent } from "@/graph/agent";
-import { openAIAgent } from "@graphai/openai_agent";
-
-import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 
 export default defineComponent({
   name: "HomePage",
@@ -78,7 +71,7 @@ export default defineComponent({
 
     const selectedSampleKey = ref(0);
     const selectedSample = computed(() => {
-      return selectedAgent.value["samples"][selectedSampleKey.value];
+      return selectedAgent.value.samples[selectedSampleKey.value];
     });
     const res = ref("");
 
@@ -96,23 +89,6 @@ export default defineComponent({
         }
       }
     };
-    const textPromise = () => {
-      return new Promise((resolved) => {
-        const task = (message: string) => {
-          resolved(message);
-        };
-        inputPromise.value.push(task);
-      });
-    };
-
-    const textInputAgent: AgentFunction = async (__context) => {
-      const result = await textPromise();
-      // console.log(result);
-      return {
-        text: result as string,
-        message: { role: "user", content: result as string },
-      };
-    };
 
     const run = async () => {
       console.log(selectedSample.value);
@@ -120,7 +96,7 @@ export default defineComponent({
       const agent = selectedAgent.value.agent;
       const { inputs, params } = selectedSample.value;
 
-      const result = await agent({ namedInputs: inputs, params });
+      const result = await agent({ ...defaultTestContext, namedInputs: inputs, params });
       console.log(result);
       res.value = JSON.stringify(result);
     };
