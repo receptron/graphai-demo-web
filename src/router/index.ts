@@ -23,7 +23,6 @@ const routeChildren: Array<RouteRecordRaw> = [
     component: Random,
   },
   {
-  {
     path: "agent",
     component: Agent,
   },
