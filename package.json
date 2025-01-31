@@ -21,7 +21,7 @@
     "graphai": "^0.6.23",
     "markdown-it": "^14.1.0",
     "pinia": "^2.3.1",
-    "unplugin-vue-markdown": "^28.1.0",
+    "unplugin-vue-markdown": "^28.3.0",
     "vue": "^3.5.13",
     "vue-i18n": "^11.0.1",
     "vue-router": "^4.5.0",
