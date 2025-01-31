@@ -18,7 +18,7 @@
             <div class="flex items-center">
               <input
                 v-model="userInput"
-                class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                class="border border-gray-300 rounded-md flex-1 p-2 focus:outline-hidden focus:ring-2 focus:ring-sky-500"
                 :disabled="events.length === 0"
                 placeholder="Type your message here..."
               />
@@ -41,7 +41,7 @@
           <h2 class="text-lg font-bold mb-2">Markdown Editor</h2>
           <textarea
             v-model="markdown"
-            class="w-full resize-none overflow-hidden border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            class="w-full resize-none overflow-hidden border border-gray-300 rounded-md p-2 focus:outline-hidden focus:ring-2 focus:ring-sky-500"
             placeholder="Write your markdown here..."
             @input="adjustTextareaHeight()"
             ref="textareaRef"
@@ -216,6 +216,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+@reference "../index.css";
 /* Headings */
 ::v-deep(h1) {
   @apply text-3xl text-blue-500 font-bold;
