@@ -5,6 +5,7 @@ import NotFound from "@/components/NotFound.vue";
 
 import About from "@/views/About.vue";
 import Random from "@/views/Random.vue";
+import Agent from "@/views/Agent.vue";
 import InterView2 from "@/views/InterView2.vue";
 import llm from "@/views/tinyswallow.vue";
 
@@ -20,6 +21,11 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "random", // big node
     component: Random,
+  },
+  {
+  {
+    path: "agent",
+    component: Agent,
   },
   {
     path: "interview2",
