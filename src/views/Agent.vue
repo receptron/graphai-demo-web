@@ -52,6 +52,14 @@
           Result:
           <textarea class="border-2 w-full">{{ resultText }}</textarea>
         </div>
+        <div class="text-left">
+          Stream:
+          <textarea class="border-2 w-full">{{ streamText }}</textarea>
+        </div>
+        <div class="text-left">
+          Error:
+          {{ errorText }}
+        </div>
       </div>
     </div>
 
@@ -68,6 +76,8 @@
 
 <script lang="ts">
 import { defaultTestContext } from "graphai";
+import { TaskManager } from "graphai/lib/task_manager";
+
 import { defineComponent, ref, computed } from "vue";
 import * as agents from "@graphai/vanilla";
 
@@ -88,6 +98,8 @@ export default defineComponent({
     const inputsText = ref("");
     const paramsText = ref("");
     const resultText = ref("");
+    const streamText = ref("");
+    const errorText = ref("");
 
     const messages = ref<{ role: string; content: string }[]>([]);
 
@@ -105,9 +117,7 @@ export default defineComponent({
     };
 
     const load = () => {
-      // const agent = selectedAgent.value.agent;
       const { inputs, params } = selectedSample.value;
-      // console.log(inputs, params);
 
       inputsText.value = JSON.stringify(inputs);
       paramsText.value = JSON.stringify(params);
@@ -135,10 +145,36 @@ export default defineComponent({
       if (!validInputs.value || !validParams.value) {
         return;
       }
-
+      resultText.value = "";
+      streamText.value = "";
+      errorText.value = "";
+      
       const agent = selectedAgent.value.agent;
-      const result = await agent({ ...defaultTestContext, namedInputs: JSON.parse(inputsText.value), params: JSON.parse(paramsText.value) });
-      resultText.value = JSON.stringify(result);
+      try {
+        const taskManager = new TaskManager(8);
+        const graph = selectedSample.value.graph;
+
+        // const context: AgentFunctionContext = defaultTestContext;
+        const forNestedGraph = {
+          agents,
+          graphData: graph,
+          graphOptions: {
+            taskManager,
+          },
+        };
+        const filterParams = {
+          streamTokenCallback: (token: string) => {
+            streamText.value = streamText.value + token;
+            // console.log(token);
+          },
+        };
+        const result = await agent({ ...defaultTestContext, namedInputs: JSON.parse(inputsText.value), params: JSON.parse(paramsText.value), filterParams, forNestedGraph});
+        resultText.value = JSON.stringify(result);
+      } catch(error) {
+        if (error instanceof Error) {
+          errorText.value = error.message;
+        }
+      }
     };
 
     return {
@@ -148,8 +184,10 @@ export default defineComponent({
       selectedSampleKey,
       resultText,
       inputsText,
+      streamText,
       paramsText,
-
+      errorText,
+      
       validInputs,
       validParams,
 
