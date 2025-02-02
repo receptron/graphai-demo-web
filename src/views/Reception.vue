@@ -8,6 +8,7 @@
       </div>
       <div class="mt-2">
         <chat :messages="messages" />
+        <div class="ml-20" v-if="streaming !== ''">🤖{{ streaming }}</div>
       </div>
       <div class="mt-2 hidden">
         <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
@@ -38,6 +39,12 @@
       </button>
       <button class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700" @click="run">Run</button>
 
+      <div v-if="isServer">
+        server agent(run <a href="https://github.com/receptron/graphai-utils/blob/main/packages/express/test/express.ts" class="font-bold">this server</a>)
+      </div>
+      <div v-else>
+        browser agent
+      </div>
       <Transitions :transitions="transitions" />
       <GraphData :selected-graph="selectedGraph" />
       <Result :graphai-response="graphaiResponse" />
@@ -118,7 +125,9 @@ export default defineComponent({
       return next(context);
     };
 
+    const streaming = ref("");
     const callback = (context: AgentFunctionContext, data: string) => {
+      streaming.value = streaming.value + data;
       console.log(data);
     };
     const streamAgentFilter = streamAgentFilterGenerator(callback);
@@ -178,6 +187,7 @@ export default defineComponent({
       graphai.onLogCallback = ({ nodeId, state, result }) => {
         if (state === "completed" && result) {
           if (nodeId === "llm_tools") {
+            streaming.value = "";
             if ((result as { tool: { arguments: string } })?.tool?.arguments) {
               messages.value.push({ role: "bot", content: (result as { tool: { arguments: string } })?.tool.arguments });
             } else {
@@ -215,6 +225,7 @@ export default defineComponent({
       inputPromise,
 
       isServer,
+      streaming,
     };
   },
 });
