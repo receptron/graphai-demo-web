@@ -63,10 +63,12 @@ export const graphReception = {
     },
     llm_tools: {
       // Sends those messages to LLM to get a response.
+      isResult: true,
       agent: "openAIAgent",
       params: {
         model: "gpt-4o",
         forWeb: true,
+        stream: true,
         tools,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },

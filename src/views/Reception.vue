@@ -49,13 +49,13 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } from "graphai";
+import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, AgentFunctionContext, sleep } from "graphai";
 import * as agents from "@graphai/vanilla";
 import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphReception } from "@/graph/reception";
 import { openAIAgent } from "@graphai/openai_agent";
-import { httpAgentFilter } from "@graphai/agent_filters";
+import { streamAgentFilterGenerator, httpAgentFilter } from "@graphai/agent_filters";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { useLogs } from "../utils/graphai";
@@ -118,8 +118,18 @@ export default defineComponent({
       return next(context);
     };
 
+    const callback = (context: AgentFunctionContext, data: string) => {
+      console.log(data);
+    };
+    const streamAgentFilter = streamAgentFilterGenerator(callback);
+
+    
     const agentFilters = computed(() => {
       const ret: AgentFilterInfo[] = [
+        {
+          name: "streamAgentFilter",
+          agent: streamAgentFilter,
+        },
         {
           name: "demoAgentFilter",
           agent: demoAgentFilter,
@@ -131,7 +141,8 @@ export default defineComponent({
           agent: httpAgentFilter,
           filterParams: {
             server: {
-              baseUrl: "http://localhost:8085/agents",
+              // for graphai-express test server
+              baseUrl: "http://localhost:8085/api/agents",
             },
           },
           agentIds: ["openAIAgent"],
@@ -159,6 +170,7 @@ export default defineComponent({
               apiKey: import.meta.env.VITE_OPEN_API_KEY,
             },
           },
+          bypassAgentIds: ["openAIAgent"]
         },
       );
       graphai.registerCallback(updateCytoscape);
