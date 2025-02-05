@@ -65,12 +65,13 @@ export default defineComponent({
       });
     });
 
-
     const newEdgeData = ref<any | null>(null);
-    const mouseCurrentPosition = ref({x:0, y:0});
+    const mouseCurrentPosition = ref({ x: 0, y: 0 });
+    const targetNode = ref("");
     const newEdgeEvent = (data) => {
       const rect = svgRef.value.getBoundingClientRect();
       if (data.on === "start") {
+        targetNode.value = data.nodeId;
         const nodeData = {
           nodeId: data.nodeId,
           data: nodeRecors.value[data.nodeId],
@@ -97,23 +98,48 @@ export default defineComponent({
         }
       }
       if (data.on === "end") {
-        const addEdge = {...newEdgeData.value};
+        const addEdge = { ...newEdgeData.value };
+
         if (addEdge.target === "output") {
           addEdge.to = {
-            nodeId: "c",
+            nodeId: nearestNode.value.node.nodeId,
             index: 0,
-          }
+          };
         } else {
           addEdge.from = {
-            nodeId: "c",
+            nodeId: nearestNode.value.node.nodeId,
             index: 0,
-          }
+          };
         }
         newEdgeData.value = null;
-        edges.value.push(addEdge)
-        console.log(edges.value)
+        edges.value.push(addEdge);
+        console.log(edges.value);
       }
     };
+
+    const nearestNode = computed(() => {
+      if (!nodes.value.length) return null;
+
+      return nodes.value.reduce((closest, node) => {
+        if (targetNode.value === node.nodeId) {
+          return closest;
+        }
+
+        const nodeCenterX = node.position.x + node.position.width / 2;
+        const nodeCenterY = node.position.y + node.position.height / 2;
+        const mouseX = mouseCurrentPosition.value.x;
+        const mouseY = mouseCurrentPosition.value.y;
+
+        const distance = Math.sqrt(Math.pow(nodeCenterX - mouseX, 2) + Math.pow(nodeCenterY - mouseY, 2));
+
+        if (!closest || distance < closest.distance) {
+          return { node, distance };
+        }
+
+        return closest;
+      }, null);
+    });
+
     return {
       updatePosition,
       nodes,
@@ -123,6 +149,7 @@ export default defineComponent({
       newEdgeData,
       svgRef,
       mouseCurrentPosition,
+      nearestNode,
     };
   },
 });
@@ -135,6 +162,6 @@ export default defineComponent({
       <Edge v-if="newEdgeData" :fromData="newEdgeData.from" :toData="newEdgeData.to" />
     </svg>
     <Node v-for="(node, index) in nodes" :key="index" :nodeData="node" @updatePosition="(pos) => updatePosition(index, pos)" @newEdge="newEdgeEvent" />
-    aa{{ mouseCurrentPosition }}
+    aa{{ mouseCurrentPosition }} {{ nearestNode }}
   </div>
 </template>
