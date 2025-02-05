@@ -8,11 +8,11 @@ export default defineComponent({
   },
   emits: ["updatePosition"],
   setup(props, ctx) {
-    console.log(props);
     const isDragging = ref(false);
     const offset = ref({ x: 0, y: 0 });
 
     const onStart = (event) => {
+      console.log("AAA");
       isDragging.value = true;
       const clientX = event.touches ? event.touches[0].clientX : event.clientX;
       const clientY = event.touches ? event.touches[0].clientY : event.clientY;
@@ -67,7 +67,7 @@ export default defineComponent({
 
 <template>
   <div
-    class="w-24 h-24 bg-blue-400 text-white text-center leading-[6rem] cursor-grab select-none"
+    class="w-24 h-24 bg-blue-400 text-white text-center leading-[6rem] cursor-grab select-none absolute"
     :style="{
       transform: transform,
       cursor: isDragging ? 'grabbing' : 'grab',
@@ -78,7 +78,8 @@ export default defineComponent({
     <div class="relative w-full h-full flex items-center justify-between p-[2px]">
       <div class="flex flex-col gap-2">
         <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="w-4 h-4 bg-blue-500 rounded-full"
-             @click="(e) => {console.log(123); e.preventDefault();}"
+             @mousedown="(e) => { e.preventDefault();}"
+             @click="(e) => {console.log(123);}"
              ></div>
       </div>
 
