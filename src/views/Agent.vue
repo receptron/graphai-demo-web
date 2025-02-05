@@ -148,7 +148,7 @@ export default defineComponent({
       resultText.value = "";
       streamText.value = "";
       errorText.value = "";
-      
+
       const agent = selectedAgent.value.agent;
       try {
         const taskManager = new TaskManager(8);
@@ -168,9 +168,15 @@ export default defineComponent({
             // console.log(token);
           },
         };
-        const result = await agent({ ...defaultTestContext, namedInputs: JSON.parse(inputsText.value), params: JSON.parse(paramsText.value), filterParams, forNestedGraph});
+        const result = await agent({
+          ...defaultTestContext,
+          namedInputs: JSON.parse(inputsText.value),
+          params: JSON.parse(paramsText.value),
+          filterParams,
+          forNestedGraph,
+        });
         resultText.value = JSON.stringify(result);
-      } catch(error) {
+      } catch (error) {
         if (error instanceof Error) {
           errorText.value = error.message;
         }
@@ -187,7 +193,7 @@ export default defineComponent({
       streamText,
       paramsText,
       errorText,
-      
+
       validInputs,
       validParams,
 
