@@ -27,7 +27,7 @@ export default defineComponent({
         position: { x: 570, y: 40 },
       },
     ]);
-    const edges = [
+    const edges = ref([
       {
         from: { nodeId: "a", index: 0 },
         to: { nodeId: "b", index: 1 },
@@ -43,7 +43,7 @@ export default defineComponent({
         to: { nodeId: "c", index: 2 },
         type: "BB",
       },
-    ];
+    ]);
     const nodeRecors = computed(() => {
       return nodes.value.reduce((tmp, current) => {
         tmp[current.nodeId] = current;
@@ -58,24 +58,28 @@ export default defineComponent({
     };
 
     const edgeDataList = computed(() => {
-      return edges.map((edge) => {
+      return edges.value.map((edge) => {
         edge.from.data = nodeRecors.value[edge.from.nodeId];
         edge.to.data = nodeRecors.value[edge.to.nodeId];
         return edge;
       });
     });
 
+
     const newEdgeData = ref<any | null>(null);
+    const mouseCurrentPosition = ref({x:0, y:0});
     const newEdgeEvent = (data) => {
       const rect = svgRef.value.getBoundingClientRect();
       if (data.on === "start") {
         const nodeData = {
+          nodeId: data.nodeId,
           data: nodeRecors.value[data.nodeId],
           index: data.index,
         };
 
+        mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
         const positionData = {
-          data: { position: { x: data.x, y: data.y - rect.top } },
+          data: { position: mouseCurrentPosition.value },
         };
         newEdgeData.value = {
           target: data.target,
@@ -84,7 +88,8 @@ export default defineComponent({
         };
       }
       if (data.on === "move") {
-        const newData = { data: { position: { x: data.x, y: data.y - rect.top } } };
+        mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
+        const newData = { data: { position: mouseCurrentPosition.value } };
         if (newEdgeData.value.target === "output") {
           newEdgeData.value.to = newData;
         } else {
@@ -92,7 +97,21 @@ export default defineComponent({
         }
       }
       if (data.on === "end") {
+        const addEdge = {...newEdgeData.value};
+        if (addEdge.target === "output") {
+          addEdge.to = {
+            nodeId: "c",
+            index: 0,
+          }
+        } else {
+          addEdge.from = {
+            nodeId: "c",
+            index: 0,
+          }
+        }
         newEdgeData.value = null;
+        edges.value.push(addEdge)
+        console.log(edges.value)
       }
     };
     return {
@@ -103,6 +122,7 @@ export default defineComponent({
       newEdgeEvent,
       newEdgeData,
       svgRef,
+      mouseCurrentPosition,
     };
   },
 });
@@ -115,5 +135,6 @@ export default defineComponent({
       <Edge v-if="newEdgeData" :fromData="newEdgeData.from" :toData="newEdgeData.to" />
     </svg>
     <Node v-for="(node, index) in nodes" :key="index" :nodeData="node" @updatePosition="(pos) => updatePosition(index, pos)" @newEdge="newEdgeEvent" />
+    aa{{ mouseCurrentPosition }}
   </div>
 </template>
