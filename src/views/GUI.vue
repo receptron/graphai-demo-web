@@ -1,43 +1,97 @@
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from "vue";
+import { defineComponent, ref, watch, computed, ComponentPublicInstance } from "vue";
 import Node from "./Node.vue";
+import Edge from "./Edge.vue";
 
 export default defineComponent({
   components: {
     Node,
+    Edge,
   },
   setup() {
-    const nodes = ref([{type: "aa", position: {x: 10, y: 10}}, {type: "bb", position: {x: 70, y: 70}}]);
-    const edges = [{type: "AA"}, {type: "BB"}]
-
-    const nodeElements = ref([]);
-
-    const updatePosition = (index, pos) => {
+    const svgRef = ref();
+    const nodes = ref([{
+      nodeId: "a",
+      type: "aa", position: {x: 10, y: 10}
+    }, {
+      nodeId: "b",
+      type: "bb", position: {x: 270, y: 70}
+    }, {
+      nodeId: "c",
+      type: "bb", position: {x: 570, y: 40}
+    }]);
+    const edges = [{
+      from: {nodeId: "a", index: 0},
+      to: {nodeId: "b", index: 1},
+      type: "AA"
+    },{
+      from: {nodeId: "a", index: 2},
+      to: {nodeId: "b", index: 0},
+      type: "AA"
+    }, {
+      from: {nodeId: "b", index: 1},
+      to: {nodeId: "c", index: 2},
+      type: "BB"
+    }]
+    const nodeRecors = computed(() => {
+      return nodes.value.reduce((tmp, current) => {
+        tmp[current.nodeId] = current;
+        return tmp;
+      }, {});
+    });
+    
+    const updatePosition = (index: number, pos: {x: number, y: number, width: number, height: number}) => {
       const node = nodes.value[index];
-      node.position = pos;
+      node.position = {...node.position, ...pos};
       nodes.value[index] = node;
     };
-    const edgeData = computed(() => {
-      if (nodeElements.value[0] && nodeElements.value[0].$el) {
-        const data = nodeElements.value[0].$el.getBoundingClientRect();
-
-        const { x, y } = nodes.value[0].position;
-        const { x: x2, y: y2 } = nodes.value[1].position;
-
-        const d = `M ${x + data.width} ${y} ${x2} ${y2}`
-        return { x, y, d};
-      }
-      return {};
+    
+    const edgeDataList = computed(() => {
+      return edges.map(edge => {
+        edge.from.data = nodeRecors.value[edge.from.nodeId];
+        edge.to.data = nodeRecors.value[edge.to.nodeId];
+        return edge;
+      });
     });
-    const isHover = ref(false);
+
+    const newEdgeData = ref<any | null>(null);
+    const newEdgeEvent = (data) => {
+      const rect = svgRef.value.getBoundingClientRect();
+      if (data.on === "start") {
+        const nodeData = {
+          data: nodeRecors.value[data.nodeId],
+          index: data.index,
+        };
+        
+        const positionData = {
+          data: {position: {x: data.x, y: data.y - rect.top}}
+        };
+        newEdgeData.value = {
+          target: data.target,
+          from: data.target === 'output' ? nodeData : positionData,
+          to: data.target === 'output' ? positionData : nodeData,
+        };
+      }
+      if (data.on === "move") {
+        const newData = {data: {position: {x: data.x, y: data.y - rect.top }}};
+        if (newEdgeData.value.target === 'output') {
+          newEdgeData.value.to =  newData;
+        } else{
+          newEdgeData.value.from =  newData;
+        }
+      }
+      if (data.on === "end") {
+        newEdgeData.value = null;
+      }
+    };
     return {
       updatePosition,
       nodes,
       edges,
-      edgeData,
-
-      nodeElements,
-      isHover,
+      edgeDataList,
+      newEdgeEvent,
+      newEdgeData,
+      svgRef,
     };
   },
 });
@@ -45,13 +99,11 @@ export default defineComponent({
 
 <template>
 <div class="w-screen h-screen relative">
-  <svg x="0" y="0" width="100%" height="100%" class="absolute">
-    <path :d="edgeData.d" :stroke="isHover ? 'blue':'red'" fill="none" :stroke-width="isHover ? 4 : 2" @mouseover="isHover=true" @mouseleave="isHover = false"/>
-  </svg>  
-  <Node v-for="(node, index) in nodes" :key="index" ref="nodeElements" :nodeData="node" @updatePosition="(pos) => updatePosition(index, pos)" />
-  <div v-for="(edge, index) in edges" :key="index">
-    aa
-  </div>
-  {{ edgeData }}
+  <svg x="0" y="0" width="100%" height="100%" class="absolute" ref="svgRef">
+    <Edge v-for="(edge, index) in edgeDataList" :key="index" :fromData="edge.from" :toData="edge.to" />
+    <Edge v-if="newEdgeData" :fromData="newEdgeData.from" :toData="newEdgeData.to" />
+  </svg>
+  <Node v-for="(node, index) in nodes" :key="index" :nodeData="node" @updatePosition="(pos) => updatePosition(index, pos)" @newEdge="newEdgeEvent"/>
+
 </div>
 </template>
