@@ -104,6 +104,7 @@ export default [
       "sonarjs/prefer-while": "error",
       "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
       "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+      "id-length": ["error", { "exceptions": ["x", "y", "d"] }],
 
 
       "vue/no-textarea-mustache": "off",

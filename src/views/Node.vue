@@ -37,11 +37,20 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
+import type { GUINodeData } from "./type";
+
+function isTouch(event: MouseEvent | TouchEvent): event is TouchEvent {
+  return ("touches" in event) 
+}
 
 export default defineComponent({
   components: {},
   props: {
-    nodeData: Object as PropType<{ type: string; position: { x: number; y: number } }>,
+    nodeData: {
+      type: Object as PropType<GUINodeData>,
+      required: true,
+    },
+
   },
   emits: ["updatePosition", "newEdge"],
   setup(props, ctx) {
@@ -50,14 +59,14 @@ export default defineComponent({
     const isNewEdge = ref(false);
     const offset = ref({ x: 0, y: 0 });
 
-    const onStartNode = (event) => {
+    const onStartNode = (event: MouseEvent | TouchEvent) => {
       console.log("node");
       if (isNewEdge.value) {
         return;
       }
       isDragging.value = true;
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
       const position = props.nodeData.position;
       offset.value.x = clientX - position.x;
       offset.value.y = clientY - position.y;
@@ -68,11 +77,11 @@ export default defineComponent({
       ctx.emit("updatePosition", { width: rect.width, height: rect.height });
     });
 
-    const onMoveNode = (event) => {
+    const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
       const rect = thisRef.value.getBoundingClientRect();
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
       const newPosition = { x: clientX - offset.value.x, y: clientY - offset.value.y, width: rect.width, height: rect.height };
       ctx.emit("updatePosition", newPosition);
     };
@@ -81,23 +90,21 @@ export default defineComponent({
       isDragging.value = false;
     };
 
-    const onStartEdge = (event, target, index) => {
+    const onStartEdge = (event:  MouseEvent | TouchEvent, target: string, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
-      const rect = thisRef.value.getBoundingClientRect();
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
       ctx.emit("newEdge", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
     };
     const onEndEdge = () => {
       isNewEdge.value = false;
       ctx.emit("newEdge", { on: "end" });
     };
-    const onMoveEdge = (event) => {
+    const onMoveEdge = (event: MouseEvent | TouchEvent) => {
       if (!isNewEdge.value) return;
-      const rect = thisRef.value.getBoundingClientRect();
-      const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-      const clientY = event.touches ? event.touches[0].clientY : event.clientY;
+      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
       ctx.emit("newEdge", { on: "move", x: clientX, y: clientY });
     };
 
