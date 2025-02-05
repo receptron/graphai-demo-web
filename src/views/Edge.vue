@@ -1,5 +1,12 @@
 <template>
-  <path :d="edgePath.d" :stroke="isHover ? 'blue':'red'" fill="none" :stroke-width="isHover ? 4 : 2" @mouseover="isHover=true" @mouseleave="isHover = false"/>
+  <path
+    :d="edgePath.d"
+    :stroke="isHover ? 'blue' : 'red'"
+    fill="none"
+    :stroke-width="isHover ? 4 : 2"
+    @mouseover="isHover = true"
+    @mouseleave="isHover = false"
+  />
 </template>
 
 <script lang="ts">
@@ -22,8 +29,8 @@ export default defineComponent({
       const y2Offset = index2 !== undefined ? index2 * 20 + 25 : 0;
 
       console.log(y1Offset, y2Offset);
-      
-      const d = `M ${x + (width ?? 0)} ${y + y1Offset } ${x2} ${y2 + y2Offset }`
+
+      const d = `M ${x + (width ?? 0)} ${y + y1Offset} ${x2} ${y2 + y2Offset}`;
       return { x, y, d };
     });
 
