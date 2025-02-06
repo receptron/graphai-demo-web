@@ -37,10 +37,15 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData } from "./type";
+import type { GUINodeData, GUINearestData } from "./type";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
   return "touches" in event;
+};
+const getClientPos = (event: MouseEvent | TouchEvent) => {
+  const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+  const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+  return { clientX, clientY };
 };
 
 export default defineComponent({
@@ -48,6 +53,10 @@ export default defineComponent({
   props: {
     nodeData: {
       type: Object as PropType<GUINodeData>,
+      required: true,
+    },
+    nearestData: {
+      type: Object as PropType<GUINearestData | null>,
       required: true,
     },
   },
@@ -67,8 +76,7 @@ export default defineComponent({
         return;
       }
       isDragging.value = true;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       const position = props.nodeData.position;
       offset.value.x = clientX - position.x;
       offset.value.y = clientY - position.y;
@@ -78,20 +86,13 @@ export default defineComponent({
       const rect = thisRef.value.getBoundingClientRect();
 
       const parentTop = rect.top;
-      const outputCenters = outputsRef.value.map((el) => {
-        if (el) {
-          const oRect = el.getBoundingClientRect();
-          return oRect.top - parentTop + oRect.height / 2;
-        }
-        return null;
-      });
-      const inputCenters = inputsRef.value.map((el) => {
-        if (el) {
-          const iRect = el.getBoundingClientRect();
-          return iRect.top - parentTop + iRect.height / 2;
-        }
-        return null;
-      });
+
+      const getCenterHeight = (el: HTMLElement) => {
+        const oRect = el.getBoundingClientRect();
+        return oRect.top - parentTop + oRect.height / 2;
+      };
+      const outputCenters = outputsRef.value.map(getCenterHeight);
+      const inputCenters = inputsRef.value.map(getCenterHeight);
 
       ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
     });
@@ -99,8 +100,7 @@ export default defineComponent({
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
       const rect = thisRef.value.getBoundingClientRect();
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       const newPosition = { x: clientX - offset.value.x, y: clientY - offset.value.y, width: rect.width, height: rect.height };
       ctx.emit("updatePosition", newPosition);
     };
@@ -109,11 +109,11 @@ export default defineComponent({
       isDragging.value = false;
     };
 
+    // edge event
     const onStartEdge = (event: MouseEvent | TouchEvent, target: string, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       ctx.emit("newEdge", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
     };
     const onEndEdge = () => {
@@ -122,10 +122,10 @@ export default defineComponent({
     };
     const onMoveEdge = (event: MouseEvent | TouchEvent) => {
       if (!isNewEdge.value) return;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       ctx.emit("newEdge", { on: "move", x: clientX, y: clientY });
     };
+    // end of edge event
 
     const edgeIO = {
       inputs: ["messages", "text", "model"],

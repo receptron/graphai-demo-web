@@ -84,7 +84,7 @@ export default defineComponent({
       });
     };
 
-    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd } = useNewEdge(nodes, edges, nodeRecords);
+    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge(nodes, edges, nodeRecords);
 
     return {
       updatePosition,
@@ -94,6 +94,7 @@ export default defineComponent({
       newEdgeEventEnd,
       newEdgeData,
       svgRef,
+      nearestData,
       addNode,
     };
   },
@@ -111,6 +112,7 @@ export default defineComponent({
         v-for="(node, index) in nodes"
         :key="index"
         :node-data="node"
+        :nearest-data="nearestData"
         @update-position="(pos) => updatePosition(index, pos)"
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"

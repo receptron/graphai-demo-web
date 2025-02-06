@@ -30,13 +30,21 @@ export type EdgeData = {
   };
 };
 
+type NewEdgeEventTargetType = "output" | "input";
+
 export type NewEdgeEventData = {
   on: string;
-  target: "output" | "input";
+  target: NewEdgeEventTargetType;
   index: number;
   nodeId: string;
   x: number;
   y: number;
+};
+
+export type GUINearestData = {
+  nodeId: string;
+  index: number;
+  target: NewEdgeEventTargetType;
 };
 
 type NewEdgeMouseData = {

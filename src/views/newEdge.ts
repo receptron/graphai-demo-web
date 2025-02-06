@@ -49,18 +49,14 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
 
   const newEdgeEventEnd = (data: NewEdgeEventData) => {
     if (data.on === "end") {
-      if (!nearestNode.value || !newEdgeData.value || !nearestConnect.value) return;
+      if (!nearestData.value || !newEdgeData.value) return;
 
-      const nearest = {
-        nodeId: nearestNode.value.node.nodeId,
-        index: nearestConnect.value.index,
-      };
       if (newEdgeData.value.target === "output") {
         const fromData = newEdgeData.value.from;
         const addEdge = {
           type: "AA",
           from: fromData,
-          to: nearest,
+          to: nearestData.value,
         };
         edges.value.push(addEdge);
       }
@@ -69,7 +65,7 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
         const { nodeId, index } = toData;
         const addEdge = {
           type: "AA",
-          from: nearest,
+          from: nearestData.value,
           to: {
             nodeId,
             index,
@@ -126,10 +122,20 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
     }, null);
   });
 
+  const nearestData = computed(() => {
+    if (!nearestNode.value || !nearestConnect.value || !newEdgeData.value) return null;
+    return {
+      nodeId: nearestNode.value.node.nodeId,
+      index: nearestConnect.value.index,
+      target: newEdgeData.value.target,
+    };
+  });
+
   return {
     svgRef,
     newEdgeData,
     newEdgeEvent,
     newEdgeEventEnd,
+    nearestData,
   };
 };
