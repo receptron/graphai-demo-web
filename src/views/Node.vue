@@ -41,26 +41,7 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData, GUINearestData } from "./gui/type";
-import { getClientPos } from "./gui/utils";
-
-export const agent2NodeParams: Record<string, { inputs: string[]; outputs: string[] }> = {
-  eventAgent: {
-    inputs: ["wait"],
-    outputs: ["text"],
-  },
-  openAIAgent: {
-    inputs: ["messages", "text", "model"],
-    outputs: ["message", "text"],
-  },
-  stringTemplateAgent: {
-    inputs: ["message1", "message2"],
-    outputs: ["text"],
-  },
-  pushAgent: {
-    inputs: ["array", "item"],
-    outputs: ["array"],
-  },
-};
+import { getClientPos, agent2NodeParams } from "./gui/utils";
 
 export default defineComponent({
   components: {},

@@ -190,3 +190,23 @@ export const graphToGUIData = (graphData: GraphData) => {
     rawNode,
   };
 };
+
+export const agent2NodeParams: Record<string, { inputs: string[]; outputs: string[] }> = {
+  eventAgent: {
+    inputs: ["wait"],
+    outputs: ["text"],
+  },
+  openAIAgent: {
+    inputs: ["messages", "text", "model"],
+    outputs: ["message", "text"],
+  },
+  stringTemplateAgent: {
+    inputs: ["message1", "message2"],
+    outputs: ["text"],
+  },
+  pushAgent: {
+    inputs: ["array", "item"],
+    outputs: ["array"],
+  },
+};
+
