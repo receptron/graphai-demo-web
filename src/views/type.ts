@@ -1,7 +1,7 @@
 export type GUINodeData = {
   type: string;
   nodeId: string;
-  position: { x: number; y: number; width?: number; height?: number };
+  position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
 };
 
 export type GUIEdgeData = {
@@ -40,7 +40,7 @@ export type NewEdgeEventData = {
 };
 
 type NewEdgeMouseData = {
-  data: { position: { x: number; y: number; width?: number } };
+  data: { position: { x: number; y: number; width?: number; outputCenters?: number[]; inputCenters?: number[] } };
   index?: number; // index and width never exists
 };
 type NewEdgeNodeData = {

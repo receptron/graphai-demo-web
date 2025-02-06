@@ -54,8 +54,8 @@ export default defineComponent({
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const thisRef = ref();
-    const inputsRef = ref();
-    const outputsRef = ref();
+    const inputsRef = ref<HTMLElement[]>([]);
+    const outputsRef = ref<HTMLElement[]>([]);
 
     const isDragging = ref(false);
     const isNewEdge = ref(false);
@@ -93,8 +93,8 @@ export default defineComponent({
         return null;
       });
 
-      console.log("Output Centers:", outputCenters);
-      console.log("Input Centers:", inputCenters);
+      // console.log("Output Centers:", outputCenters);
+      // console.log("Input Centers:", inputCenters);
       ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
     });
 

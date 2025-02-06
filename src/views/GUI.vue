@@ -179,14 +179,12 @@ export default defineComponent({
 
     const nearestConnect = computed(() => {
       if (!newEdgeData.value || !nearestNode.value) return;
-      // (newEdgeData.value.target)
       const nodePos = nearestNode.value.node.position;
       const { inputCenters, outputCenters } = nodePos;
       const isOutput = newEdgeData.value.target === "output";
-      const centers = isOutput ? inputCenters : outputCenters;
-      return centers.reduce((closest: null | any, center: number, index: number) => {
-        console.log(centers);
-        const nodeX = nodePos.x + (isOutput ? 0 : nodePos.width);
+      const centers = (isOutput ? inputCenters : outputCenters) ?? [];
+      return centers.reduce((closest: null | { index: number; distance: number }, center: number, index: number) => {
+        const nodeX = nodePos.x + (isOutput ? 0 : (nodePos?.width ?? 0));
         const nodeY = nodePos.y + center;
         const mouseX = mouseCurrentPosition.value.x;
         const mouseY = mouseCurrentPosition.value.y;
