@@ -11,6 +11,7 @@
     @touchstart="onStartNode"
   >
     <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
+    <div class="w-full text-center bg-blue-500 py-1 leading-none text-xs" v-if="nodeData.type === 'computed'">{{ nodeData.agent?.replace(/Agent$/, "") }}</div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
@@ -98,9 +99,8 @@ export default defineComponent({
       offset.value.y = clientY - position.y;
     };
 
-    onMounted(() => {
+    const getWH = () => {
       const rect = thisRef.value.getBoundingClientRect();
-
       const parentTop = rect.top;
 
       const getCenterHeight = (el: HTMLElement) => {
@@ -109,15 +109,16 @@ export default defineComponent({
       };
       const outputCenters = outputsRef.value.map(getCenterHeight);
       const inputCenters = inputsRef.value.map(getCenterHeight);
-
-      ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
+      return { width: rect.width, height: rect.height, outputCenters, inputCenters }
+    };
+    onMounted(() => {
+      ctx.emit("updatePosition", getWH());
     });
 
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
-      const rect = thisRef.value.getBoundingClientRect();
       const { clientX, clientY } = getClientPos(event);
-      const newPosition = { x: clientX - offset.value.x, y: clientY - offset.value.y, width: rect.width, height: rect.height };
+      const newPosition = { ...getWH(), x: clientX - offset.value.x, y: clientY - offset.value.y };
       ctx.emit("updatePosition", newPosition);
     };
 
