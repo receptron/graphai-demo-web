@@ -3,10 +3,10 @@ import { defineComponent, ref, computed } from "vue";
 import { inputs2dataSources } from "graphai";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { NewEdgeEventData, GUINodeData, GUIEdgeData, EdgeData, NewEdgeData } from "./type";
+import { GUINodeData, GUIEdgeData, EdgeData } from "./type";
 
 import { graphChat } from "../graph/chat";
-
+import { useNewEdge } from "./newEdge";
 export default defineComponent({
   components: {
     Node,
@@ -42,7 +42,6 @@ export default defineComponent({
       };
     });
 
-    const svgRef = ref();
     const nodes = ref<GUINodeData[]>(rawNode);
     const edges = ref<GUIEdgeData[]>(rawEdge);
     const nodeRecords = computed(() => {
@@ -75,129 +74,6 @@ export default defineComponent({
       });
     });
 
-    const newEdgeData = ref<NewEdgeData | null>(null);
-    const mouseCurrentPosition = ref({ x: 0, y: 0 });
-    const targetNode = ref("");
-    const newEdgeEvent = (data: NewEdgeEventData) => {
-      const rect = svgRef.value.getBoundingClientRect();
-      mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
-      if (data.on === "start") {
-        targetNode.value = data.nodeId;
-        console.log(data.index);
-        const nodeData = {
-          nodeId: data.nodeId,
-          data: nodeRecords.value[data.nodeId],
-          index: data.index,
-        };
-
-        const positionData = {
-          data: { position: mouseCurrentPosition.value },
-        };
-        if (data.target === "output") {
-          newEdgeData.value = {
-            target: data.target,
-            from: nodeData,
-            to: positionData,
-          };
-        } else {
-          newEdgeData.value = {
-            target: data.target,
-            from: positionData,
-            to: nodeData,
-          };
-        }
-      }
-      if (data.on === "move") {
-        const newData = { data: { position: mouseCurrentPosition.value } };
-        if (newEdgeData.value) {
-          if (newEdgeData.value.target === "output") {
-            newEdgeData.value.to = newData;
-          } else {
-            newEdgeData.value.from = newData;
-          }
-        }
-      }
-    };
-
-    const newEdgeEventEnd = (data: NewEdgeEventData) => {
-      if (data.on === "end") {
-        if (!nearestNode.value || !newEdgeData.value || !nearestConnect.value) return;
-
-        const nearest = {
-          nodeId: nearestNode.value.node.nodeId,
-          index: nearestConnect.value.index,
-        };
-        if (newEdgeData.value.target === "output") {
-          const fromData = newEdgeData.value.from;
-          const addEdge = {
-            type: "AA",
-            from: fromData,
-            to: nearest,
-          };
-          edges.value.push(addEdge);
-        }
-        if (newEdgeData.value.target === "input") {
-          const toData = newEdgeData.value.to;
-          const { nodeId, index } = toData;
-          const addEdge = {
-            type: "AA",
-            from: nearest,
-            to: {
-              nodeId,
-              index,
-            },
-          };
-          edges.value.push(addEdge);
-        }
-        newEdgeData.value = null;
-        // edges.value.push(addEdge);
-        console.log(edges.value);
-      }
-    };
-
-    const nearestNode = computed(() => {
-      if (!nodes.value.length) return null;
-
-      return nodes.value.reduce((closest: null | { node: GUINodeData; distance: number }, node) => {
-        if (targetNode.value === node.nodeId) {
-          return closest;
-        }
-        const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
-        const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
-        const mouseX = mouseCurrentPosition.value.x;
-        const mouseY = mouseCurrentPosition.value.y;
-
-        const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
-
-        if (!closest || distance < closest.distance) {
-          return { node, distance };
-        }
-
-        return closest;
-      }, null);
-    });
-
-    const nearestConnect = computed(() => {
-      if (!newEdgeData.value || !nearestNode.value) return;
-      const nodePos = nearestNode.value.node.position;
-      const { inputCenters, outputCenters } = nodePos;
-      const isOutput = newEdgeData.value.target === "output";
-      const centers = (isOutput ? inputCenters : outputCenters) ?? [];
-      return centers.reduce((closest: null | { index: number; distance: number }, center: number, index: number) => {
-        const nodeX = nodePos.x + (isOutput ? 0 : (nodePos?.width ?? 0));
-        const nodeY = nodePos.y + center;
-        const mouseX = mouseCurrentPosition.value.x;
-        const mouseY = mouseCurrentPosition.value.y;
-
-        const distance = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
-        if (!closest || distance < closest.distance) {
-          return { index, distance };
-        }
-
-        return closest;
-      }, null);
-    });
-
     const addNode = () => {
       const uuid = self.crypto.randomUUID();
       console.log(uuid);
@@ -208,6 +84,8 @@ export default defineComponent({
       });
     };
 
+    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge(nodes, edges, nodeRecords);
+
     return {
       updatePosition,
       nodes,
@@ -216,10 +94,8 @@ export default defineComponent({
       newEdgeEventEnd,
       newEdgeData,
       svgRef,
-      mouseCurrentPosition,
-      nearestNode,
+      nearestData,
       addNode,
-      nearestConnect,
     };
   },
 });
@@ -236,12 +112,11 @@ export default defineComponent({
         v-for="(node, index) in nodes"
         :key="index"
         :node-data="node"
+        :nearest-data="nearestData"
         @update-position="(pos) => updatePosition(index, pos)"
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"
       />
-      aa{{ mouseCurrentPosition }}
-      {{ nearestConnect }}
     </div>
     <div><button @click="addNode">Add node</button></div>
   </div>

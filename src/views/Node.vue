@@ -1,6 +1,7 @@
 <template>
   <div
-    class="w-24 bg-blue-400 text-white text-center cursor-grab select-none absolute flex flex-col"
+    class="w-24 text-white text-center cursor-grab select-none absolute flex flex-col"
+    :class="expectNearNode ? 'bg-blue-200' : 'bg-blue-400'"
     :style="{
       transform: transform,
       cursor: isDragging ? 'grabbing' : 'grab',
@@ -10,12 +11,12 @@
     @touchstart="onStartNode"
   >
     <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
-
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
         <div
-          class="w-4 h-4 bg-green-500 rounded-full absolute right-[-10px] min-w-[12px]"
+          class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
+          :class="isExpectNearButton('input', index) ? 'bg-green-200' : 'bg-green-500'"
           @mousedown="(e) => onStartEdge(e, 'output', index)"
           @touchstart="(e) => onStartEdge(e, 'output', index)"
         ></div>
@@ -25,7 +26,8 @@
     <div class="flex flex-col items-start mt-1 mb-1">
       <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
-          class="w-4 h-4 bg-blue-500 rounded-full absolute left-[-10px] min-w-[12px]"
+          class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
+          :class="isExpectNearButton('output', index) ? 'bg-blue-200' : 'bg-blue-500'"
           @mousedown="(e) => onStartEdge(e, 'input', index)"
           @touchstart="(e) => onStartEdge(e, 'input', index)"
         ></div>
@@ -37,10 +39,15 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData } from "./type";
+import type { GUINodeData, GUINearestData } from "./type";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
   return "touches" in event;
+};
+const getClientPos = (event: MouseEvent | TouchEvent) => {
+  const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+  const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+  return { clientX, clientY };
 };
 
 export default defineComponent({
@@ -49,6 +56,10 @@ export default defineComponent({
     nodeData: {
       type: Object as PropType<GUINodeData>,
       required: true,
+    },
+    nearestData: {
+      type: Object as PropType<GUINearestData>,
+      default: undefined,
     },
   },
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
@@ -67,8 +78,7 @@ export default defineComponent({
         return;
       }
       isDragging.value = true;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       const position = props.nodeData.position;
       offset.value.x = clientX - position.x;
       offset.value.y = clientY - position.y;
@@ -78,31 +88,21 @@ export default defineComponent({
       const rect = thisRef.value.getBoundingClientRect();
 
       const parentTop = rect.top;
-      const outputCenters = outputsRef.value.map((el) => {
-        if (el) {
-          const oRect = el.getBoundingClientRect();
-          return oRect.top - parentTop + oRect.height / 2;
-        }
-        return null;
-      });
-      const inputCenters = inputsRef.value.map((el) => {
-        if (el) {
-          const iRect = el.getBoundingClientRect();
-          return iRect.top - parentTop + iRect.height / 2;
-        }
-        return null;
-      });
 
-      // console.log("Output Centers:", outputCenters);
-      // console.log("Input Centers:", inputCenters);
+      const getCenterHeight = (el: HTMLElement) => {
+        const oRect = el.getBoundingClientRect();
+        return oRect.top - parentTop + oRect.height / 2;
+      };
+      const outputCenters = outputsRef.value.map(getCenterHeight);
+      const inputCenters = inputsRef.value.map(getCenterHeight);
+
       ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
     });
 
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
       const rect = thisRef.value.getBoundingClientRect();
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       const newPosition = { x: clientX - offset.value.x, y: clientY - offset.value.y, width: rect.width, height: rect.height };
       ctx.emit("updatePosition", newPosition);
     };
@@ -111,11 +111,11 @@ export default defineComponent({
       isDragging.value = false;
     };
 
+    // edge event
     const onStartEdge = (event: MouseEvent | TouchEvent, target: string, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       ctx.emit("newEdge", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
     };
     const onEndEdge = () => {
@@ -124,10 +124,10 @@ export default defineComponent({
     };
     const onMoveEdge = (event: MouseEvent | TouchEvent) => {
       if (!isNewEdge.value) return;
-      const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-      const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+      const { clientX, clientY } = getClientPos(event);
       ctx.emit("newEdge", { on: "move", x: clientX, y: clientY });
     };
+    // end of edge event
 
     const edgeIO = {
       inputs: ["messages", "text", "model"],
@@ -167,6 +167,17 @@ export default defineComponent({
     const transform = computed(() => {
       return `translate(${props.nodeData.position.x}px, ${props.nodeData.position.y}px)`;
     });
+    const expectNearNode = computed(() => {
+      return props.nodeData.nodeId === props.nearestData?.nodeId;
+    });
+
+    const isExpectNearButton = (targetType: string, index: number) => {
+      if (!expectNearNode.value) {
+        return false;
+      }
+      return props.nearestData?.target === targetType && props.nearestData?.index === index;
+    };
+
     return {
       transform,
       onStartNode,
@@ -178,6 +189,9 @@ export default defineComponent({
 
       inputsRef,
       outputsRef,
+
+      expectNearNode,
+      isExpectNearButton,
     };
   },
 });
