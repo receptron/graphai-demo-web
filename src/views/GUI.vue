@@ -17,14 +17,15 @@ export default defineComponent({
       j = 10;
 
     const nodeIds = Object.keys(graphChat.nodes);
-    const rawEdge = [];
-    const rawNode = nodeIds.map((nodeId) => {
+    const rawEdge: GUIEdgeData[] = [];
+    const rawNode = Object.keys(graphChat.nodes).map((nodeId) => {
       i = i + 150;
       if (i > 800) {
         i = 100;
         j = j + 150;
       }
-      inputs2dataSources(graphChat.nodes[nodeId]).forEach((source) => {
+      const node = graphChat.nodes[nodeId];
+      inputs2dataSources(node).forEach((source) => {
         const expect = source.value || source.nodeId;
         if (nodeIds.includes(expect)) {
           rawEdge.push({

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-24 h-24 bg-blue-400 text-white text-center leading-[6rem] cursor-grab select-none absolute"
+    class="w-24 bg-blue-400 text-white text-center cursor-grab select-none absolute flex flex-col"
     :style="{
       transform: transform,
       cursor: isDragging ? 'grabbing' : 'grab',
@@ -9,31 +9,43 @@
     @mousedown="onStartNode"
     @touchstart="onStartNode"
   >
-    <div class="relative w-full h-full flex items-center justify-between p-[2px]">
-      <div class="flex flex-col gap-2">
-        <div
-          v-for="(input, index) in edgeIO.inputs"
-          :key="'in-' + index"
-          class="w-4 h-4 bg-blue-500 rounded-full"
-          @mousedown="(e) => onStartEdge(e, 'input', index)"
-          @touchstart="(e) => onStartEdge(e, 'input', index)"
-        ></div>
-      </div>
+    <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
 
-      <div class="flex-1 flex items-center justify-center">{{ nodeData.nodeId }}</div>
-
-      <div class="flex flex-col gap-2">
+    <div class="flex flex-col items-end mt-1">
+      <div
+        v-for="(output, index) in edgeIO.outputs"
+        :key="'out-' + index"
+        class="relative flex items-center"
+        ref="outputsRef"
+      >
+        <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
         <div
-          v-for="(output, index) in edgeIO.outputs"
-          :key="'out-' + index"
-          class="w-4 h-4 bg-green-500 rounded-full"
+          class="w-4 h-4 bg-green-500 rounded-full absolute right-[-10px] min-w-[12px]"
           @mousedown="(e) => onStartEdge(e, 'output', index)"
           @touchstart="(e) => onStartEdge(e, 'output', index)"
         ></div>
       </div>
     </div>
+
+    <div class="flex flex-col items-start mt-1 mb-1">
+      <div
+        v-for="(input, index) in edgeIO.inputs"
+        :key="'in-' + index"
+        class="relative flex items-center"
+        ref="inputsRef"
+      >
+        <div
+          class="w-4 h-4 bg-blue-500 rounded-full absolute left-[-10px] min-w-[12px]"
+          @mousedown="(e) => onStartEdge(e, 'input', index)"
+          @touchstart="(e) => onStartEdge(e, 'input', index)"
+        ></div>
+        <span class="ml-2 text-xs whitespace-nowrap">{{ input }}</span>
+      </div>
+    </div>
   </div>
+
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
@@ -54,6 +66,9 @@ export default defineComponent({
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const thisRef = ref();
+    const inputsRef = ref();
+    const outputsRef = ref();
+    
     const isDragging = ref(false);
     const isNewEdge = ref(false);
     const offset = ref({ x: 0, y: 0 });
@@ -73,7 +88,27 @@ export default defineComponent({
 
     onMounted(() => {
       const rect = thisRef.value.getBoundingClientRect();
-      ctx.emit("updatePosition", { width: rect.width, height: rect.height });
+
+      const parentTop = rect.top;
+      const outputCenters = outputsRef.value.map((el) => {
+        if (el) {
+          const oRect = el.getBoundingClientRect();
+          return oRect.top - parentTop + oRect.height / 2;
+        }
+        return null;
+      });
+      const inputCenters = inputsRef.value.map((el) => {
+        if (el) {
+          const iRect = el.getBoundingClientRect();
+          return iRect.top - parentTop + iRect.height / 2;
+        }
+        return null;
+      });
+      
+      console.log("Output Centers:", outputCenters);
+      console.log("Input Centers:", inputCenters);
+      ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
+
     });
 
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
@@ -108,8 +143,8 @@ export default defineComponent({
     };
 
     const edgeIO = {
-      inputs: ["A", "B", "C"],
-      outputs: ["X", "Y", "Z"],
+      inputs: ["messages", "text", "model"],
+      outputs: ["message", "text", ],
     };
 
     watchEffect((onCleanup) => {
@@ -153,6 +188,9 @@ export default defineComponent({
       thisRef,
       isNewEdge,
       onStartEdge,
+
+      inputsRef,
+      outputsRef,
     };
   },
 });
