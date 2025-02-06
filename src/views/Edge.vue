@@ -35,8 +35,6 @@ export default defineComponent({
       const y1Offset = index === undefined ? 0 : index * 20 + 25;
       const y2Offset = index2 === undefined ? 0 : index2 * 20 + 25;
 
-      console.log(y1Offset, y2Offset);
-
       const d = `M ${x + (width ?? 0)} ${y + y1Offset} ${x2} ${y2 + y2Offset}`;
       return { x, y, d };
     });
