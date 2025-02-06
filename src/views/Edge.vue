@@ -25,7 +25,7 @@ export default defineComponent({
       const { index } = props.fromData;
       const { x: x2, y: y2 } = props.toData.data.position;
       const { index: index2 } = props.toData;
-      const y1Offset = index === undefined ? 0 :index * 20 + 25;
+      const y1Offset = index === undefined ? 0 : index * 20 + 25;
       const y2Offset = index2 === undefined ? 0 : index2 * 20 + 25;
 
       console.log(y1Offset, y2Offset);

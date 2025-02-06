@@ -39,9 +39,9 @@
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData } from "./type";
 
-function isTouch(event: MouseEvent | TouchEvent): event is TouchEvent {
-  return ("touches" in event) 
-}
+const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+  return "touches" in event;
+};
 
 export default defineComponent({
   components: {},
@@ -50,7 +50,6 @@ export default defineComponent({
       type: Object as PropType<GUINodeData>,
       required: true,
     },
-
   },
   emits: ["updatePosition", "newEdge"],
   setup(props, ctx) {
@@ -90,7 +89,7 @@ export default defineComponent({
       isDragging.value = false;
     };
 
-    const onStartEdge = (event:  MouseEvent | TouchEvent, target: string, index: number) => {
+    const onStartEdge = (event: MouseEvent | TouchEvent, target: string, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
       const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;

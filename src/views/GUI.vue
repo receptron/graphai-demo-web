@@ -2,7 +2,7 @@
 import { defineComponent, ref, computed } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { NewEdgeEventData } from "./type";
+import { NewEdgeEventData, GUINodeData, GUIEdgeData, EdgeData } from "./type";
 
 export default defineComponent({
   components: {
@@ -11,7 +11,7 @@ export default defineComponent({
   },
   setup() {
     const svgRef = ref();
-    const nodes = ref([
+    const nodes = ref<GUINodeData[]>([
       {
         nodeId: "a",
         type: "aa",
@@ -28,7 +28,7 @@ export default defineComponent({
         position: { x: 570, y: 40 },
       },
     ]);
-    const edges = ref([
+    const edges = ref<GUIEdgeData[]>([
       {
         from: { nodeId: "a", index: 0 },
         to: { nodeId: "b", index: 1 },
@@ -45,8 +45,8 @@ export default defineComponent({
         type: "BB",
       },
     ]);
-    const nodeRecors = computed(() => {
-      return nodes.value.reduce((tmp, current) => {
+    const nodeRecords = computed(() => {
+      return nodes.value.reduce((tmp: Record<string, GUINodeData>, current) => {
         tmp[current.nodeId] = current;
         return tmp;
       }, {});
@@ -58,11 +58,20 @@ export default defineComponent({
       nodes.value[index] = node;
     };
 
-    const edgeDataList = computed(() => {
+    const edgeDataList = computed<EdgeData[]>(() => {
       return edges.value.map((edge) => {
-        edge.from.data = nodeRecors.value[edge.from.nodeId];
-        edge.to.data = nodeRecors.value[edge.to.nodeId];
-        return edge;
+        const { type, from, to } = edge;
+        return {
+          type,
+          from: {
+            ...from,
+            data: nodeRecords.value[edge.from.nodeId],
+          },
+          to: {
+            ...to,
+            data: nodeRecords.value[edge.to.nodeId],
+          },
+        };
       });
     });
 
@@ -75,7 +84,7 @@ export default defineComponent({
         targetNode.value = data.nodeId;
         const nodeData = {
           nodeId: data.nodeId,
-          data: nodeRecors.value[data.nodeId],
+          data: nodeRecords.value[data.nodeId],
           index: data.index,
         };
 
@@ -99,6 +108,7 @@ export default defineComponent({
         }
       }
       if (data.on === "end") {
+        if (!nearestNode.value) return;
         const addEdge = { ...newEdgeData.value };
 
         if (addEdge.target === "output") {
@@ -121,13 +131,13 @@ export default defineComponent({
     const nearestNode = computed(() => {
       if (!nodes.value.length) return null;
 
-      return nodes.value.reduce((closest, node) => {
+      return nodes.value.reduce((closest: null | { node: GUINodeData; distance: number }, node) => {
         if (targetNode.value === node.nodeId) {
           return closest;
         }
 
-        const nodeCenterX = node.position.x + node.position.width / 2;
-        const nodeCenterY = node.position.y + node.position.height / 2;
+        const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
+        const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
         const mouseX = mouseCurrentPosition.value.x;
         const mouseY = mouseCurrentPosition.value.y;
 
@@ -144,7 +154,6 @@ export default defineComponent({
     return {
       updatePosition,
       nodes,
-      edges,
       edgeDataList,
       newEdgeEvent,
       newEdgeData,
@@ -162,7 +171,7 @@ export default defineComponent({
       <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" />
       <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" />
     </svg>
-    <Node v-for="(node, index) in nodes" :key="index" :node-data="node" @updatePosition="(pos) => updatePosition(index, pos)" @newEdge="newEdgeEvent" />
+    <Node v-for="(node, index) in nodes" :key="index" :node-data="node" @update-position="(pos) => updatePosition(index, pos)" @new-edge="newEdgeEvent" />
     aa{{ mouseCurrentPosition }} {{ nearestNode }}
   </div>
 </template>
