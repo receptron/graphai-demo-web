@@ -20,7 +20,7 @@
         ></div>
       </div>
 
-      <div class="flex-1 flex items-center justify-center">Node</div>
+      <div class="flex-1 flex items-center justify-center">{{ nodeData.nodeId }}</div>
 
       <div class="flex flex-col gap-2">
         <div

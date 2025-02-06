@@ -1,8 +1,11 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
+import { inputs2dataSources } from "graphai";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
 import { NewEdgeEventData, GUINodeData, GUIEdgeData, EdgeData, NewEdgeData } from "./type";
+
+import { graphChat } from "../graph/chat";
 
 export default defineComponent({
   components: {
@@ -10,41 +13,37 @@ export default defineComponent({
     Edge,
   },
   setup() {
+    let i = -50,
+      j = 10;
+
+    const nodeIds = Object.keys(graphChat.nodes);
+    const rawEdge = [];
+    const rawNode = nodeIds.map((nodeId) => {
+      i = i + 150;
+      if (i > 800) {
+        i = 100;
+        j = j + 150;
+      }
+      inputs2dataSources(graphChat.nodes[nodeId]).forEach((source) => {
+        const expect = source.value || source.nodeId;
+        if (nodeIds.includes(expect)) {
+          rawEdge.push({
+            from: { nodeId: expect, index: 0 },
+            to: { nodeId, index: 1 },
+            type: "AA",
+          });
+        }
+      });
+      return {
+        type: "computed",
+        nodeId,
+        position: { x: i, y: j },
+      };
+    });
+
     const svgRef = ref();
-    const nodes = ref<GUINodeData[]>([
-      {
-        nodeId: "a",
-        type: "aa",
-        position: { x: 10, y: 10 },
-      },
-      {
-        nodeId: "b",
-        type: "bb",
-        position: { x: 270, y: 70 },
-      },
-      {
-        nodeId: "c",
-        type: "bb",
-        position: { x: 570, y: 40 },
-      },
-    ]);
-    const edges = ref<GUIEdgeData[]>([
-      {
-        from: { nodeId: "a", index: 0 },
-        to: { nodeId: "b", index: 1 },
-        type: "AA",
-      },
-      {
-        from: { nodeId: "a", index: 2 },
-        to: { nodeId: "b", index: 0 },
-        type: "AA",
-      },
-      {
-        from: { nodeId: "b", index: 1 },
-        to: { nodeId: "c", index: 2 },
-        type: "BB",
-      },
-    ]);
+    const nodes = ref<GUINodeData[]>(rawNode);
+    const edges = ref<GUIEdgeData[]>(rawEdge);
     const nodeRecords = computed(() => {
       return nodes.value.reduce((tmp: Record<string, GUINodeData>, current) => {
         tmp[current.nodeId] = current;
