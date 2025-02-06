@@ -2,7 +2,7 @@
 import { defineComponent, ref, computed } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { NewEdgeEventData, GUINodeData, GUIEdgeData, EdgeData } from "./type";
+import { NewEdgeEventData, GUINodeData, GUIEdgeData, EdgeData, NewEdgeData } from "./type";
 
 export default defineComponent({
   components: {
@@ -75,7 +75,7 @@ export default defineComponent({
       });
     });
 
-    const newEdgeData = ref<any | null>(null);
+    const newEdgeData = ref<NewEdgeData | null>(null);
     const mouseCurrentPosition = ref({ x: 0, y: 0 });
     const targetNode = ref("");
     const newEdgeEvent = (data: NewEdgeEventData) => {
@@ -92,38 +92,61 @@ export default defineComponent({
         const positionData = {
           data: { position: mouseCurrentPosition.value },
         };
-        newEdgeData.value = {
-          target: data.target,
-          from: data.target === "output" ? nodeData : positionData,
-          to: data.target === "output" ? positionData : nodeData,
-        };
+        if (data.target === "output") {
+          newEdgeData.value = {
+            target: data.target,
+            from: nodeData,
+            to: positionData,
+          };
+        } else {
+          newEdgeData.value = {
+            target: data.target,
+            from: positionData,
+            to: nodeData,
+          };
+        }
       }
       if (data.on === "move") {
         mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
         const newData = { data: { position: mouseCurrentPosition.value } };
-        if (newEdgeData.value.target === "output") {
-          newEdgeData.value.to = newData;
-        } else {
-          newEdgeData.value.from = newData;
+        if (newEdgeData.value) {
+          if (newEdgeData.value.target === "output") {
+            newEdgeData.value.to = newData;
+          } else {
+            newEdgeData.value.from = newData;
+          }
         }
       }
       if (data.on === "end") {
-        if (!nearestNode.value) return;
-        const addEdge = { ...newEdgeData.value };
-
-        if (addEdge.target === "output") {
-          addEdge.to = {
-            nodeId: nearestNode.value.node.nodeId,
-            index: 0,
+        if (!nearestNode.value || !newEdgeData.value) return;
+        const nearest = {
+          nodeId: nearestNode.value.node.nodeId,
+          index: 0,
+        };
+        if (newEdgeData.value.target === "output") {
+          const fromData = newEdgeData.value.from;
+          const addEdge = {
+            type: "AA",
+            from: fromData,
+            to: nearest,
           };
-        } else {
-          addEdge.from = {
-            nodeId: nearestNode.value.node.nodeId,
-            index: 0,
+          edges.value.push(addEdge);
+        }
+        if (newEdgeData.value.target === "input") {
+          const toData = newEdgeData.value.to;
+          const { nodeId, index } = toData;
+          const addEdge = {
+            type: "AA",
+            from: nearest,
+            to: {
+              nodeId,
+              index,
+            },
           };
+          edges.value.push(addEdge);
         }
         newEdgeData.value = null;
-        edges.value.push(addEdge);
+        // edges.value.push(addEdge);
         console.log(edges.value);
       }
     };
