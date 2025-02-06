@@ -1,4 +1,5 @@
-export const graphChat = {
+import { GraphData } from "graphai";
+export const graphChat: GraphData = {
   version: 0.5,
   loop: {
     while: ":continue",

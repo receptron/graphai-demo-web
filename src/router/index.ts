@@ -8,6 +8,7 @@ import Random from "@/views/Random.vue";
 import Agent from "@/views/Agent.vue";
 import InterView2 from "@/views/InterView2.vue";
 import llm from "@/views/tinyswallow.vue";
+import gui from "@/views/GUI.vue";
 
 const routeChildren: Array<RouteRecordRaw> = [
   {
@@ -33,6 +34,10 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "llm",
     component: llm,
+  },
+  {
+    path: "gui",
+    component: gui,
   },
 ];
 

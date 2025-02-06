@@ -12,7 +12,7 @@
               <div class="bg-warmgray-100 flex w-64 flex-col bg-white shadow-sm">
                 <MenuList @close-menu="toggleMenu()" />
               </div>
-              <div @click="toggleMenu()" class="flex-1 cursor-pointer bg-black bg-opacity-40"></div>
+              <div @click="toggleMenu()" class="flex-1 cursor-pointer bg-black/40"></div>
             </div>
           </div>
         </div>

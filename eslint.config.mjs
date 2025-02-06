@@ -42,6 +42,7 @@ export default [
         {
           argsIgnorePattern: "^__",
           varsIgnorePattern: "^__",
+          caughtErrorsIgnorePattern: "^__",
         },
       ],
       "@typescript-eslint/no-explicit-any": "error",
@@ -53,7 +54,9 @@ export default [
       "max-lines": "off",
       "max-lines-per-function": "off",
       "no-ternary": "off",
+      "no-nested-ternary": "off",
       "no-unreachable": "error",
+      "consistent-return": "off",
       "one-var": "off",
       "operator-assignment": "off",
       "no-undefined": "off",
@@ -80,6 +83,7 @@ export default [
       "sonarjs/no-gratuitous-expressions": "error",
       "sonarjs/pseudo-random": "off",
       "sonarjs/no-nested-functions": "off",
+      "sonarjs/no-nested-conditional": "off",
       "sonarjs/no-identical-conditions": "error",
       "sonarjs/no-identical-expressions": "error",
       "sonarjs/no-identical-functions": "error",
@@ -89,6 +93,7 @@ export default [
       "sonarjs/no-nested-template-literals": "error",
       "sonarjs/no-one-iteration-loop": "error",
       "sonarjs/no-redundant-boolean": "error",
+      "sonarjs/no-ignored-exceptions": "off",
       "sonarjs/no-redundant-jump": "error",
       "sonarjs/no-same-line-conditional": "error",
       "sonarjs/no-small-switch": "error",
@@ -102,6 +107,7 @@ export default [
       "sonarjs/prefer-while": "error",
       "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
       "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+      "id-length": ["error", { "exceptions": ["x", "y", "d", "i", "j"] }],
 
 
       "vue/no-textarea-mustache": "off",
