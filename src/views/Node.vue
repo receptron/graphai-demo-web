@@ -1,7 +1,7 @@
 <template>
   <div
-    class="w-24 text-white text-center cursor-grab select-none absolute flex flex-col"
-    :class="expectNearNode ? 'bg-blue-200' : 'bg-blue-400'"
+    class="w-24 text-white text-center cursor-grab select-none absolute flex flex-col rounded-md"
+    :class="nodeMainClass(expectNearNode, nodeData)"
     :style="{
       transform: transform,
       cursor: isDragging ? 'grabbing' : 'grab',
@@ -10,14 +10,20 @@
     @mousedown="onStartNode"
     @touchstart="onStartNode"
   >
-    <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
-    <div class="w-full text-center bg-blue-500 py-1 leading-none text-xs" v-if="nodeData.type === 'computed'">{{ nodeData.agent?.replace(/Agent$/, "") }}</div>
+    <div
+      class="w-full text-center py-1 leading-none rounded-md"
+      :class="nodeHeaderClass(expectNearNode, nodeData)"
+         >{{ nodeData.nodeId }}</div>
+    <div
+      class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'"
+      :class="nodeHeaderClass(expectNearNode, nodeData)"
+         >{{ nodeData.agent?.replace(/Agent$/, "") }}</div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
         <div
           class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
-          :class="isExpectNearButton('input', index) ? 'bg-green-200' : 'bg-green-500'"
+          :class="nodeOutputClass(isExpectNearButton('input', index), nodeData)"
           @mousedown="(e) => onStartEdge(e, 'output', index)"
           @touchstart="(e) => onStartEdge(e, 'output', index)"
         ></div>
@@ -28,7 +34,7 @@
       <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
           class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
-          :class="isExpectNearButton('output', index) ? 'bg-blue-200' : 'bg-blue-500'"
+          :class="nodeInputClass(isExpectNearButton('output', index), nodeData)"
           @mousedown="(e) => onStartEdge(e, 'input', index)"
           @touchstart="(e) => onStartEdge(e, 'input', index)"
         ></div>
@@ -42,6 +48,7 @@
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData, GUINearestData } from "./gui/type";
 import { getClientPos, agent2NodeParams } from "./gui/utils";
+import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "./gui/classUtils";
 
 export default defineComponent({
   components: {},
@@ -185,6 +192,12 @@ export default defineComponent({
 
       expectNearNode,
       isExpectNearButton,
+
+      // helper
+      nodeMainClass,
+      nodeHeaderClass,
+      nodeOutputClass,
+      nodeInputClass 
     };
   },
 });
