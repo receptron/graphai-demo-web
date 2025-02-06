@@ -93,8 +93,6 @@ export default defineComponent({
         return null;
       });
 
-      // console.log("Output Centers:", outputCenters);
-      // console.log("Input Centers:", inputCenters);
       ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
     });
 
