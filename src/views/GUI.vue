@@ -83,6 +83,7 @@ export default defineComponent({
       mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
       if (data.on === "start") {
         targetNode.value = data.nodeId;
+        console.log(data.index);
         const nodeData = {
           nodeId: data.nodeId,
           data: nodeRecords.value[data.nodeId],
@@ -120,10 +121,11 @@ export default defineComponent({
 
     const newEdgeEventEnd = (data: NewEdgeEventData) => {
       if (data.on === "end") {
-        if (!nearestNode.value || !newEdgeData.value) return;
+        if (!nearestNode.value || !newEdgeData.value || !nearestConnect.value) return;
+
         const nearest = {
           nodeId: nearestNode.value.node.nodeId,
-          index: 0,
+          index: nearestConnect.value.index,
         };
         if (newEdgeData.value.target === "output") {
           const fromData = newEdgeData.value.from;
@@ -160,7 +162,6 @@ export default defineComponent({
         if (targetNode.value === node.nodeId) {
           return closest;
         }
-
         const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
         const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
         const mouseX = mouseCurrentPosition.value.x;
@@ -170,6 +171,29 @@ export default defineComponent({
 
         if (!closest || distance < closest.distance) {
           return { node, distance };
+        }
+
+        return closest;
+      }, null);
+    });
+
+    const nearestConnect = computed(() => {
+      if (!newEdgeData.value || !nearestNode.value) return;
+      // (newEdgeData.value.target)
+      const nodePos = nearestNode.value.node.position;
+      const { inputCenters, outputCenters } = nodePos;
+      const isOutput = newEdgeData.value.target === "output";
+      const centers = isOutput ? inputCenters : outputCenters;
+      return centers.reduce((closest: null | any, center: number, index: number) => {
+        console.log(centers);
+        const nodeX = nodePos.x + (isOutput ? 0 : nodePos.width);
+        const nodeY = nodePos.y + center;
+        const mouseX = mouseCurrentPosition.value.x;
+        const mouseY = mouseCurrentPosition.value.y;
+
+        const distance = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
+        if (!closest || distance < closest.distance) {
+          return { index, distance };
         }
 
         return closest;
@@ -197,6 +221,7 @@ export default defineComponent({
       mouseCurrentPosition,
       nearestNode,
       addNode,
+      nearestConnect,
     };
   },
 });
@@ -217,7 +242,8 @@ export default defineComponent({
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"
       />
-      aa{{ mouseCurrentPosition }} {{ nearestNode }}
+      aa{{ mouseCurrentPosition }}
+      {{ nearestConnect }}
     </div>
     <div><button @click="addNode">Add node</button></div>
   </div>
