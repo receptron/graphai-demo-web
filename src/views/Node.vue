@@ -11,6 +11,7 @@
     @touchstart="onStartNode"
   >
     <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
+    <div class="w-full text-center bg-blue-500 py-1 leading-none text-xs" v-if="nodeData.type === 'computed'">{{ nodeData.agent?.replace(/Agent$/, "") }}</div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
@@ -39,16 +40,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData } from "./type";
-
-const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
-  return "touches" in event;
-};
-const getClientPos = (event: MouseEvent | TouchEvent) => {
-  const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-  const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
-  return { clientX, clientY };
-};
+import type { GUINodeData, GUINearestData } from "./gui/type";
+import { getClientPos, agent2NodeParams } from "./gui/utils";
 
 export default defineComponent({
   components: {},
@@ -64,6 +57,9 @@ export default defineComponent({
   },
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
+    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : { inputs: ["update"], outputs: ["date"] };
+    console.log(agentParams);
+
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);
     const outputsRef = ref<HTMLElement[]>([]);
@@ -84,9 +80,8 @@ export default defineComponent({
       offset.value.y = clientY - position.y;
     };
 
-    onMounted(() => {
+    const getWH = () => {
       const rect = thisRef.value.getBoundingClientRect();
-
       const parentTop = rect.top;
 
       const getCenterHeight = (el: HTMLElement) => {
@@ -95,15 +90,16 @@ export default defineComponent({
       };
       const outputCenters = outputsRef.value.map(getCenterHeight);
       const inputCenters = inputsRef.value.map(getCenterHeight);
-
-      ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
+      return { width: rect.width, height: rect.height, outputCenters, inputCenters }
+    };
+    onMounted(() => {
+      ctx.emit("updatePosition", getWH());
     });
 
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
-      const rect = thisRef.value.getBoundingClientRect();
       const { clientX, clientY } = getClientPos(event);
-      const newPosition = { x: clientX - offset.value.x, y: clientY - offset.value.y, width: rect.width, height: rect.height };
+      const newPosition = { ...getWH(), x: clientX - offset.value.x, y: clientY - offset.value.y };
       ctx.emit("updatePosition", newPosition);
     };
 
@@ -129,10 +125,7 @@ export default defineComponent({
     };
     // end of edge event
 
-    const edgeIO = {
-      inputs: ["messages", "text", "model"],
-      outputs: ["message", "text"],
-    };
+    const edgeIO = agentParams;
 
     watchEffect((onCleanup) => {
       if (isDragging.value) {

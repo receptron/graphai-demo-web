@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, PropType } from "vue";
-import { EdgeData2 } from "./type";
+import { EdgeData2 } from "./gui/type";
 
 export default defineComponent({
   components: {},

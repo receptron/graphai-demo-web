@@ -1,5 +1,6 @@
 import { ref, computed, ComputedRef, Ref } from "vue";
 import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData } from "./type";
+import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
 export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>, nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
   //  newEdge
@@ -139,3 +140,73 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
     nearestData,
   };
 };
+
+const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+  return "touches" in event;
+};
+export const getClientPos = (event: MouseEvent | TouchEvent) => {
+  const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
+  const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
+  return { clientX, clientY };
+};
+
+export const graphToGUIData = (graphData: GraphData) => {
+  let i = -50;
+  let j = 10;
+
+  const nodeIds = Object.keys(graphData.nodes);
+  const rawEdge: GUIEdgeData[] = [];
+  const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
+    i = i + 150;
+    if (i > 800) {
+      i = 100;
+      j = j + 150;
+    }
+    const node = graphData.nodes[nodeId];
+    inputs2dataSources(node).forEach((source) => {
+      const expect = source.value || source.nodeId;
+      if (nodeIds.includes(expect)) {
+        rawEdge.push({
+          from: { nodeId: expect, index: 0 },
+          to: { nodeId, index: 0 },
+          type: "AA",
+        });
+      }
+    });
+    const isComputed = isComputedNodeData(node);
+    return {
+      type: isComputed ? "computed" : "static",
+      nodeId,
+      position: { x: i, y: j },
+
+      agent: isComputed ? (node.agent as string) : undefined,
+      guiAgentId: isComputed ? (node.agent as string) : undefined,
+      params: isComputed ? node.params : undefined,
+    };
+  });
+
+  return {
+    rawEdge,
+    rawNode,
+  };
+};
+
+export const agent2NodeParams: Record<string, { inputs: string[]; outputs: string[] }> = {
+  eventAgent: {
+    inputs: ["wait"],
+    outputs: ["text"],
+  },
+  openAIAgent: {
+    inputs: ["messages", "text", "model"],
+    outputs: ["message", "text"],
+  },
+  stringTemplateAgent: {
+    inputs: ["message1", "message2"],
+    outputs: ["text"],
+  },
+  pushAgent: {
+    inputs: ["array", "item"],
+    outputs: ["array"],
+  },
+};
+

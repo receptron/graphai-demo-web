@@ -1,46 +1,18 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
-import { inputs2dataSources } from "graphai";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { GUINodeData, GUIEdgeData, EdgeData } from "./type";
+import { GUINodeData, GUIEdgeData, EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
-import { useNewEdge } from "./newEdge";
+import { useNewEdge, graphToGUIData } from "./gui/utils";
 export default defineComponent({
   components: {
     Node,
     Edge,
   },
   setup() {
-    let i = -50,
-      j = 10;
-
-    const nodeIds = Object.keys(graphChat.nodes);
-    const rawEdge: GUIEdgeData[] = [];
-    const rawNode = Object.keys(graphChat.nodes).map((nodeId) => {
-      i = i + 150;
-      if (i > 800) {
-        i = 100;
-        j = j + 150;
-      }
-      const node = graphChat.nodes[nodeId];
-      inputs2dataSources(node).forEach((source) => {
-        const expect = source.value || source.nodeId;
-        if (nodeIds.includes(expect)) {
-          rawEdge.push({
-            from: { nodeId: expect, index: 0 },
-            to: { nodeId, index: 1 },
-            type: "AA",
-          });
-        }
-      });
-      return {
-        type: "computed",
-        nodeId,
-        position: { x: i, y: j },
-      };
-    });
+    const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
     const nodes = ref<GUINodeData[]>(rawNode);
     const edges = ref<GUIEdgeData[]>(rawEdge);
@@ -76,7 +48,6 @@ export default defineComponent({
 
     const addNode = () => {
       const uuid = self.crypto.randomUUID();
-      console.log(uuid);
       nodes.value.push({
         nodeId: uuid,
         type: "aa",
