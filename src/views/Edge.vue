@@ -29,7 +29,7 @@ export default defineComponent({
     const isHover = ref(false);
     const edgePath = computed(() => {
       const { x, y, width, inputCenters, outputCenters } = props.fromData.data.position;
-      console.log( props.fromData.data);
+      console.log(props.fromData.data);
       const { index } = props.fromData;
       const { x: x2, y: y2 } = props.toData.data.position;
       const { index: index2 } = props.toData;

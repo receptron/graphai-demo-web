@@ -12,12 +12,7 @@
     <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
 
     <div class="flex flex-col items-end mt-1">
-      <div
-        v-for="(output, index) in edgeIO.outputs"
-        :key="'out-' + index"
-        class="relative flex items-center"
-        ref="outputsRef"
-      >
+      <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
         <div
           class="w-4 h-4 bg-green-500 rounded-full absolute right-[-10px] min-w-[12px]"
@@ -28,12 +23,7 @@
     </div>
 
     <div class="flex flex-col items-start mt-1 mb-1">
-      <div
-        v-for="(input, index) in edgeIO.inputs"
-        :key="'in-' + index"
-        class="relative flex items-center"
-        ref="inputsRef"
-      >
+      <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
           class="w-4 h-4 bg-blue-500 rounded-full absolute left-[-10px] min-w-[12px]"
           @mousedown="(e) => onStartEdge(e, 'input', index)"
@@ -43,9 +33,7 @@
       </div>
     </div>
   </div>
-
 </template>
-
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
@@ -68,7 +56,7 @@ export default defineComponent({
     const thisRef = ref();
     const inputsRef = ref();
     const outputsRef = ref();
-    
+
     const isDragging = ref(false);
     const isNewEdge = ref(false);
     const offset = ref({ x: 0, y: 0 });
@@ -104,11 +92,10 @@ export default defineComponent({
         }
         return null;
       });
-      
+
       console.log("Output Centers:", outputCenters);
       console.log("Input Centers:", inputCenters);
       ctx.emit("updatePosition", { width: rect.width, height: rect.height, outputCenters, inputCenters });
-
     });
 
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
@@ -144,7 +131,7 @@ export default defineComponent({
 
     const edgeIO = {
       inputs: ["messages", "text", "model"],
-      outputs: ["message", "text", ],
+      outputs: ["message", "text"],
     };
 
     watchEffect((onCleanup) => {
