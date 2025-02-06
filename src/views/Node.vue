@@ -42,6 +42,25 @@ import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from
 import type { GUINodeData, GUINearestData } from "./gui/type";
 import { getClientPos } from "./gui/utils";
 
+export const agent2NodeParams: Record<string, { inputs: string[]; outputs: string[] }> = {
+  eventAgent: {
+    inputs: ["wait"],
+    outputs: ["text"],
+  },
+  openAIAgent: {
+    inputs: ["messages", "text", "model"],
+    outputs: ["message", "text"],
+  },
+  stringTemplateAgent: {
+    inputs: ["message1", "message2"],
+    outputs: ["text"],
+  },
+  pushAgent: {
+    inputs: ["array", "item"],
+    outputs: ["array"],
+  },
+};
+
 export default defineComponent({
   components: {},
   props: {
@@ -56,6 +75,9 @@ export default defineComponent({
   },
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
+    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : { inputs: ["update"], outputs: ["date"] };
+    console.log(agentParams);
+
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);
     const outputsRef = ref<HTMLElement[]>([]);
@@ -121,10 +143,7 @@ export default defineComponent({
     };
     // end of edge event
 
-    const edgeIO = {
-      inputs: ["messages", "text", "model"],
-      outputs: ["message", "text"],
-    };
+    const edgeIO = agentParams;
 
     watchEffect((onCleanup) => {
       if (isDragging.value) {

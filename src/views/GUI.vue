@@ -12,10 +12,7 @@ export default defineComponent({
     Edge,
   },
   setup() {
-    const {
-      rawEdge,
-      rawNode,
-    } = graphToGUIData(graphChat)
+    const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
     const nodes = ref<GUINodeData[]>(rawNode);
     const edges = ref<GUIEdgeData[]>(rawEdge);

@@ -1,5 +1,11 @@
+import type { DefaultParamsType } from "graphai";
+
 export type GUINodeData = {
   type: string;
+  agent?: string;
+  guiAgentId?: string;
+  params?: DefaultParamsType;
+  isResult?: boolean;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
 };

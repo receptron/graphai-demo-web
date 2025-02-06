@@ -1,6 +1,6 @@
 import { ref, computed, ComputedRef, Ref } from "vue";
 import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData } from "./type";
-import { inputs2dataSources, GraphData } from "graphai";
+import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
 export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>, nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
   //  newEdge
@@ -141,7 +141,6 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
   };
 };
 
-
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
   return "touches" in event;
 };
@@ -150,7 +149,6 @@ export const getClientPos = (event: MouseEvent | TouchEvent) => {
   const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
   return { clientX, clientY };
 };
-
 
 export const graphToGUIData = (graphData: GraphData) => {
   let i = -50;
@@ -170,15 +168,20 @@ export const graphToGUIData = (graphData: GraphData) => {
       if (nodeIds.includes(expect)) {
         rawEdge.push({
           from: { nodeId: expect, index: 0 },
-          to: { nodeId, index: 1 },
+          to: { nodeId, index: 0 },
           type: "AA",
         });
       }
     });
+    const isComputed = isComputedNodeData(node);
     return {
-      type: "computed",
+      type: isComputed ? "computed" : "static",
       nodeId,
       position: { x: i, y: j },
+
+      agent: isComputed ? (node.agent as string) : undefined,
+      guiAgentId: isComputed ? (node.agent as string) : undefined,
+      params: isComputed ? node.params : undefined,
     };
   });
 
