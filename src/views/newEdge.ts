@@ -123,7 +123,7 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
   });
 
   const nearestData = computed(() => {
-    if (!nearestNode.value || !nearestConnect.value || !newEdgeData.value) return null;
+    if (!nearestNode.value || !nearestConnect.value || !newEdgeData.value) return;
     return {
       nodeId: nearestNode.value.node.nodeId,
       index: nearestConnect.value.index,

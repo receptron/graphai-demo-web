@@ -1,6 +1,7 @@
 <template>
   <div
-    class="w-24 bg-blue-400 text-white text-center cursor-grab select-none absolute flex flex-col"
+    class="w-24 text-white text-center cursor-grab select-none absolute flex flex-col"
+    :class="expectNearNode ? 'bg-blue-200' : 'bg-blue-400'"
     :style="{
       transform: transform,
       cursor: isDragging ? 'grabbing' : 'grab',
@@ -10,12 +11,12 @@
     @touchstart="onStartNode"
   >
     <div class="w-full text-center bg-blue-500 py-1 leading-none">{{ nodeData.nodeId }}</div>
-
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
         <div
-          class="w-4 h-4 bg-green-500 rounded-full absolute right-[-10px] min-w-[12px]"
+          class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
+          :class="isExpectNearButton('input', index) ? 'bg-green-200' : 'bg-green-500'"
           @mousedown="(e) => onStartEdge(e, 'output', index)"
           @touchstart="(e) => onStartEdge(e, 'output', index)"
         ></div>
@@ -25,7 +26,8 @@
     <div class="flex flex-col items-start mt-1 mb-1">
       <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
-          class="w-4 h-4 bg-blue-500 rounded-full absolute left-[-10px] min-w-[12px]"
+          class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
+          :class="isExpectNearButton('output', index) ? 'bg-blue-200' : 'bg-blue-500'"
           @mousedown="(e) => onStartEdge(e, 'input', index)"
           @touchstart="(e) => onStartEdge(e, 'input', index)"
         ></div>
@@ -56,8 +58,8 @@ export default defineComponent({
       required: true,
     },
     nearestData: {
-      type: Object as PropType<GUINearestData | null>,
-      required: true,
+      type: Object as PropType<GUINearestData>,
+      default: undefined,
     },
   },
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
@@ -165,6 +167,17 @@ export default defineComponent({
     const transform = computed(() => {
       return `translate(${props.nodeData.position.x}px, ${props.nodeData.position.y}px)`;
     });
+    const expectNearNode = computed(() => {
+      return props.nodeData.nodeId === props.nearestData?.nodeId;
+    });
+
+    const isExpectNearButton = (targetType: string, index: number) => {
+      if (!expectNearNode.value) {
+        return false;
+      }
+      return props.nearestData?.target === targetType && props.nearestData?.index === index;
+    };
+
     return {
       transform,
       onStartNode,
@@ -176,6 +189,9 @@ export default defineComponent({
 
       inputsRef,
       outputsRef,
+
+      expectNearNode,
+      isExpectNearButton,
     };
   },
 });
