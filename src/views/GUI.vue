@@ -3,10 +3,10 @@ import { defineComponent, ref, computed } from "vue";
 import { inputs2dataSources } from "graphai";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { GUINodeData, GUIEdgeData, EdgeData } from "./type";
+import { GUINodeData, GUIEdgeData, EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
-import { useNewEdge } from "./newEdge";
+import { useNewEdge } from "./gui/newEdge";
 export default defineComponent({
   components: {
     Node,

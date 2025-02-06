@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData } from "./type";
+import type { GUINodeData, GUINearestData } from "./gui/type";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
   return "touches" in event;
