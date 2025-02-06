@@ -40,15 +40,7 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData, GUINearestData } from "./gui/type";
-
-const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
-  return "touches" in event;
-};
-const getClientPos = (event: MouseEvent | TouchEvent) => {
-  const clientX = isTouch(event) ? event.touches[0].clientX : event.clientX;
-  const clientY = isTouch(event) ? event.touches[0].clientY : event.clientY;
-  return { clientX, clientY };
-};
+import { getClientPos } from "./gui/utils";
 
 export default defineComponent({
   components: {},
