@@ -11,12 +11,19 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, PropType } from "vue";
+import { EdgeData2 } from "./type";
 
 export default defineComponent({
   components: {},
   props: {
-    fromData: Object as PropType<any>,
-    toData: Object as PropType<any>,
+    fromData: {
+      type: Object as PropType<EdgeData2>,
+      required: true,
+    },
+    toData: {
+      type: Object as PropType<EdgeData2>,
+      required: true,
+    },
   },
   setup(props) {
     const isHover = ref(false);

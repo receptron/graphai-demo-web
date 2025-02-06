@@ -51,7 +51,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["updatePosition", "newEdge"],
+  emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const thisRef = ref();
     const isDragging = ref(false);
@@ -98,7 +98,7 @@ export default defineComponent({
     };
     const onEndEdge = () => {
       isNewEdge.value = false;
-      ctx.emit("newEdge", { on: "end" });
+      ctx.emit("newEdgeEnd", { on: "end" });
     };
     const onMoveEdge = (event: MouseEvent | TouchEvent) => {
       if (!isNewEdge.value) return;

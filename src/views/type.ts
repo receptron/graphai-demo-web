@@ -40,13 +40,16 @@ export type NewEdgeEventData = {
 };
 
 type NewEdgeMouseData = {
-  data: { position: { x: number; y: number } };
+  data: { position: { x: number; y: number; width?: number } };
+  index?: number; // index and width never exists
 };
 type NewEdgeNodeData = {
   nodeId: string;
   index: number;
   data: GUINodeData;
 };
+
+export type EdgeData2 = NewEdgeMouseData | NewEdgeNodeData;
 
 export type NewEdgeData1 = {
   target: "output";

@@ -80,6 +80,7 @@ export default defineComponent({
     const targetNode = ref("");
     const newEdgeEvent = (data: NewEdgeEventData) => {
       const rect = svgRef.value.getBoundingClientRect();
+      mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
       if (data.on === "start") {
         targetNode.value = data.nodeId;
         const nodeData = {
@@ -88,7 +89,6 @@ export default defineComponent({
           index: data.index,
         };
 
-        mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
         const positionData = {
           data: { position: mouseCurrentPosition.value },
         };
@@ -107,7 +107,6 @@ export default defineComponent({
         }
       }
       if (data.on === "move") {
-        mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
         const newData = { data: { position: mouseCurrentPosition.value } };
         if (newEdgeData.value) {
           if (newEdgeData.value.target === "output") {
@@ -117,6 +116,9 @@ export default defineComponent({
           }
         }
       }
+    };
+
+    const newEdgeEventEnd = (data: NewEdgeEventData) => {
       if (data.on === "end") {
         if (!nearestNode.value || !newEdgeData.value) return;
         const nearest = {
@@ -179,6 +181,7 @@ export default defineComponent({
       nodes,
       edgeDataList,
       newEdgeEvent,
+      newEdgeEventEnd,
       newEdgeData,
       svgRef,
       mouseCurrentPosition,
@@ -194,7 +197,14 @@ export default defineComponent({
       <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" />
       <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" />
     </svg>
-    <Node v-for="(node, index) in nodes" :key="index" :node-data="node" @update-position="(pos) => updatePosition(index, pos)" @new-edge="newEdgeEvent" />
+    <Node
+      v-for="(node, index) in nodes"
+      :key="index"
+      :node-data="node"
+      @update-position="(pos) => updatePosition(index, pos)"
+      @new-edge="newEdgeEvent"
+      @new-edge-end="newEdgeEventEnd"
+    />
     aa{{ mouseCurrentPosition }} {{ nearestNode }}
   </div>
 </template>
