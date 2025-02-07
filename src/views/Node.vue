@@ -67,7 +67,6 @@ export default defineComponent({
   emits: ["updatePosition", "savePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
-    console.log(agentParams);
 
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);

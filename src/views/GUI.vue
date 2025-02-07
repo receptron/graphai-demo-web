@@ -2,6 +2,8 @@
 import { defineComponent, computed, onMounted } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
+import AddNode from "./AddNode.vue";
+
 import { GUINodeData, EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
@@ -13,6 +15,7 @@ export default defineComponent({
   components: {
     Node,
     Edge,
+    AddNode,
   },
   setup() {
     const store = useStore();
@@ -55,15 +58,6 @@ export default defineComponent({
       });
     });
 
-    const addNode = () => {
-      const uuid = self.crypto.randomUUID();
-      store.pushNode({
-        nodeId: uuid,
-        type: "aa",
-        position: { x: Math.random() * 200, y: Math.random() * 200 },
-      });
-    };
-
     const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
 
     return {
@@ -78,7 +72,6 @@ export default defineComponent({
       newEdgeData,
       svgRef,
       nearestData,
-      addNode,
     };
   },
 });
@@ -103,7 +96,7 @@ export default defineComponent({
       />
     </div>
     <div>
-      <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
+      <AddNode />
       <button
         @click="store.undo"
         class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
