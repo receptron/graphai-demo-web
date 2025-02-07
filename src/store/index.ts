@@ -42,7 +42,7 @@ export const useStore = defineStore("store", () => {
     index.value = index.value + 1;
   };
 
-  const initHistory = (nodeData: GUINodeData[], edgeData: GUIEdgeData[]) => {
+  const initData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[]) => {
     // this time, node position is not set. save after mounted.
     updateData(nodeData, edgeData, false);
   };
@@ -90,7 +90,7 @@ export const useStore = defineStore("store", () => {
     hisotories,
 
     // methods
-    initHistory,
+    initData,
     pushNode,
     pushEdge,
     updatePosition,

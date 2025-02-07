@@ -54,7 +54,7 @@ export default defineComponent({
     <input type="text" v-model="nodeId" class="border-2" />
     <select class="border-2" v-model="agent">
       <option>StaticNode</option>
-      <option v-for="(a, k) in nodesKey" :key="k">{{ a }}</option>
+      <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
     </select>
     <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
   </div>

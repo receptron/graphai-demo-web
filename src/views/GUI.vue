@@ -22,7 +22,7 @@ export default defineComponent({
 
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
-    store.initHistory(rawNode, rawEdge);
+    store.initData(rawNode, rawEdge);
     onMounted(() => {
       savePosition();
     });
