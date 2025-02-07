@@ -157,10 +157,10 @@ export const graphToGUIData = (graphData: GraphData) => {
   const nodeIds = Object.keys(graphData.nodes);
   const rawEdge: GUIEdgeData[] = [];
   const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
-    i = i + 150;
+    i = i + 200;
     if (i > 800) {
       i = 100;
-      j = j + 150;
+      j = j + 300;
     }
     const node = graphData.nodes[nodeId];
     inputs2dataSources(node).forEach((source) => {
@@ -209,4 +209,3 @@ export const agent2NodeParams: Record<string, { inputs: string[]; outputs: strin
     outputs: ["array"],
   },
 };
-

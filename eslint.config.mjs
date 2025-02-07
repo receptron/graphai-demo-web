@@ -84,6 +84,7 @@ export default [
       "sonarjs/pseudo-random": "off",
       "sonarjs/no-nested-functions": "off",
       "sonarjs/no-nested-conditional": "off",
+      "sonarjs/no-selector-parameter": "off",
       "sonarjs/no-identical-conditions": "error",
       "sonarjs/no-identical-expressions": "error",
       "sonarjs/no-identical-functions": "error",
