@@ -64,7 +64,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: ["updatePosition", "newEdge", "newEdgeEnd"],
+  emits: ["updatePosition", "savePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
     console.log(agentParams);
@@ -114,6 +114,7 @@ export default defineComponent({
 
     const onEndNode = () => {
       isDragging.value = false;
+      ctx.emit("savePosition");
     };
 
     // edge event

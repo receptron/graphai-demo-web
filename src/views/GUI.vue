@@ -29,8 +29,10 @@ export default defineComponent({
     });
 
     const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
-      // TODO: move to store
       store.updatePosition(index, pos);
+    };
+    const savePosition = () => {
+      store.saveData();
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
@@ -63,6 +65,7 @@ export default defineComponent({
 
     return {
       updatePosition,
+      savePosition,
 
       store,
 
@@ -91,6 +94,7 @@ export default defineComponent({
         :node-data="node"
         :nearest-data="nearestData"
         @update-position="(pos) => updatePosition(index, pos)"
+        @save-position="savePosition"
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"
       />
@@ -100,6 +104,7 @@ export default defineComponent({
         <option>aa</option>
       </select>
       <button @click="addNode">Add node</button>
+      <button @click="store.undo">Undo</button>
     </div>
   </div>
 </template>
