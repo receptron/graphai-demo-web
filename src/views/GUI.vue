@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, onMounted } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
 import { GUINodeData, EdgeData } from "./gui/type";
@@ -20,6 +20,9 @@ export default defineComponent({
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
     store.initHistory(rawNode, rawEdge);
+    onMounted(() => {
+      savePosition();
+    });
 
     const nodeRecords = computed(() => {
       return store.nodes.reduce((tmp: Record<string, GUINodeData>, current) => {
@@ -100,11 +103,21 @@ export default defineComponent({
       />
     </div>
     <div>
-      <select>
-        <option>aa</option>
-      </select>
-      <button @click="addNode">Add node</button>
-      <button @click="store.undo">Undo</button>
+      <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
+      <button
+        @click="store.undo"
+        class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
+        :class="store.undoable ? 'bg-sky-500 hover:bg-sky-700' : 'bg-sky-200'"
+      >
+        Undo
+      </button>
+      <button
+        @click="store.redo"
+        class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
+        :class="store.redoable ? 'bg-sky-500 hover:bg-sky-700' : 'bg-sky-200'"
+      >
+        Redo
+      </button>
     </div>
   </div>
 </template>
