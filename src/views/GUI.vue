@@ -61,7 +61,7 @@ export default defineComponent({
       });
     };
 
-    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge(nodeRecords);
+    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
 
     return {
       updatePosition,

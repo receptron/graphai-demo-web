@@ -1,10 +1,10 @@
-import { ref, computed, ComputedRef } from "vue";
+import { ref, computed } from "vue";
 import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
 import { useStore } from "@/store";
 
-export const useNewEdge = (nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
+export const useNewEdge = () => {
   const store = useStore();
   //  newEdge
   const svgRef = ref();
@@ -18,7 +18,7 @@ export const useNewEdge = (nodeRecords: ComputedRef<Record<string, GUINodeData>>
       targetNode.value = data.nodeId;
       const nodeData = {
         nodeId: data.nodeId,
-        data: nodeRecords.value[data.nodeId],
+        data: store.nodeRecords[data.nodeId],
         index: data.index,
       };
 
