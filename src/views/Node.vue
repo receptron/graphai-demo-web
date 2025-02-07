@@ -16,7 +16,7 @@
     </div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
-        <span class="mr-2 text-xs whitespace-nowrap">{{ output }}</span>
+        <span class="mr-2 text-xs whitespace-nowrap">{{ output.name }}</span>
         <div
           class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
           :class="nodeOutputClass(isExpectNearButton('input', index), nodeData)"
@@ -34,7 +34,7 @@
           @mousedown="(e) => onStartEdge(e, 'input', index)"
           @touchstart="(e) => onStartEdge(e, 'input', index)"
         ></div>
-        <span class="ml-2 text-xs whitespace-nowrap">{{ input }}</span>
+        <span class="ml-2 text-xs whitespace-nowrap">{{ input.name }}</span>
       </div>
     </div>
     <div class="w-full p-2 flex flex-col gap-1">
@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData, GUINearestData } from "./gui/type";
-import { getClientPos, agent2NodeParams } from "./gui/utils";
+import { getClientPos, agent2NodeParams, staticNodeParams } from "./gui/utils";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "./gui/classUtils";
 
 export default defineComponent({
@@ -66,7 +66,7 @@ export default defineComponent({
   },
   emits: ["updatePosition", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
-    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : { inputs: ["update"], outputs: ["date"] };
+    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
     console.log(agentParams);
 
     const thisRef = ref();

@@ -1,5 +1,5 @@
 import { ref, computed, ComputedRef, Ref } from "vue";
-import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData } from "./type";
+import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
 export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>, nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
@@ -191,21 +191,23 @@ export const graphToGUIData = (graphData: GraphData) => {
   };
 };
 
-export const agent2NodeParams: Record<string, { inputs: string[]; outputs: string[] }> = {
+export const agent2NodeParams: Record<string, InputOutput> = {
   eventAgent: {
-    inputs: ["wait"],
-    outputs: ["text"],
+    inputs: [{ name: "wait" }],
+    outputs: [{ name: "text" }],
   },
   openAIAgent: {
-    inputs: ["messages", "text", "model"],
-    outputs: ["message", "text"],
+    inputs: [{ name: "messages" }, { name: "text" }, { name: "model" }],
+    outputs: [{ name: "message" }, { name: "text" }],
   },
   stringTemplateAgent: {
-    inputs: ["message1", "message2"],
-    outputs: ["text"],
+    inputs: [{ name: "message1" }, { name: "message2" }],
+    outputs: [{ name: "text" }],
   },
   pushAgent: {
-    inputs: ["array", "item"],
-    outputs: ["array"],
+    inputs: [{ name: "array" }, { name: "item" }],
+    outputs: [{ name: "array" }],
   },
 };
+
+export const staticNodeParams: InputOutput = { inputs: [{ name: "update" }], outputs: [{ name: "date" }] };

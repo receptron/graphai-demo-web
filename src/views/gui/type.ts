@@ -78,3 +78,7 @@ export type NewEdgeData2 = {
 };
 
 export type NewEdgeData = NewEdgeData1 | NewEdgeData2;
+
+// TODO good name
+export type InputOutputParam = { name: string };
+export type InputOutput = { inputs: InputOutputParam[]; outputs: InputOutputParam[] };
