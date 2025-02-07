@@ -30,9 +30,7 @@ export default defineComponent({
 
     const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
       // TODO: move to store
-      const node = store.nodes[index];
-      node.position = { ...node.position, ...pos };
-      store.nodes[index] = node;
+      store.updatePosition(index, pos);
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
