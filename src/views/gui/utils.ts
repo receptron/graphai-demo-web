@@ -1,5 +1,5 @@
 import { ref, computed } from "vue";
-import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput } from "./type";
+import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput, InputOutputParam } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
 import { useStore } from "@/store";
@@ -71,7 +71,6 @@ export const useNewEdge = () => {
       if (newEdgeData.value.target === "input") {
         const toData = newEdgeData.value.to;
         const { nodeId, index } = toData;
-        console.log(toData);
         const addEdge = {
           type: "AA",
           from: nearestData.value,
@@ -162,6 +161,22 @@ export const graphToGUIData = (graphData: GraphData) => {
 
   const nodeIds = Object.keys(graphData.nodes);
   const rawEdge: GUIEdgeData[] = [];
+  const node2agent = Object.keys(graphData.nodes).reduce((tmp: Record<string, string | null>, nodeId) => {
+    const node = graphData.nodes[nodeId];
+    tmp[nodeId] = isComputedNodeData(node) ? (node.agent as string) : null;
+    return tmp;
+  }, {});
+
+  const getIndex = (nodeId: string, PropId: string, key: keyof InputOutput) => {
+    const agent = node2agent[nodeId];
+    const indexes = agent ? (agent2NodeParams[agent][key] as InputOutputParam[]) : [];
+    const index = indexes.findIndex((data) => data.name === PropId);
+    if (index === -1) {
+      console.log(`${key} ${nodeId}.${PropId} is not hit`);
+    }
+    return index;
+  };
+
   const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
     i = i + 200;
     if (i > 800) {
@@ -169,17 +184,29 @@ export const graphToGUIData = (graphData: GraphData) => {
       j = j + 300;
     }
     const node = graphData.nodes[nodeId];
-    inputs2dataSources(node).forEach((source) => {
-      const expect = source.value || source.nodeId;
-      if (nodeIds.includes(expect)) {
-        rawEdge.push({
-          from: { nodeId: expect, index: 0 },
-          to: { nodeId, index: 0 },
-          type: "AA",
-        });
-      }
-    });
     const isComputed = isComputedNodeData(node);
+    const inputs = isComputed ? (node.inputs ?? {}) : node.update ? { update: node.update } : {};
+    Object.keys(inputs).forEach((inputProp) => {
+      // node, props
+      // inputs(to), oututs(from)
+      inputs2dataSources([inputs[inputProp]]).forEach((source) => {
+        const outputNodeId = source.value || source.nodeId;
+        if (source.propIds && source.propIds.length > 0) {
+          source.propIds.forEach((outputPropId) => {
+            if (nodeIds.includes(outputNodeId)) {
+              const fromIndex = getIndex(outputNodeId, outputPropId, "outputs");
+              const toIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
+
+              rawEdge.push({
+                from: { nodeId: outputNodeId, index: fromIndex > -1 ? fromIndex : 0 },
+                to: { nodeId, index: toIndex > -1 ? toIndex : 0 },
+                type: "AA",
+              });
+            }
+          });
+        }
+      });
+    });
     return {
       type: isComputed ? "computed" : "static",
       nodeId,
@@ -209,7 +236,7 @@ export const agent2NodeParams: Record<string, InputOutput> = {
     params: [],
   },
   stringTemplateAgent: {
-    inputs: [{ name: "message1" }, { name: "message2" }],
+    inputs: [{ name: "text" }, { name: "message1" }, { name: "message2" }],
     outputs: [{ name: "text" }],
     params: [],
   },

@@ -87,9 +87,9 @@ export default defineComponent({
 <template>
   <div>
     <div class="w-screen h-[80vh] relative">
-      <svg x="0" y="0" width="100%" height="80%" class="absolute" ref="svgRef">
-        <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" />
-        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" />
+      <svg x="0" y="0" width="100%" height="80%" class="absolute pointer-events-none" ref="svgRef">
+        <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" class="pointer-events-auto" />
+        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"
