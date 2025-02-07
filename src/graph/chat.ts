@@ -35,7 +35,7 @@ export const graphChat: GraphData = {
     },
     reducer: {
       agent: "pushAgent",
-      inputs: { array: ":messages", items: [":userInput.message", { content: ":llm.text", role: "assistant" }] },
+      inputs: { array: ":messages", items: [":userInput.message", ":llm.message"] },
     },
   },
 };
