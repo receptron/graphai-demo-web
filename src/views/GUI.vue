@@ -1,36 +1,42 @@
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { GUINodeData, GUIEdgeData, EdgeData } from "./gui/type";
+import { GUINodeData, EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge, graphToGUIData } from "./gui/utils";
+
+import { useStore } from "@/store";
+
 export default defineComponent({
   components: {
     Node,
     Edge,
   },
   setup() {
+    const store = useStore();
+
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
-    const nodes = ref<GUINodeData[]>(rawNode);
-    const edges = ref<GUIEdgeData[]>(rawEdge);
+    store.initHistory(rawNode, rawEdge);
+
     const nodeRecords = computed(() => {
-      return nodes.value.reduce((tmp: Record<string, GUINodeData>, current) => {
+      return store.nodes.reduce((tmp: Record<string, GUINodeData>, current) => {
         tmp[current.nodeId] = current;
         return tmp;
       }, {});
     });
 
     const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
-      const node = nodes.value[index];
+      // TODO: move to store
+      const node = store.nodes[index];
       node.position = { ...node.position, ...pos };
-      nodes.value[index] = node;
+      store.nodes[index] = node;
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
-      return edges.value.map((edge) => {
+      return store.edges.map((edge) => {
         const { type, from, to } = edge;
         return {
           type,
@@ -48,18 +54,20 @@ export default defineComponent({
 
     const addNode = () => {
       const uuid = self.crypto.randomUUID();
-      nodes.value.push({
+      store.pushNode({
         nodeId: uuid,
         type: "aa",
         position: { x: Math.random() * 200, y: Math.random() * 200 },
       });
     };
 
-    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge(nodes, edges, nodeRecords);
+    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge(nodeRecords);
 
     return {
       updatePosition,
-      nodes,
+
+      store,
+
       edgeDataList,
       newEdgeEvent,
       newEdgeEventEnd,
@@ -74,13 +82,13 @@ export default defineComponent({
 
 <template>
   <div>
-    <div class="w-screen h-screen relative">
-      <svg x="0" y="0" width="100%" height="100%" class="absolute" ref="svgRef">
+    <div class="w-screen h-[80vh] relative">
+      <svg x="0" y="0" width="100%" height="80%" class="absolute" ref="svgRef">
         <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" />
         <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" />
       </svg>
       <Node
-        v-for="(node, index) in nodes"
+        v-for="(node, index) in store.nodes"
         :key="index"
         :node-data="node"
         :nearest-data="nearestData"
@@ -89,6 +97,11 @@ export default defineComponent({
         @new-edge-end="newEdgeEventEnd"
       />
     </div>
-    <div><button @click="addNode">Add node</button></div>
+    <div>
+      <select>
+        <option>aa</option>
+      </select>
+      <button @click="addNode">Add node</button>
+    </div>
   </div>
 </template>

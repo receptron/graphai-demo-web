@@ -1,8 +1,11 @@
-import { ref, computed, ComputedRef, Ref } from "vue";
+import { ref, computed, ComputedRef } from "vue";
 import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
 
-export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>, nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
+import { useStore } from "@/store";
+
+export const useNewEdge = (nodeRecords: ComputedRef<Record<string, GUINodeData>>) => {
+  const store = useStore();
   //  newEdge
   const svgRef = ref();
   const newEdgeData = ref<NewEdgeData | null>(null);
@@ -54,16 +57,21 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
 
       if (newEdgeData.value.target === "output") {
         const fromData = newEdgeData.value.from;
+        const { nodeId, index } = fromData;
         const addEdge = {
           type: "AA",
-          from: fromData,
+          from: {
+            nodeId,
+            index,
+          },
           to: nearestData.value,
         };
-        edges.value.push(addEdge);
+        store.pushEdge(addEdge);
       }
       if (newEdgeData.value.target === "input") {
         const toData = newEdgeData.value.to;
         const { nodeId, index } = toData;
+        console.log(toData);
         const addEdge = {
           type: "AA",
           from: nearestData.value,
@@ -72,18 +80,16 @@ export const useNewEdge = (nodes: Ref<GUINodeData[]>, edges: Ref<GUIEdgeData[]>,
             index,
           },
         };
-        edges.value.push(addEdge);
+        store.pushEdge(addEdge);
       }
       newEdgeData.value = null;
-      // edges.value.push(addEdge);
-      console.log(edges.value);
     }
   };
 
   const nearestNode = computed(() => {
-    if (!nodes.value.length) return null;
+    if (!store.nodes.length) return null;
 
-    return nodes.value.reduce((closest: null | { node: GUINodeData; distance: number }, node) => {
+    return store.nodes.reduce((closest: null | { node: GUINodeData; distance: number }, node) => {
       if (targetNode.value === node.nodeId) {
         return closest;
       }
@@ -195,18 +201,46 @@ export const agent2NodeParams: Record<string, InputOutput> = {
   eventAgent: {
     inputs: [{ name: "wait" }],
     outputs: [{ name: "text" }],
+    params: [],
   },
   openAIAgent: {
     inputs: [{ name: "messages" }, { name: "text" }, { name: "model" }],
     outputs: [{ name: "message" }, { name: "text" }],
+    params: [],
   },
   stringTemplateAgent: {
     inputs: [{ name: "message1" }, { name: "message2" }],
     outputs: [{ name: "text" }],
+    params: [],
   },
   pushAgent: {
     inputs: [{ name: "array" }, { name: "item" }],
     outputs: [{ name: "array" }],
+    params: [],
+  },
+  convertAgent: {
+    agent: "copyAgent",
+    inputSchema: {
+      context: {
+        inputs: {
+          person0: {
+            name: "interviewer",
+            system: ":interviewer",
+          },
+          person1: {
+            name: ":name",
+            system: "You are ${:name}.",
+            greeting: "Hi, I'm ${:name}",
+          },
+        },
+      },
+    },
+    inputs: [
+      { name: "interviewer", type: "text" },
+      { name: "name", type: "text" },
+    ],
+    outputs: [{ name: "array" }],
+    params: [],
   },
 };
 
