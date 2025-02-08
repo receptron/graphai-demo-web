@@ -1,4 +1,4 @@
-import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData } from "./type";
+import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData, ClosestNodeData } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -287,4 +287,24 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
     return addEdge;
   }
   return null;
+};
+
+export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseCurrentPosition: { x: number; y: number }) => {
+  return nodes.reduce((closest: null | ClosestNodeData, node) => {
+    if (targetNode === node.nodeId) {
+      return closest;
+    }
+    const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
+    const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
+    const mouseX = mouseCurrentPosition.x;
+    const mouseY = mouseCurrentPosition.y;
+
+    const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
+
+    if (!closest || distance < closest.distance) {
+      return { node, distance };
+    }
+
+    return closest;
+  }, null);
 };

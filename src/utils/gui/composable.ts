@@ -1,7 +1,7 @@
 import { NewEdgeEventData, NewEdgeData, ClosestNodeData, GUINearestData } from "./type";
 import { ref, computed } from "vue";
 import { useStore } from "@/store";
-import { edgeStartEventData, edgeUpdateEventData, edgeEndEventData } from "./utils";
+import { edgeStartEventData, edgeUpdateEventData, edgeEndEventData, pickNearestNode } from "./utils";
 
 export const useNewEdge = () => {
   const store = useStore();
@@ -36,27 +36,10 @@ export const useNewEdge = () => {
     newEdgeData.value = null;
   };
 
-  
   const nearestNode = computed<ClosestNodeData | null>(() => {
     if (!store.nodes.length) return null;
 
-    return store.nodes.reduce((closest: null | ClosestNodeData, node) => {
-      if (targetNode.value === node.nodeId) {
-        return closest;
-      }
-      const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
-      const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
-      const mouseX = mouseCurrentPosition.value.x;
-      const mouseY = mouseCurrentPosition.value.y;
-
-      const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
-
-      if (!closest || distance < closest.distance) {
-        return { node, distance };
-      }
-
-      return closest;
-    }, null);
+    return pickNearestNode(store.nodes, targetNode.value, mouseCurrentPosition.value);
   });
 
   const nearestConnect = computed(() => {
