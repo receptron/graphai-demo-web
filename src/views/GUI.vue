@@ -131,8 +131,10 @@ export default defineComponent({
         Redo
       </button>
     </div>
-    <div>
-      {{ store.graphData }}
+    <div class="text-left">
+      <pre>
+        {{ JSON.stringify(store.graphData, null, 2) }}
+      </pre>
     </div>
   </div>
 </template>

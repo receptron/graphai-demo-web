@@ -1,12 +1,12 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
-import { agent2NodeParams } from "../utils/gui/utils";
+import { agentProfiles } from "../utils/gui/data";
 
 export default defineComponent({
   components: {},
   setup() {
-    const nodesKey = Object.keys(agent2NodeParams);
+    const nodesKey = Object.keys(agentProfiles);
     const nodeId = ref("");
     const agent = ref(nodesKey[0]);
 
@@ -20,7 +20,7 @@ export default defineComponent({
       //   reset nodeId after add
 
       const isStatic = agent.value === "StaticNode";
-      const targetAgent = agent2NodeParams[agent.value];
+      const targetAgent = agentProfiles[agent.value];
       const data = isStatic
         ? {}
         : targetAgent.agent

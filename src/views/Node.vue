@@ -49,7 +49,8 @@
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
 import type { GUINodeData, GUINearestData } from "../utils/gui/type";
-import { getClientPos, agent2NodeParams, staticNodeParams } from "../utils/gui/utils";
+import { getClientPos } from "../utils/gui/utils";
+import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
 
 export default defineComponent({
@@ -66,7 +67,7 @@ export default defineComponent({
   },
   emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
-    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
+    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.agent ?? ""] : staticNodeParams;
 
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);

@@ -1,5 +1,17 @@
-import { Position, GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData, ClosestNodeData } from "./type";
+import {
+  Position,
+  GUINodeData,
+  GUIEdgeData,
+  InputOutput,
+  InputOutputParam,
+  NewEdgeEventData,
+  NewEdgeData,
+  GUINearestData,
+  ClosestNodeData,
+  EdgeEndPointData,
+} from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
+import { agentProfiles } from "./data";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
   return "touches" in event;
@@ -24,7 +36,7 @@ export const graphToGUIData = (graphData: GraphData) => {
 
   const getIndex = (nodeId: string, propId: string, key: keyof InputOutput) => {
     const agent = node2agent[nodeId];
-    const indexes = agent ? (agent2NodeParams[agent][key] as InputOutputParam[]) : [];
+    const indexes = agent ? (agentProfiles[agent][key] as InputOutputParam[]) : [];
     const index = indexes.findIndex((data) => data.name === propId);
     if (index === -1) {
       console.log(`${key} ${nodeId}.${propId} is not hit`);
@@ -80,54 +92,18 @@ export const graphToGUIData = (graphData: GraphData) => {
   };
 };
 
-export const agent2NodeParams: Record<string, InputOutput> = {
-  eventAgent: {
-    inputs: [{ name: "wait", type: "array" }],
-    outputs: [{ name: "text" }],
-    params: [],
-  },
-  openAIAgent: {
-    inputs: [{ name: "messages" }, { name: "prompt", type: "string" }, { name: "model", type: "string" }],
-    outputs: [{ name: "message" }, { name: "text" }],
-    params: [],
-  },
-  stringTemplateAgent: {
-    inputs: [{ name: "text" }, { name: "message1" }, { name: "message2" }],
-    outputs: [{ name: "text" }],
-    params: [],
-  },
-  pushAgent: {
-    inputs: [{ name: "array" }, { name: "item" }],
-    outputs: [{ name: "array" }],
-    params: [],
-  },
-  convertAgent: {
-    agent: "copyAgent",
-    inputSchema: {
-      context: {
-        inputs: {
-          person0: {
-            name: "interviewer",
-            system: ":interviewer",
-          },
-          person1: {
-            name: ":name",
-            system: "You are ${:name}.",
-            greeting: "Hi, I'm ${:name}",
-          },
-        },
-      },
-    },
-    inputs: [
-      { name: "interviewer", type: "text" },
-      { name: "name", type: "text" },
-    ],
-    outputs: [{ name: "array" }],
-    params: [],
-  },
-};
+export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: Record<string, GUINodeData>) => {
+  const node = nodeRecords[edgeEndPointData.nodeId];
+  if (node && node.type === "computed") {
+    const specializedAgent = node.guiAgentId ?? node.agent ?? ""; // undefined is static node.
 
-export const staticNodeParams: InputOutput = { inputs: [{ name: "update" }], outputs: [{ name: "date" }] };
+    const profile = agentProfiles[specializedAgent];
+    return {
+      agent: specializedAgent,
+      profile,
+    };
+  }
+};
 
 // for store
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, GUINodeData>) => {
@@ -140,7 +116,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, G
       const fromData = (() => {
         if (fromNode && fromNode.type === "computed") {
           const fromAgent = fromNode.guiAgentId ?? fromNode.agent ?? ""; // undefined is static node.
-          const props = agent2NodeParams[fromAgent].outputs[fromEdge.index]?.name;
+          const props = agentProfiles[fromAgent].outputs[fromEdge.index]?.name;
           return `:${fromEdge.nodeId}.${props}`;
         }
         return `:${fromEdge.nodeId}`;
@@ -148,7 +124,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, G
       const toPropId = (() => {
         if (toNode && toNode.type === "computed") {
           const toAgent = toNode.guiAgentId ?? toNode.agent ?? ""; // undefined is static node.
-          const toProp = agent2NodeParams[toAgent].inputs[toEdge.index]?.name;
+          const toProp = agentProfiles[toAgent].inputs[toEdge.index]?.name;
           return toProp;
         }
         return "update";

@@ -13,23 +13,20 @@ export type GUINodeData = {
   value?: unknown; // ResultData<DefaultResultData>;
 };
 
+export type EdgeEndPointData = {
+  nodeId: string;
+  index: number;
+};
+
 export type GUIEdgeData = {
   type: string;
-  from: {
-    nodeId: string;
-    index: number;
-  };
-  to: {
-    nodeId: string;
-    index: number;
-  };
+  from: EdgeEndPointData;
+  to: EdgeEndPointData;
 };
 
 export type EdgeFormToData = {
-  nodeId: string;
-  index: number;
   data: GUINodeData;
-};
+} & EdgeEndPointData;
 
 export type EdgeData = {
   type: string;
