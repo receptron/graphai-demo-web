@@ -52,7 +52,7 @@ export const useNewEdge = () => {
     return {
       nodeId: nearestNode.value.node.nodeId,
       index: nearestConnect.value.index,
-      target: newEdgeData.value.target,
+      direction: newEdgeData.value.direction,
     };
   });
 

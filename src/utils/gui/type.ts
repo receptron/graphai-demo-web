@@ -34,12 +34,12 @@ export type EdgeData = {
   to: EdgeFormToData;
 };
 
-type NewEdgeEventTargetType = "outbound" | "inbound";
+export type NewEdgeEventTargetType = "outbound" | "inbound";
 
 // x, y is clientX, clientY of mouse pointer
 export type NewEdgeEventData = {
   on: string;
-  target: NewEdgeEventTargetType;
+  direction: NewEdgeEventTargetType;
   index: number;
   nodeId: string;
   x: number;
@@ -49,7 +49,7 @@ export type NewEdgeEventData = {
 export type GUINearestData = {
   nodeId: string;
   index: number;
-  target: NewEdgeEventTargetType;
+  direction: NewEdgeEventTargetType;
 };
 
 type NewEdgeMouseData = {
@@ -65,13 +65,13 @@ type NewEdgeNodeData = {
 export type EdgeData2 = NewEdgeMouseData | NewEdgeNodeData;
 
 export type NewEdgeData1 = {
-  target: "outbound";
+  direction: "outbound";
   from: NewEdgeNodeData;
   to: NewEdgeMouseData;
 };
 
 export type NewEdgeData2 = {
-  target: "inbound";
+  direction: "inbound";
   from: NewEdgeMouseData;
   to: NewEdgeNodeData;
 };
@@ -82,7 +82,7 @@ export type ClosestNodeData = { node: GUINodeData; distance: number };
 export type NearestData = {
   nodeId: string;
   index: number;
-  target: string;
+  direction: string;
 };
 
 // TODO good name

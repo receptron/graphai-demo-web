@@ -118,11 +118,11 @@ export default defineComponent({
     };
 
     // edge event
-    const onStartEdge = (event: MouseEvent | TouchEvent, target: NewEdgeEventTargetType, index: number) => {
+    const onStartEdge = (event: MouseEvent | TouchEvent, direction: NewEdgeEventTargetType, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
       const { clientX, clientY } = getClientPos(event);
-      ctx.emit("newEdgeStart", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
+      ctx.emit("newEdgeStart", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, direction });
     };
     const onEndEdge = () => {
       isNewEdge.value = false;
@@ -178,7 +178,7 @@ export default defineComponent({
       if (!expectNearNode.value) {
         return false;
       }
-      return props.nearestData?.target === targetType && props.nearestData?.index === index;
+      return props.nearestData?.direction === targetType && props.nearestData?.index === index;
     };
 
     return {
