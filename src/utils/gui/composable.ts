@@ -1,7 +1,7 @@
-import { NewEdgeEventData, NewEdgeData, GUINodeData } from "./type";
+import { NewEdgeEventData, NewEdgeData, ClosestNodeData, GUINearestData } from "./type";
 import { ref, computed } from "vue";
 import { useStore } from "@/store";
-import { edgeStartEventData, edgeUpdateEventData } from "./utils";
+import { edgeStartEventData, edgeUpdateEventData, edgeEndEventData } from "./utils";
 
 export const useNewEdge = () => {
   const store = useStore();
@@ -29,39 +29,18 @@ export const useNewEdge = () => {
   const newEdgeEndEvent = () => {
     if (!nearestData.value || !newEdgeData.value) return;
 
-    if (newEdgeData.value.target === "output") {
-      const fromData = newEdgeData.value.from;
-      const { nodeId, index } = fromData;
-      const addEdge = {
-        type: "AA",
-        from: {
-          nodeId,
-          index,
-        },
-        to: nearestData.value,
-      };
-      store.pushEdge(addEdge);
-    }
-    if (newEdgeData.value.target === "input") {
-      const toData = newEdgeData.value.to;
-      const { nodeId, index } = toData;
-      const addEdge = {
-        type: "AA",
-        from: nearestData.value,
-        to: {
-          nodeId,
-          index,
-        },
-      };
-      store.pushEdge(addEdge);
+    const newEdge = edgeEndEventData(newEdgeData.value, nearestData.value);
+    if (newEdge) {
+      store.pushEdge(newEdge);
     }
     newEdgeData.value = null;
   };
 
-  const nearestNode = computed(() => {
+  
+  const nearestNode = computed<ClosestNodeData | null>(() => {
     if (!store.nodes.length) return null;
 
-    return store.nodes.reduce((closest: null | { node: GUINodeData; distance: number }, node) => {
+    return store.nodes.reduce((closest: null | ClosestNodeData, node) => {
       if (targetNode.value === node.nodeId) {
         return closest;
       }
@@ -101,7 +80,7 @@ export const useNewEdge = () => {
     }, null);
   });
 
-  const nearestData = computed(() => {
+  const nearestData = computed<GUINearestData | undefined>(() => {
     if (!nearestNode.value || !nearestConnect.value || !newEdgeData.value) return;
     return {
       nodeId: nearestNode.value.node.nodeId,

@@ -79,6 +79,13 @@ export type NewEdgeData2 = {
 
 export type NewEdgeData = NewEdgeData1 | NewEdgeData2;
 
+export type ClosestNodeData = { node: GUINodeData; distance: number };
+export type NearestData = {
+  nodeId: string;
+  index: number;
+  target: string;
+};
+
 // TODO good name
 export type InputOutputParam = { name: string; type?: string };
 export type InputOutput = { inputs: InputOutputParam[]; outputs: InputOutputParam[]; params?: InputOutputParam[]; agent?: string; inputSchema?: unknown };

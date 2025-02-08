@@ -1,4 +1,4 @@
-import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData } from "./type";
+import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -203,6 +203,8 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
 
 // composable
 export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLElement, nodeData: GUINodeData) => {
+  // Since x and y are clientX and clientY, adjust the height by the header.
+  // If there is a horizontal menu, you will need to adjust x.
   const rect = parantElement.getBoundingClientRect();
   const mousePosition = { x: data.x, y: data.y - rect.top };
 
@@ -255,4 +257,34 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
     mousePosition,
     updateEdgeData,
   };
+};
+
+export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData) => {
+  if (newEdgeData.target === "output") {
+    const fromData = newEdgeData.from;
+    const { nodeId, index } = fromData;
+    const addEdge = {
+      type: "AA",
+      from: {
+        nodeId,
+        index,
+      },
+      to: nearestData,
+    };
+    return addEdge;
+  }
+  if (newEdgeData.target === "input") {
+    const toData = newEdgeData.to;
+    const { nodeId, index } = toData;
+    const addEdge = {
+      type: "AA",
+      from: nearestData,
+      to: {
+        nodeId,
+        index,
+      },
+    };
+    return addEdge;
+  }
+  return null;
 };
