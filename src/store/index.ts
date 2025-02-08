@@ -47,25 +47,28 @@ export const useStore = defineStore("store", () => {
     updateData(nodeData, edgeData, false);
   };
 
+  // node
   const pushNode = (nodeData: GUINodeData) => {
     updateData([...nodes.value, nodeData], [...edges.value], true);
   };
 
+  const updatePosition = (positionIndex: number, pos: { x: number; y: number; width: number; height: number }) => {
+    const newNode = { ...nodes.value[positionIndex] };
+    newNode.position = { ...newNode.position, ...pos };
+    const newNodes = [...nodes.value];
+    newNodes[positionIndex] = newNode;
+    updateData(newNodes, [...edges.value], false);
+  };
+
+  // edge
   const pushEdge = (edgeData: GUIEdgeData) => {
     updateData([...nodes.value], [...edges.value, edgeData], true);
   };
   const deleteEdge = (edgeIndex: number) => {
     updateData([...nodes.value], [...edges.value.filter((__, i) => i !== edgeIndex)], true);
   };
-  const updatePosition = (positionIndex: number, pos: { x: number; y: number; width: number; height: number }) => {
-    const newNode = { ...nodes.value[positionIndex] };
-    newNode.position = { ...newNode.position, ...pos };
-    const newNodes = [...nodes.value];
-    newNodes[positionIndex] = newNode;
-    // const newData = { nodes: newNodes, edges: [...edges.value] };
-    updateData(newNodes, [...edges.value], false);
-  };
 
+  // history api
   const undoable = computed(() => {
     return index.value > 1;
   });

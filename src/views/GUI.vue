@@ -5,7 +5,7 @@ import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
 import ContextMenu from "./ContextMenu.vue";
 
-import { GUINodeData, EdgeData } from "./gui/type";
+import { EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge, graphToGUIData } from "./gui/utils";
@@ -30,13 +30,6 @@ export default defineComponent({
       savePosition();
     });
 
-    const nodeRecords = computed(() => {
-      return store.nodes.reduce((tmp: Record<string, GUINodeData>, current) => {
-        tmp[current.nodeId] = current;
-        return tmp;
-      }, {});
-    });
-
     const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
       store.updatePosition(index, pos);
     };
@@ -51,11 +44,11 @@ export default defineComponent({
           type,
           from: {
             ...from,
-            data: nodeRecords.value[edge.from.nodeId],
+            data: store.nodeRecords[edge.from.nodeId],
           },
           to: {
             ...to,
-            data: nodeRecords.value[edge.to.nodeId],
+            data: store.nodeRecords[edge.to.nodeId],
           },
         };
       });
