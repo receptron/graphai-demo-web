@@ -1,9 +1,7 @@
 <template>
-  <div class="w-full h-screen flex items-center justify-center bg-gray-100" @click="closeMenu">
-    <ul v-if="menuVisible" :style="menuStyle" class="absolute bg-white border border-gray-300 shadow-md rounded-md py-2 w-40">
-      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="deleteEdge()">Delete</li>
-    </ul>
-  </div>
+  <ul v-if="menuVisible" :style="menuStyle" class="absolute bg-white border border-gray-300 shadow-md rounded-md py-2 w-40">
+    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="deleteEdge()">Delete</li>
+  </ul>
 </template>
 
 <script lang="ts">

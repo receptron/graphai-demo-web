@@ -67,6 +67,10 @@ export default defineComponent({
       const rect = svgRef.value.getBoundingClientRect();
       contextMenu.value.openMenu(event, rect.top, edgeIndex);
     };
+    const closeMenu = () => {
+      contextMenu.value.closeMenu();
+    };
+
     return {
       updatePosition,
       savePosition,
@@ -82,6 +86,7 @@ export default defineComponent({
 
       contextMenu,
       openMenu,
+      closeMenu,
     };
   },
 });
@@ -89,7 +94,7 @@ export default defineComponent({
 
 <template>
   <div>
-    <div class="w-screen h-[80vh] relative">
+    <div class="w-screen h-[80vh] relative" @click="closeMenu">
       <svg x="0" y="0" width="100%" height="80%" class="absolute pointer-events-none" ref="svgRef">
         <Edge
           v-for="(edge, index) in edgeDataList"
