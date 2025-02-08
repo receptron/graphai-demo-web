@@ -5,7 +5,7 @@ import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
 import ContextMenu from "./ContextMenu.vue";
 
-import { EdgeData } from "../utils/gui/type";
+import { EdgeData, NodePosition } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge } from "../utils/gui/composable";
@@ -28,14 +28,14 @@ export default defineComponent({
 
     store.initData(rawNode, rawEdge);
     onMounted(() => {
-      savePosition();
+      saveNodePosition();
     });
 
-    const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
-      store.updatePosition(index, pos);
+    const updateNodePosition = (index: number, pos: NodePosition) => {
+      store.updateNodePosition(index, pos);
     };
-    const savePosition = () => {
-      store.saveData();
+    const saveNodePosition = () => {
+      store.saveNodeData();
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
@@ -66,8 +66,8 @@ export default defineComponent({
     };
 
     return {
-      updatePosition,
-      savePosition,
+      updateNodePosition,
+      saveNodePosition,
 
       store,
 
@@ -106,8 +106,8 @@ export default defineComponent({
         :key="index"
         :node-data="node"
         :nearest-data="nearestData"
-        @update-position="(pos) => updatePosition(index, pos)"
-        @save-position="savePosition"
+        @update-position="(pos) => updateNodePosition(index, pos)"
+        @save-position="saveNodePosition"
         @new-edge-start="newEdgeStartEvent"
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEndEvent"

@@ -1,4 +1,4 @@
-import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData, ClosestNodeData } from "./type";
+import { Position, GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData, GUINearestData, ClosestNodeData } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -22,12 +22,12 @@ export const graphToGUIData = (graphData: GraphData) => {
     return tmp;
   }, {});
 
-  const getIndex = (nodeId: string, PropId: string, key: keyof InputOutput) => {
+  const getIndex = (nodeId: string, propId: string, key: keyof InputOutput) => {
     const agent = node2agent[nodeId];
     const indexes = agent ? (agent2NodeParams[agent][key] as InputOutputParam[]) : [];
-    const index = indexes.findIndex((data) => data.name === PropId);
+    const index = indexes.findIndex((data) => data.name === propId);
     if (index === -1) {
-      console.log(`${key} ${nodeId}.${PropId} is not hit`);
+      console.log(`${key} ${nodeId}.${propId} is not hit`);
     }
     return index;
   };
@@ -289,7 +289,7 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
   return null;
 };
 
-export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseCurrentPosition: { x: number; y: number }) => {
+export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseCurrentPosition: Position) => {
   return nodes.reduce((closest: null | ClosestNodeData, node) => {
     if (targetNode === node.nodeId) {
       return closest;
@@ -303,6 +303,26 @@ export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseC
 
     if (!closest || distance < closest.distance) {
       return { node, distance };
+    }
+
+    return closest;
+  }, null);
+};
+
+export const pickNearestConnect = (nearestNode: ClosestNodeData, newEdgeData: NewEdgeData, mouseCurrentPosition: Position) => {
+  const nodePos = nearestNode.node.position;
+  const { inputCenters, outputCenters } = nodePos;
+  const isOutput = newEdgeData.target === "output";
+  const centers = (isOutput ? inputCenters : outputCenters) ?? [];
+  return centers.reduce((closest: null | { index: number; distance: number }, center: number, index: number) => {
+    const nodeX = nodePos.x + (isOutput ? 0 : (nodePos?.width ?? 0));
+    const nodeY = nodePos.y + center;
+    const mouseX = mouseCurrentPosition.x;
+    const mouseY = mouseCurrentPosition.y;
+
+    const distance = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
+    if (!closest || distance < closest.distance) {
+      return { index, distance };
     }
 
     return closest;

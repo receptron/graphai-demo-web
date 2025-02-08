@@ -1,5 +1,7 @@
 import type { DefaultParamsType } from "graphai";
 
+export type Position = { x: number; y: number };
+export type NodePosition = { x: number; y: number; width: number; height: number };
 export type GUINodeData = {
   type: string;
   agent?: string;

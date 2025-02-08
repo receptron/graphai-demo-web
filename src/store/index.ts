@@ -41,7 +41,7 @@ export const useStore = defineStore("store", () => {
       index.value = index.value + 1;
     }
   };
-  const saveData = () => {
+  const saveNodeData = () => {
     // just special case. only use position update.
     hisotories.value.length = index.value;
     hisotories.value.push(currentData.value);
@@ -58,7 +58,7 @@ export const useStore = defineStore("store", () => {
     updateData([...nodes.value, nodeData], [...edges.value], true);
   };
 
-  const updatePosition = (positionIndex: number, pos: { x: number; y: number; width: number; height: number }) => {
+  const updateNodePosition = (positionIndex: number, pos: { x: number; y: number; width: number; height: number }) => {
     const newNode = { ...nodes.value[positionIndex] };
     newNode.position = { ...newNode.position, ...pos };
     const newNodes = [...nodes.value];
@@ -107,8 +107,8 @@ export const useStore = defineStore("store", () => {
     pushEdge,
     deleteEdge,
 
-    updatePosition,
-    saveData,
+    updateNodePosition,
+    saveNodeData,
 
     undo,
     redo,

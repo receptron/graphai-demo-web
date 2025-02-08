@@ -1,16 +1,15 @@
-import { NewEdgeEventData, NewEdgeData, ClosestNodeData, GUINearestData } from "./type";
+import { Position, NewEdgeEventData, NewEdgeData, ClosestNodeData, GUINearestData } from "./type";
 import { ref, computed } from "vue";
 import { useStore } from "@/store";
-import { edgeStartEventData, edgeUpdateEventData, edgeEndEventData, pickNearestNode } from "./utils";
+import { edgeStartEventData, edgeUpdateEventData, edgeEndEventData, pickNearestNode, pickNearestConnect } from "./utils";
 
 export const useNewEdge = () => {
   const store = useStore();
-  //  newEdge
+
   const svgRef = ref();
   const newEdgeData = ref<NewEdgeData | null>(null);
-  const mouseCurrentPosition = ref({ x: 0, y: 0 });
-  const targetNode = ref("");
-  //
+  const mouseCurrentPosition = ref<Position>({ x: 0, y: 0 });
+  const targetNode = ref<string>("");
 
   const newEdgeStartEvent = (data: NewEdgeEventData) => {
     targetNode.value = data.nodeId;
@@ -44,23 +43,8 @@ export const useNewEdge = () => {
 
   const nearestConnect = computed(() => {
     if (!newEdgeData.value || !nearestNode.value) return;
-    const nodePos = nearestNode.value.node.position;
-    const { inputCenters, outputCenters } = nodePos;
-    const isOutput = newEdgeData.value.target === "output";
-    const centers = (isOutput ? inputCenters : outputCenters) ?? [];
-    return centers.reduce((closest: null | { index: number; distance: number }, center: number, index: number) => {
-      const nodeX = nodePos.x + (isOutput ? 0 : (nodePos?.width ?? 0));
-      const nodeY = nodePos.y + center;
-      const mouseX = mouseCurrentPosition.value.x;
-      const mouseY = mouseCurrentPosition.value.y;
 
-      const distance = Math.sqrt((nodeX - mouseX) ** 2 + (nodeY - mouseY) ** 2);
-      if (!closest || distance < closest.distance) {
-        return { index, distance };
-      }
-
-      return closest;
-    }, null);
+    return pickNearestConnect(nearestNode.value, newEdgeData.value, mouseCurrentPosition.value);
   });
 
   const nearestData = computed<GUINearestData | undefined>(() => {
