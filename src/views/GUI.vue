@@ -1,8 +1,11 @@
 <script lang="ts">
-import { defineComponent, computed, onMounted } from "vue";
+import { defineComponent, computed, onMounted, ref } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
-import { GUINodeData, EdgeData } from "./gui/type";
+import AddNode from "./AddNode.vue";
+import ContextMenu from "./ContextMenu.vue";
+
+import { EdgeData } from "./gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge, graphToGUIData } from "./gui/utils";
@@ -13,22 +16,18 @@ export default defineComponent({
   components: {
     Node,
     Edge,
+    AddNode,
+    ContextMenu,
   },
   setup() {
     const store = useStore();
+    const contextMenu = ref();
 
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
-    store.initHistory(rawNode, rawEdge);
+    store.initData(rawNode, rawEdge);
     onMounted(() => {
       savePosition();
-    });
-
-    const nodeRecords = computed(() => {
-      return store.nodes.reduce((tmp: Record<string, GUINodeData>, current) => {
-        tmp[current.nodeId] = current;
-        return tmp;
-      }, {});
     });
 
     const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
@@ -45,26 +44,25 @@ export default defineComponent({
           type,
           from: {
             ...from,
-            data: nodeRecords.value[edge.from.nodeId],
+            data: store.nodeRecords[edge.from.nodeId],
           },
           to: {
             ...to,
-            data: nodeRecords.value[edge.to.nodeId],
+            data: store.nodeRecords[edge.to.nodeId],
           },
         };
       });
     });
 
-    const addNode = () => {
-      const uuid = self.crypto.randomUUID();
-      store.pushNode({
-        nodeId: uuid,
-        type: "aa",
-        position: { x: Math.random() * 200, y: Math.random() * 200 },
-      });
-    };
-
     const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
+
+    const openMenu = (event: MouseEvent, edgeIndex: number) => {
+      const rect = svgRef.value.getBoundingClientRect();
+      contextMenu.value.openMenu(event, rect.top, edgeIndex);
+    };
+    const closeMenu = () => {
+      contextMenu.value.closeMenu();
+    };
 
     return {
       updatePosition,
@@ -78,7 +76,10 @@ export default defineComponent({
       newEdgeData,
       svgRef,
       nearestData,
-      addNode,
+
+      contextMenu,
+      openMenu,
+      closeMenu,
     };
   },
 });
@@ -86,10 +87,17 @@ export default defineComponent({
 
 <template>
   <div>
-    <div class="w-screen h-[80vh] relative">
-      <svg x="0" y="0" width="100%" height="80%" class="absolute" ref="svgRef">
-        <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" />
-        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" />
+    <div class="w-screen h-[80vh] relative" @click="closeMenu">
+      <svg x="0" y="0" width="100%" height="80%" class="absolute pointer-events-none" ref="svgRef">
+        <Edge
+          v-for="(edge, index) in edgeDataList"
+          :key="index"
+          :from-data="edge.from"
+          :to-data="edge.to"
+          class="pointer-events-auto"
+          @dblclick="(e) => openMenu(e, index)"
+        />
+        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"
@@ -101,9 +109,10 @@ export default defineComponent({
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"
       />
+      <ContextMenu ref="contextMenu" />
     </div>
     <div>
-      <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
+      <AddNode />
       <button
         @click="store.undo"
         class="text-white font-bold items-center rounded-full px-4 py-2 m-1"
@@ -118,6 +127,9 @@ export default defineComponent({
       >
         Redo
       </button>
+    </div>
+    <div>
+      {{ store.graphData }}
     </div>
   </div>
 </template>
