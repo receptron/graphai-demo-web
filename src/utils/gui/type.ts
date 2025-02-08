@@ -23,18 +23,16 @@ export type GUIEdgeData = {
   };
 };
 
+export type EdgeFormToData = {
+  nodeId: string;
+  index: number;
+  data: GUINodeData;
+};
+
 export type EdgeData = {
   type: string;
-  from: {
-    nodeId: string;
-    index: number;
-    data: GUINodeData;
-  };
-  to: {
-    nodeId: string;
-    index: number;
-    data: GUINodeData;
-  };
+  from: EdgeFormToData;
+  to: EdgeFormToData;
 };
 
 type NewEdgeEventTargetType = "output" | "input";

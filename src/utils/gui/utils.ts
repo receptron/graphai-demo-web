@@ -1,4 +1,4 @@
-import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam } from "./type";
+import { GUINodeData, GUIEdgeData, InputOutput, InputOutputParam, NewEdgeEventData, NewEdgeData } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -199,4 +199,60 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
     nodes: newNodes,
   };
   return newGraphData;
+};
+
+// composable
+export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLElement, nodeData: GUINodeData) => {
+  const rect = parantElement.getBoundingClientRect();
+  const mousePosition = { x: data.x, y: data.y - rect.top };
+
+  const edgeNodeData = {
+    nodeId: data.nodeId,
+    data: nodeData,
+    index: data.index,
+  };
+
+  const positionData = {
+    data: { position: mousePosition },
+  };
+  const startEdgeData = (() => {
+    if (data.target === "output") {
+      return {
+        target: data.target,
+        from: edgeNodeData,
+        to: positionData,
+      };
+    }
+    return {
+      target: data.target,
+      from: positionData,
+      to: edgeNodeData,
+    };
+  })();
+  return {
+    mousePosition,
+    startEdgeData,
+  };
+};
+
+export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLElement, prevEdgeData: NewEdgeData) => {
+  const rect = parantElement.getBoundingClientRect();
+  const mousePosition = { x: data.x, y: data.y - rect.top };
+
+  const newData = { data: { position: mousePosition } };
+
+  const updateEdgeData =
+    prevEdgeData.target === "output"
+      ? {
+          ...prevEdgeData,
+          to: newData,
+        }
+      : {
+          ...prevEdgeData,
+          from: newData,
+        };
+  return {
+    mousePosition,
+    updateEdgeData,
+  };
 };
