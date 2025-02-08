@@ -5,10 +5,10 @@ import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
 import ContextMenu from "./ContextMenu.vue";
 
-import { EdgeData } from "./gui/type";
+import { EdgeData } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
-import { useNewEdge, graphToGUIData } from "./gui/utils";
+import { useNewEdge, graphToGUIData } from "../utils/gui/utils";
 
 import { useStore } from "@/store";
 

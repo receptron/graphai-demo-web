@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
-import { GUINodeData, GUIEdgeData } from "../views/gui/type";
-import { agent2NodeParams } from "../views/gui/utils";
+import { GUINodeData, GUIEdgeData } from "../utils/gui/type";
+import { agent2NodeParams } from "../utils/gui/utils";
 import { defineStore } from "pinia";
 import { NodeData, StaticNodeData } from "graphai";
 type HistoryData = {

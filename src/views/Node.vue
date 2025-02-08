@@ -48,9 +48,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData } from "./gui/type";
-import { getClientPos, agent2NodeParams, staticNodeParams } from "./gui/utils";
-import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "./gui/classUtils";
+import type { GUINodeData, GUINearestData } from "../utils/gui/type";
+import { getClientPos, agent2NodeParams, staticNodeParams } from "../utils/gui/utils";
+import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
 
 export default defineComponent({
   components: {},
