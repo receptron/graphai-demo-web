@@ -20,7 +20,7 @@ export default defineComponent({
 
     const openMenu = (event: MouseEvent | TouchEvent, topOffset: number, edgeIndex: number) => {
       event.preventDefault();
-      const { clientX, clientY } = getClientPos(event)
+      const { clientX, clientY } = getClientPos(event);
       menuStyle.value = {
         top: `${clientY - topOffset}px`,
         left: `${clientX}px`,

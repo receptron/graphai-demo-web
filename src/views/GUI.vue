@@ -128,5 +128,8 @@ export default defineComponent({
         Redo
       </button>
     </div>
+    <div>
+      {{ store.graphData }}
+    </div>
   </div>
 </template>

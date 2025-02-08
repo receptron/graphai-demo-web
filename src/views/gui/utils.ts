@@ -215,6 +215,7 @@ export const graphToGUIData = (graphData: GraphData) => {
       agent: isComputed ? (node.agent as string) : undefined,
       guiAgentId: isComputed ? (node.agent as string) : undefined,
       params: isComputed ? node.params : undefined,
+      value: isComputed ? undefined : node.value,
     };
   });
 
@@ -226,12 +227,12 @@ export const graphToGUIData = (graphData: GraphData) => {
 
 export const agent2NodeParams: Record<string, InputOutput> = {
   eventAgent: {
-    inputs: [{ name: "wait" }],
+    inputs: [{ name: "wait", type: "array" }],
     outputs: [{ name: "text" }],
     params: [],
   },
   openAIAgent: {
-    inputs: [{ name: "messages" }, { name: "text" }, { name: "model" }],
+    inputs: [{ name: "messages" }, { name: "prompt", type: "string" }, { name: "model", type: "string" }],
     outputs: [{ name: "message" }, { name: "text" }],
     params: [],
   },
