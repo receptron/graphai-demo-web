@@ -40,16 +40,16 @@ export default defineComponent({
 
     const edgeDataList = computed<EdgeData[]>(() => {
       return store.edges.map((edge) => {
-        const { type, from, to } = edge;
+        const { type, source, target } = edge;
         return {
           type,
-          from: {
-            ...from,
-            data: store.nodeRecords[edge.from.nodeId],
+          source: {
+            ...source,
+            data: store.nodeRecords[edge.source.nodeId],
           },
-          to: {
-            ...to,
-            data: store.nodeRecords[edge.to.nodeId],
+          target: {
+            ...target,
+            data: store.nodeRecords[edge.target.nodeId],
           },
         };
       });
@@ -94,12 +94,12 @@ export default defineComponent({
         <Edge
           v-for="(edge, index) in edgeDataList"
           :key="index"
-          :from-data="edge.from"
-          :to-data="edge.to"
+          :from-data="edge.source"
+          :to-data="edge.target"
           class="pointer-events-auto"
           @dblclick="(e) => openMenu(e, index)"
         />
-        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
+        <Edge v-if="newEdgeData" :from-data="newEdgeData.source" :to-data="newEdgeData.target" class="pointer-events-auto" />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"

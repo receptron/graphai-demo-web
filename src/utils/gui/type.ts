@@ -20,8 +20,8 @@ export type EdgeEndPointData = {
 
 export type GUIEdgeData = {
   type: string;
-  from: EdgeEndPointData;
-  to: EdgeEndPointData;
+  source: EdgeEndPointData;
+  target: EdgeEndPointData;
 };
 
 export type EdgeFormToData = {
@@ -30,8 +30,8 @@ export type EdgeFormToData = {
 
 export type EdgeData = {
   type: string;
-  from: EdgeFormToData;
-  to: EdgeFormToData;
+  source: EdgeFormToData;
+  target: EdgeFormToData;
 };
 
 export type NewEdgeEventTargetType = "outbound" | "inbound";
@@ -66,14 +66,14 @@ export type EdgeData2 = NewEdgeMouseData | NewEdgeNodeData;
 
 export type NewEdgeData1 = {
   direction: "outbound";
-  from: NewEdgeNodeData;
-  to: NewEdgeMouseData;
+  source: NewEdgeNodeData;
+  target: NewEdgeMouseData;
 };
 
 export type NewEdgeData2 = {
   direction: "inbound";
-  from: NewEdgeMouseData;
-  to: NewEdgeNodeData;
+  source: NewEdgeMouseData;
+  target: NewEdgeNodeData;
 };
 
 export type NewEdgeData = NewEdgeData1 | NewEdgeData2;

@@ -65,8 +65,8 @@ export const graphToGUIData = (graphData: GraphData) => {
               const toIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
 
               rawEdge.push({
-                from: { nodeId: outputNodeId, index: fromIndex > -1 ? fromIndex : 0 },
-                to: { nodeId, index: toIndex > -1 ? toIndex : 0 },
+                source: { nodeId: outputNodeId, index: fromIndex > -1 ? fromIndex : 0 },
+                target: { nodeId, index: toIndex > -1 ? toIndex : 0 },
                 type: "AA",
               });
             }
@@ -109,7 +109,7 @@ export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRec
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, GUINodeData>) => {
   return edges
     .map((edge) => {
-      const { from: fromEdge, to: toEdge } = edge;
+      const { source: fromEdge, target: toEdge } = edge;
 
       const fromNode = nodeRecords[fromEdge.nodeId];
       const toNode = nodeRecords[toEdge.nodeId];
@@ -197,14 +197,14 @@ export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLEl
     if (data.direction === "outbound") {
       return {
         direction: data.direction,
-        from: edgeNodeData,
-        to: positionData,
+        source: edgeNodeData,
+        target: positionData,
       };
     }
     return {
       direction: data.direction,
-      from: positionData,
-      to: edgeNodeData,
+      source: positionData,
+      target: edgeNodeData,
     };
   })();
   return {
@@ -223,11 +223,11 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
     prevEdgeData.direction === "outbound"
       ? {
           ...prevEdgeData,
-          to: newData,
+          target: newData,
         }
       : {
           ...prevEdgeData,
-          from: newData,
+          source: newData,
         };
   return {
     mousePosition,
@@ -237,25 +237,25 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
 
 export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData) => {
   if (newEdgeData.direction === "outbound") {
-    const fromData = newEdgeData.from;
+    const fromData = newEdgeData.source;
     const { nodeId, index } = fromData;
     const addEdge = {
       type: "AA",
-      from: {
+      source: {
         nodeId,
         index,
       },
-      to: nearestData,
+      target: nearestData,
     };
     return addEdge;
   }
   if (newEdgeData.direction === "inbound") {
-    const toData = newEdgeData.to;
+    const toData = newEdgeData.target;
     const { nodeId, index } = toData;
     const addEdge = {
       type: "AA",
-      from: nearestData,
-      to: {
+      source: nearestData,
+      target: {
         nodeId,
         index,
       },
