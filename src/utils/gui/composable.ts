@@ -1,4 +1,4 @@
-import { NewEdgeEventData, NewEdgeData, GUINodeData} from "./type";
+import { NewEdgeEventData, NewEdgeData, GUINodeData } from "./type";
 import { ref, computed } from "vue";
 import { useStore } from "@/store";
 
@@ -10,7 +10,7 @@ export const useNewEdge = () => {
   const mouseCurrentPosition = ref({ x: 0, y: 0 });
   const targetNode = ref("");
   //
-  
+
   const newEdgeStartEvent = (data: NewEdgeEventData) => {
     const rect = svgRef.value.getBoundingClientRect();
     mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
