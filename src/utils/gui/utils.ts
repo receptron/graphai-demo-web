@@ -61,12 +61,12 @@ export const graphToGUIData = (graphData: GraphData) => {
         if (source.propIds && source.propIds.length > 0) {
           source.propIds.forEach((outputPropId) => {
             if (nodeIds.includes(outputNodeId)) {
-              const fromIndex = getIndex(outputNodeId, outputPropId, "outputs");
-              const toIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
+              const sourceIndex = getIndex(outputNodeId, outputPropId, "outputs");
+              const targetIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
 
               rawEdge.push({
-                source: { nodeId: outputNodeId, index: fromIndex > -1 ? fromIndex : 0 },
-                target: { nodeId, index: toIndex > -1 ? toIndex : 0 },
+                source: { nodeId: outputNodeId, index: sourceIndex > -1 ? sourceIndex : 0 },
+                target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
                 type: "AA",
               });
             }
@@ -109,41 +109,41 @@ export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRec
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, GUINodeData>) => {
   return edges
     .map((edge) => {
-      const { source: fromEdge, target: toEdge } = edge;
+      const { source: sourceEdge, target: targetEdge } = edge;
 
-      const fromNode = nodeRecords[fromEdge.nodeId];
-      const toNode = nodeRecords[toEdge.nodeId];
-      const fromData = (() => {
-        if (fromNode && fromNode.type === "computed") {
-          const fromAgent = fromNode.guiAgentId ?? fromNode.agent ?? ""; // undefined is static node.
-          const props = agentProfiles[fromAgent].outputs[fromEdge.index]?.name;
-          return `:${fromEdge.nodeId}.${props}`;
+      const sourceNode = nodeRecords[sourceEdge.nodeId];
+      const targetNode = nodeRecords[targetEdge.nodeId];
+      const sourceData = (() => {
+        if (sourceNode && sourceNode.type === "computed") {
+          const sourceAgent = sourceNode.guiAgentId ?? sourceNode.agent ?? ""; // undefined is static node.
+          const props = agentProfiles[sourceAgent].outputs[sourceEdge.index]?.name;
+          return `:${sourceEdge.nodeId}.${props}`;
         }
-        return `:${fromEdge.nodeId}`;
+        return `:${sourceEdge.nodeId}`;
       })();
-      const toPropId = (() => {
-        if (toNode && toNode.type === "computed") {
-          const toAgent = toNode.guiAgentId ?? toNode.agent ?? ""; // undefined is static node.
-          const toProp = agentProfiles[toAgent].inputs[toEdge.index]?.name;
-          return toProp;
+      const targetPropId = (() => {
+        if (targetNode && targetNode.type === "computed") {
+          const targetAgent = targetNode.guiAgentId ?? targetNode.agent ?? ""; // undefined is static node.
+          const targetProp = agentProfiles[targetAgent].inputs[targetEdge.index]?.name;
+          return targetProp;
         }
         return "update";
       })();
 
       return {
-        fromData,
-        toNodeId: toEdge.nodeId,
-        toPropId,
+        sourceData,
+        targetNodeId: targetEdge.nodeId,
+        targetPropId,
       };
     })
     .reduce((tmp: Record<string, Record<string, string[]>>, current) => {
-      if (!tmp[current.toNodeId]) {
-        tmp[current.toNodeId] = {};
+      if (!tmp[current.targetNodeId]) {
+        tmp[current.targetNodeId] = {};
       }
-      if (!tmp[current.toNodeId][current.toPropId]) {
-        tmp[current.toNodeId][current.toPropId] = [];
+      if (!tmp[current.targetNodeId][current.targetPropId]) {
+        tmp[current.targetNodeId][current.targetPropId] = [];
       }
-      tmp[current.toNodeId][current.toPropId].push(current.fromData);
+      tmp[current.targetNodeId][current.targetPropId].push(current.sourceData);
       return tmp;
     }, {});
 };
@@ -237,8 +237,8 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
 
 export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData) => {
   if (newEdgeData.direction === "outbound") {
-    const fromData = newEdgeData.source;
-    const { nodeId, index } = fromData;
+    const sourceData = newEdgeData.source;
+    const { nodeId, index } = sourceData;
     const addEdge = {
       type: "AA",
       source: {
@@ -250,8 +250,8 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
     return addEdge;
   }
   if (newEdgeData.direction === "inbound") {
-    const toData = newEdgeData.target;
-    const { nodeId, index } = toData;
+    const targetData = newEdgeData.target;
+    const { nodeId, index } = targetData;
     const addEdge = {
       type: "AA",
       source: nearestData,
