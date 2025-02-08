@@ -55,7 +55,7 @@ export default defineComponent({
       });
     });
 
-    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
+    const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData } = useNewEdge();
 
     const openMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
@@ -72,8 +72,9 @@ export default defineComponent({
       store,
 
       edgeDataList,
+      newEdgeStartEvent,
       newEdgeEvent,
-      newEdgeEventEnd,
+      newEdgeEndEvent,
       newEdgeData,
       svgRef,
       nearestData,
@@ -107,8 +108,9 @@ export default defineComponent({
         :nearest-data="nearestData"
         @update-position="(pos) => updatePosition(index, pos)"
         @save-position="savePosition"
+        @new-edge-start="newEdgeStartEvent"
         @new-edge="newEdgeEvent"
-        @new-edge-end="newEdgeEventEnd"
+        @new-edge-end="newEdgeEndEvent"
       />
       <ContextMenu ref="contextMenu" />
     </div>

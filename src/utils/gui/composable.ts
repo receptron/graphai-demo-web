@@ -11,7 +11,7 @@ export const useNewEdge = () => {
   const targetNode = ref("");
   //
   
-  const newEdgeEvent = (data: NewEdgeEventData) => {
+  const newEdgeStartEvent = (data: NewEdgeEventData) => {
     const rect = svgRef.value.getBoundingClientRect();
     mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
     if (data.on === "start") {
@@ -39,6 +39,10 @@ export const useNewEdge = () => {
         };
       }
     }
+  };
+  const newEdgeEvent = (data: NewEdgeEventData) => {
+    const rect = svgRef.value.getBoundingClientRect();
+    mouseCurrentPosition.value = { x: data.x, y: data.y - rect.top };
     if (data.on === "move") {
       const newData = { data: { position: mouseCurrentPosition.value } };
       if (newEdgeData.value) {
@@ -51,7 +55,7 @@ export const useNewEdge = () => {
     }
   };
 
-  const newEdgeEventEnd = (data: NewEdgeEventData) => {
+  const newEdgeEndEvent = (data: NewEdgeEventData) => {
     if (data.on === "end") {
       if (!nearestData.value || !newEdgeData.value) return;
 
@@ -140,8 +144,9 @@ export const useNewEdge = () => {
   return {
     svgRef,
     newEdgeData,
+    newEdgeStartEvent,
     newEdgeEvent,
-    newEdgeEventEnd,
+    newEdgeEndEvent,
     nearestData,
   };
 };

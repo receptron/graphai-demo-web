@@ -64,7 +64,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: ["updatePosition", "savePosition", "newEdge", "newEdgeEnd"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
 
@@ -121,7 +121,7 @@ export default defineComponent({
       console.log("edge", event);
       isNewEdge.value = true;
       const { clientX, clientY } = getClientPos(event);
-      ctx.emit("newEdge", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
+      ctx.emit("newEdgeStart", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
     };
     const onEndEdge = () => {
       isNewEdge.value = false;

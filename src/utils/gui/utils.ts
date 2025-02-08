@@ -174,8 +174,7 @@ export const edges2inputs = (edges:GUIEdgeData[], nodeRecords: Record<string, GU
 
 export const store2graphData = (nodes:GUINodeData[], edgeObject: Record<string, Record<string, string[]>>) => {
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
-    const inputs = edgeObject.value[node.nodeId];
-    console.log(edgeObject.value, node.nodeId);
+    const inputs = edgeObject[node.nodeId];
     if (node.agent) {
       tmp[node.nodeId] = {
         agent: node.agent,
