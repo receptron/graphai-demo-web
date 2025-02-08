@@ -7,6 +7,7 @@
 <script lang="ts">
 import { ref, defineComponent } from "vue";
 
+import { getClientPos } from "./gui/utils";
 import { useStore } from "@/store";
 
 export default defineComponent({
@@ -17,11 +18,12 @@ export default defineComponent({
     const menuStyle = ref({ top: "0px", left: "0px" });
     const selectedEdgeIndex = ref(0);
 
-    const openMenu = (event: MouseEvent, topOffset: number, edgeIndex: number) => {
+    const openMenu = (event: MouseEvent | TouchEvent, topOffset: number, edgeIndex: number) => {
       event.preventDefault();
+      const { clientX, clientY } = getClientPos(event)
       menuStyle.value = {
-        top: `${event.clientY - topOffset}px`,
-        left: `${event.clientX}px`,
+        top: `${clientY - topOffset}px`,
+        left: `${clientX}px`,
       };
       menuVisible.value = true;
       selectedEdgeIndex.value = edgeIndex;
