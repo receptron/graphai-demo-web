@@ -94,12 +94,12 @@ export default defineComponent({
         <Edge
           v-for="(edge, index) in edgeDataList"
           :key="index"
-          :from-data="edge.source"
-          :to-data="edge.target"
+          :source-data="edge.source"
+          :target-data="edge.target"
           class="pointer-events-auto"
           @dblclick="(e) => openMenu(e, index)"
         />
-        <Edge v-if="newEdgeData" :from-data="newEdgeData.source" :to-data="newEdgeData.target" class="pointer-events-auto" />
+        <Edge v-if="newEdgeData" :source-data="newEdgeData.source" :target-data="newEdgeData.target" class="pointer-events-auto" />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"
