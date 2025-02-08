@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { NewEdgeEventData, GUINodeData, NewEdgeData, GUIEdgeData, InputOutput, InputOutputParam } from "./type";
-import { inputs2dataSources, GraphData, isComputedNodeData } from "graphai";
+import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 
 import { useStore } from "@/store";
 
@@ -273,3 +273,76 @@ export const agent2NodeParams: Record<string, InputOutput> = {
 };
 
 export const staticNodeParams: InputOutput = { inputs: [{ name: "update" }], outputs: [{ name: "date" }] };
+
+
+// for store
+export const edges2inputs = (edges:GUIEdgeData[], nodeRecords: Record<string, GUINodeData>) => {
+  return edges.map((edge) => {
+    const { from: fromEdge, to: toEdge } = edge;
+
+    const fromNode = nodeRecords[fromEdge.nodeId];
+    const toNode = nodeRecords[toEdge.nodeId];
+    const fromData = (() => {
+      if (fromNode && fromNode.type === "computed") {
+        const fromAgent = fromNode.guiAgentId ?? fromNode.agent ?? ""; // undefined is static node.
+        const props = agent2NodeParams[fromAgent].outputs[fromEdge.index]?.name;
+        return `:${fromEdge.nodeId}.${props}`;
+      }
+      return `:${fromEdge.nodeId}`;
+    })();
+    const toPropId = (() => {
+      if (toNode && toNode.type === "computed") {
+        const toAgent = toNode.guiAgentId ?? toNode.agent ?? ""; // undefined is static node.
+        const toProp = agent2NodeParams[toAgent].inputs[toEdge.index]?.name;
+        return toProp;
+      }
+      return "update";
+    })();
+    
+    return {
+      fromData,
+      toNodeId: toEdge.nodeId,
+      toPropId,
+    };
+  })
+    .reduce((tmp: Record<string, Record<string, string[]>>, current) => {
+      if (!tmp[current.toNodeId]) {
+        tmp[current.toNodeId] = {};
+      }
+      if (!tmp[current.toNodeId][current.toPropId]) {
+        tmp[current.toNodeId][current.toPropId] = [];
+      }
+      tmp[current.toNodeId][current.toPropId].push(current.fromData);
+      return tmp;
+    }, {});
+};
+
+export const store2graphData = (nodes:GUINodeData[], edgeObject: Record<string, Record<string, string[]>>) => {
+  const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
+    const inputs = edgeObject.value[node.nodeId];
+    console.log(edgeObject.value, node.nodeId);
+    if (node.agent) {
+      tmp[node.nodeId] = {
+        agent: node.agent,
+        params: node.params,
+        inputs: inputs ?? {},
+        // isResult: true,
+        // anyInput (boolean)
+        // if/unless (edge)
+        // defaultValue (object?)
+        // retry ?
+      };
+    } else {
+      tmp[node.nodeId] = {
+        value: node.value,
+        ...inputs,
+      } as StaticNodeData;
+    }
+    return tmp;
+  }, {});
+  const newGraphData = {
+    version: 0.5,
+    nodes: newNodes,
+  };
+  return newGraphData;
+};

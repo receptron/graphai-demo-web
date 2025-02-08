@@ -39,6 +39,7 @@ export type EdgeData = {
 
 type NewEdgeEventTargetType = "output" | "input";
 
+// x, y is clientX, clientY of mouse pointer
 export type NewEdgeEventData = {
   on: string;
   target: NewEdgeEventTargetType;
