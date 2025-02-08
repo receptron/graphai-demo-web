@@ -9,7 +9,7 @@ import { EdgeData, NodePosition } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge } from "../utils/gui/composable";
-import { graphToGUIData } from "../utils/gui/utils";
+import { graphToGUIData, guiEdgeData2edgeData } from "../utils/gui/utils";
 
 import { useStore } from "@/store";
 
@@ -39,20 +39,7 @@ export default defineComponent({
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
-      return store.edges.map((edge) => {
-        const { type, source, target } = edge;
-        return {
-          type,
-          source: {
-            ...source,
-            data: store.nodeRecords[edge.source.nodeId],
-          },
-          target: {
-            ...target,
-            data: store.nodeRecords[edge.target.nodeId],
-          },
-        };
-      });
+      return guiEdgeData2edgeData(store.edges, store.nodeRecords);
     });
 
     const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData } = useNewEdge();

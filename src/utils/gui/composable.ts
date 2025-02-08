@@ -26,15 +26,19 @@ export const useNewEdge = () => {
   };
 
   const newEdgeEndEvent = () => {
-    if (!nearestData.value || !newEdgeData.value) return;
-
-    const newEdge = edgeEndEventData(newEdgeData.value, nearestData.value);
+    const newEdge = expectEdge.value;
     if (newEdge) {
       store.pushEdge(newEdge);
     }
     newEdgeData.value = null;
   };
 
+  const expectEdge = computed(() => {
+    if (!nearestData.value || !newEdgeData.value) return;
+
+    return edgeEndEventData(newEdgeData.value, nearestData.value);
+  });
+  
   const nearestNode = computed<ClosestNodeData | null>(() => {
     if (!store.nodes.length) return null;
 
@@ -63,5 +67,6 @@ export const useNewEdge = () => {
     newEdgeEvent,
     newEdgeEndEvent,
     nearestData,
+    expectEdge,
   };
 };

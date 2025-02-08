@@ -1,5 +1,5 @@
 import { ref, computed } from "vue";
-import { GUINodeData, GUIEdgeData } from "../utils/gui/type";
+import { GUINodeData, GUIEdgeData, GUINodeDataRecord } from "../utils/gui/type";
 import { edges2inputs, store2graphData } from "../utils/gui/utils";
 import { defineStore } from "pinia";
 type HistoryData = {
@@ -18,8 +18,8 @@ export const useStore = defineStore("store", () => {
   const edges = computed(() => {
     return currentData.value.edges;
   });
-  const nodeRecords = computed(() => {
-    return nodes.value.reduce((tmp: Record<string, GUINodeData>, current) => {
+  const nodeRecords = computed<GUINodeDataRecord>(() => {
+    return nodes.value.reduce((tmp: GUINodeDataRecord, current) => {
       tmp[current.nodeId] = current;
       return tmp;
     }, {});

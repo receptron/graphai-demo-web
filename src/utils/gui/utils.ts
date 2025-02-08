@@ -2,11 +2,13 @@ import {
   Position,
   GUINodeData,
   GUIEdgeData,
+  GUINodeDataRecord,
+  GUINearestData,
+  EdgeData,
   InputOutput,
   InputOutputParam,
   NewEdgeEventData,
   NewEdgeData,
-  GUINearestData,
   ClosestNodeData,
   EdgeEndPointData,
 } from "./type";
@@ -92,7 +94,7 @@ export const graphToGUIData = (graphData: GraphData) => {
   };
 };
 
-export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: Record<string, GUINodeData>, sorceOrTarget: "source" | "target") => {
+export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: GUINodeDataRecord, sorceOrTarget: "source" | "target") => {
   const node = nodeRecords[edgeEndPointData.nodeId];
   if (node && node.type === "computed") {
     const specializedAgent = node.guiAgentId ?? node.agent ?? ""; // undefined is static node.
@@ -109,7 +111,7 @@ export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRec
 };
 
 // for store
-export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, GUINodeData>) => {
+export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecord) => {
   return edges
     .map((edge) => {
       const { source: sourceEdge, target: targetEdge } = edge;
@@ -179,6 +181,23 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
 };
 
 // composable
+export const guiEdgeData2edgeData = (guiEdges: GUIEdgeData[], nodeRecords: GUINodeDataRecord): EdgeData[] => {
+  return guiEdges.map((edge) => {
+    const { type, source, target } = edge;
+    return {
+      type,
+      source: {
+        ...source,
+        data: nodeRecords[edge.source.nodeId],
+      },
+      target: {
+        ...target,
+        data: nodeRecords[edge.target.nodeId],
+      },
+    };
+  })
+};
+
 export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLElement, nodeData: GUINodeData) => {
   // Since x and y are clientX and clientY, adjust the height by the header.
   // If there is a horizontal menu, you will need to adjust x.
@@ -194,7 +213,7 @@ export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLEl
   const positionData = {
     data: { position: mousePosition },
   };
-  const startEdgeData = (() => {
+  const startEdgeData: NewEdgeData = (() => {
     if (data.direction === "outbound") {
       return {
         direction: data.direction,

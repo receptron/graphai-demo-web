@@ -13,6 +13,8 @@ export type GUINodeData = {
   value?: unknown; // ResultData<DefaultResultData>;
 };
 
+export type GUINodeDataRecord = Record<string, GUINodeData>;
+
 export type EdgeEndPointData = {
   nodeId: string;
   index: number;
