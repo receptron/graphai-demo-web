@@ -63,9 +63,9 @@ export default defineComponent({
 
     const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
 
-    const openMenu = (event: MouseEvent) => {
+    const openMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
-      contextMenu.value.openMenu(event, rect.top);
+      contextMenu.value.openMenu(event, rect.top, edgeIndex);
     };
     return {
       updatePosition,
@@ -97,7 +97,7 @@ export default defineComponent({
           :from-data="edge.from"
           :to-data="edge.to"
           class="pointer-events-auto"
-          @dblclick="(e) => openMenu(e)"
+          @dblclick="(e) => openMenu(e, index)"
         />
         <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
       </svg>
