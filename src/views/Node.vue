@@ -19,9 +19,9 @@
         <span class="mr-2 text-xs whitespace-nowrap">{{ output.name }}</span>
         <div
           class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
-          :class="nodeOutputClass(isExpectNearButton('input', index), nodeData)"
-          @mousedown="(e) => onStartEdge(e, 'output', index)"
-          @touchstart="(e) => onStartEdge(e, 'output', index)"
+          :class="nodeOutputClass(isExpectNearButton('inbound', index), nodeData)"
+          @mousedown="(e) => onStartEdge(e, 'outbound', index)"
+          @touchstart="(e) => onStartEdge(e, 'outbound', index)"
         ></div>
       </div>
     </div>
@@ -30,9 +30,9 @@
       <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
           class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
-          :class="nodeInputClass(isExpectNearButton('output', index), nodeData)"
-          @mousedown="(e) => onStartEdge(e, 'input', index)"
-          @touchstart="(e) => onStartEdge(e, 'input', index)"
+          :class="nodeInputClass(isExpectNearButton('outbound', index), nodeData)"
+          @mousedown="(e) => onStartEdge(e, 'inbound', index)"
+          @touchstart="(e) => onStartEdge(e, 'inbound', index)"
         ></div>
         <span class="ml-2 text-xs whitespace-nowrap">{{ input.name }}</span>
       </div>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData } from "../utils/gui/type";
+import type { GUINodeData, GUINearestData, NewEdgeEventTargetType } from "../utils/gui/type";
 import { getClientPos } from "../utils/gui/utils";
 import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
@@ -118,7 +118,7 @@ export default defineComponent({
     };
 
     // edge event
-    const onStartEdge = (event: MouseEvent | TouchEvent, target: string, index: number) => {
+    const onStartEdge = (event: MouseEvent | TouchEvent, target: NewEdgeEventTargetType, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
       const { clientX, clientY } = getClientPos(event);
@@ -174,7 +174,7 @@ export default defineComponent({
       return props.nodeData.nodeId === props.nearestData?.nodeId;
     });
 
-    const isExpectNearButton = (targetType: string, index: number) => {
+    const isExpectNearButton = (targetType: NewEdgeEventTargetType, index: number) => {
       if (!expectNearNode.value) {
         return false;
       }

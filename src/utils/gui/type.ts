@@ -34,7 +34,7 @@ export type EdgeData = {
   to: EdgeFormToData;
 };
 
-type NewEdgeEventTargetType = "output" | "input";
+type NewEdgeEventTargetType = "outbound" | "inbound";
 
 // x, y is clientX, clientY of mouse pointer
 export type NewEdgeEventData = {
@@ -65,13 +65,13 @@ type NewEdgeNodeData = {
 export type EdgeData2 = NewEdgeMouseData | NewEdgeNodeData;
 
 export type NewEdgeData1 = {
-  target: "output";
+  target: "outbound";
   from: NewEdgeNodeData;
   to: NewEdgeMouseData;
 };
 
 export type NewEdgeData2 = {
-  target: "input";
+  target: "inbound";
   from: NewEdgeMouseData;
   to: NewEdgeNodeData;
 };

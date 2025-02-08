@@ -194,7 +194,7 @@ export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLEl
     data: { position: mousePosition },
   };
   const startEdgeData = (() => {
-    if (data.target === "output") {
+    if (data.target === "outbound") {
       return {
         target: data.target,
         from: edgeNodeData,
@@ -220,7 +220,7 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
   const newData = { data: { position: mousePosition } };
 
   const updateEdgeData =
-    prevEdgeData.target === "output"
+    prevEdgeData.target === "outbound"
       ? {
           ...prevEdgeData,
           to: newData,
@@ -236,7 +236,7 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
 };
 
 export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData) => {
-  if (newEdgeData.target === "output") {
+  if (newEdgeData.target === "outbound") {
     const fromData = newEdgeData.from;
     const { nodeId, index } = fromData;
     const addEdge = {
@@ -249,7 +249,7 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
     };
     return addEdge;
   }
-  if (newEdgeData.target === "input") {
+  if (newEdgeData.target === "inbound") {
     const toData = newEdgeData.to;
     const { nodeId, index } = toData;
     const addEdge = {
@@ -288,7 +288,7 @@ export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseC
 export const pickNearestConnect = (nearestNode: ClosestNodeData, newEdgeData: NewEdgeData, mouseCurrentPosition: Position) => {
   const nodePos = nearestNode.node.position;
   const { inputCenters, outputCenters } = nodePos;
-  const isOutput = newEdgeData.target === "output";
+  const isOutput = newEdgeData.target === "outbound";
   const centers = (isOutput ? inputCenters : outputCenters) ?? [];
   return centers.reduce((closest: null | { index: number; distance: number }, center: number, index: number) => {
     const nodeX = nodePos.x + (isOutput ? 0 : (nodePos?.width ?? 0));
