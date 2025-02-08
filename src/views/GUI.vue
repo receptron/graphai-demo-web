@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, computed, onMounted } from "vue";
+import { defineComponent, computed, onMounted, ref } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
+import ContextMenu from "./ContextMenu.vue";
 
 import { GUINodeData, EdgeData } from "./gui/type";
 
@@ -16,9 +17,11 @@ export default defineComponent({
     Node,
     Edge,
     AddNode,
+    ContextMenu,
   },
   setup() {
     const store = useStore();
+    const contextMenu = ref();
 
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
@@ -60,6 +63,10 @@ export default defineComponent({
 
     const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
 
+    const openMenu = (event: MouseEvent) => {
+      const rect = svgRef.value.getBoundingClientRect();
+      contextMenu.value.openMenu(event, rect.top);
+    };
     return {
       updatePosition,
       savePosition,
@@ -72,6 +79,9 @@ export default defineComponent({
       newEdgeData,
       svgRef,
       nearestData,
+
+      contextMenu,
+      openMenu,
     };
   },
 });
@@ -81,7 +91,14 @@ export default defineComponent({
   <div>
     <div class="w-screen h-[80vh] relative">
       <svg x="0" y="0" width="100%" height="80%" class="absolute pointer-events-none" ref="svgRef">
-        <Edge v-for="(edge, index) in edgeDataList" :key="index" :from-data="edge.from" :to-data="edge.to" class="pointer-events-auto" />
+        <Edge
+          v-for="(edge, index) in edgeDataList"
+          :key="index"
+          :from-data="edge.from"
+          :to-data="edge.to"
+          class="pointer-events-auto"
+          @dblclick="(e) => openMenu(e)"
+        />
         <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
       </svg>
       <Node
@@ -94,6 +111,7 @@ export default defineComponent({
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEventEnd"
       />
+      <ContextMenu ref="contextMenu" />
     </div>
     <div>
       <AddNode />
