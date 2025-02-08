@@ -8,7 +8,8 @@ import ContextMenu from "./ContextMenu.vue";
 import { EdgeData } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
-import { useNewEdge, graphToGUIData } from "../utils/gui/utils";
+import { useNewEdge } from "../utils/gui/composable";
+import { graphToGUIData } from "../utils/gui/utils";
 
 import { useStore } from "@/store";
 
