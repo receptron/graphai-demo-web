@@ -92,15 +92,18 @@ export const graphToGUIData = (graphData: GraphData) => {
   };
 };
 
-export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: Record<string, GUINodeData>) => {
+export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: Record<string, GUINodeData>, sorceOrTarget: "source" | "target") => {
   const node = nodeRecords[edgeEndPointData.nodeId];
   if (node && node.type === "computed") {
     const specializedAgent = node.guiAgentId ?? node.agent ?? ""; // undefined is static node.
 
     const profile = agentProfiles[specializedAgent];
+    const IOData = sorceOrTarget === "source" ? profile.outputs[edgeEndPointData.index] : profile.inputs[edgeEndPointData.index];
+
     return {
       agent: specializedAgent,
       profile,
+      IOData,
     };
   }
 };
@@ -111,20 +114,18 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: Record<string, G
     .map((edge) => {
       const { source: sourceEdge, target: targetEdge } = edge;
 
-      const sourceNode = nodeRecords[sourceEdge.nodeId];
-      const targetNode = nodeRecords[targetEdge.nodeId];
       const sourceData = (() => {
-        if (sourceNode && sourceNode.type === "computed") {
-          const sourceAgent = sourceNode.guiAgentId ?? sourceNode.agent ?? ""; // undefined is static node.
-          const props = agentProfiles[sourceAgent].outputs[sourceEdge.index]?.name;
+        const sourceAgentProfile = edgeEnd2agentProfile(sourceEdge, nodeRecords, "source");
+        if (sourceAgentProfile) {
+          const props = sourceAgentProfile.IOData?.name;
           return `:${sourceEdge.nodeId}.${props}`;
         }
         return `:${sourceEdge.nodeId}`;
       })();
       const targetPropId = (() => {
-        if (targetNode && targetNode.type === "computed") {
-          const targetAgent = targetNode.guiAgentId ?? targetNode.agent ?? ""; // undefined is static node.
-          const targetProp = agentProfiles[targetAgent].inputs[targetEdge.index]?.name;
+        const targetAgentProfile = edgeEnd2agentProfile(targetEdge, nodeRecords, "target");
+        if (targetAgentProfile) {
+          const targetProp = targetAgentProfile.IOData?.name;
           return targetProp;
         }
         return "update";

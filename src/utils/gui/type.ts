@@ -34,12 +34,12 @@ export type EdgeData = {
   target: EdgeFormToData;
 };
 
-export type NewEdgeEventTargetType = "outbound" | "inbound";
+export type NewEdgeEventDirection = "outbound" | "inbound";
 
 // x, y is clientX, clientY of mouse pointer
 export type NewEdgeEventData = {
   on: string;
-  direction: NewEdgeEventTargetType;
+  direction: NewEdgeEventDirection;
   index: number;
   nodeId: string;
   x: number;
@@ -49,7 +49,7 @@ export type NewEdgeEventData = {
 export type GUINearestData = {
   nodeId: string;
   index: number;
-  direction: NewEdgeEventTargetType;
+  direction: NewEdgeEventDirection;
 };
 
 type NewEdgeMouseData = {

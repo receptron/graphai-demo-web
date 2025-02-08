@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData, NewEdgeEventTargetType } from "../utils/gui/type";
+import type { GUINodeData, GUINearestData, NewEdgeEventDirection } from "../utils/gui/type";
 import { getClientPos } from "../utils/gui/utils";
 import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
@@ -118,7 +118,7 @@ export default defineComponent({
     };
 
     // edge event
-    const onStartEdge = (event: MouseEvent | TouchEvent, direction: NewEdgeEventTargetType, index: number) => {
+    const onStartEdge = (event: MouseEvent | TouchEvent, direction: NewEdgeEventDirection, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
       const { clientX, clientY } = getClientPos(event);
@@ -174,7 +174,7 @@ export default defineComponent({
       return props.nodeData.nodeId === props.nearestData?.nodeId;
     });
 
-    const isExpectNearButton = (targetType: NewEdgeEventTargetType, index: number) => {
+    const isExpectNearButton = (targetType: NewEdgeEventDirection, index: number) => {
       if (!expectNearNode.value) {
         return false;
       }
