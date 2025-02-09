@@ -19,9 +19,9 @@
         <span class="mr-2 text-xs whitespace-nowrap">{{ output.name }}</span>
         <div
           class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
-          :class="nodeOutputClass(isExpectNearButton('input', index), nodeData)"
-          @mousedown="(e) => onStartEdge(e, 'output', index)"
-          @touchstart="(e) => onStartEdge(e, 'output', index)"
+          :class="nodeOutputClass(isExpectNearButton('inbound', index), nodeData)"
+          @mousedown="(e) => onStartEdge(e, 'outbound', index)"
+          @touchstart="(e) => onStartEdge(e, 'outbound', index)"
         ></div>
       </div>
     </div>
@@ -30,14 +30,17 @@
       <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
         <div
           class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
-          :class="nodeInputClass(isExpectNearButton('output', index), nodeData)"
-          @mousedown="(e) => onStartEdge(e, 'input', index)"
-          @touchstart="(e) => onStartEdge(e, 'input', index)"
+          :class="nodeInputClass(isExpectNearButton('outbound', index), nodeData)"
+          @mousedown="(e) => onStartEdge(e, 'inbound', index)"
+          @touchstart="(e) => onStartEdge(e, 'inbound', index)"
         ></div>
         <span class="ml-2 text-xs whitespace-nowrap">{{ input.name }}</span>
       </div>
     </div>
-    <div class="w-full p-2 flex flex-col gap-1">
+    <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'static'">
+      <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" @update-value="updateValue" />
+    </div>
+    <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
       <label class="text-xs text-gray-300">Name</label>
       <input type="text" placeholder="Enter the name" class="w-full border border-gray-300 rounded-md p-1 text-black" />
       <label class="text-xs text-gray-300">Messages</label>
@@ -48,12 +51,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData } from "./gui/type";
-import { getClientPos, agent2NodeParams, staticNodeParams } from "./gui/utils";
-import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "./gui/classUtils";
+import type { GUINodeData, GUINearestData, NewEdgeEventDirection } from "../utils/gui/type";
+import { getClientPos } from "../utils/gui/utils";
+import { agentProfiles, staticNodeParams } from "../utils/gui/data";
+import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
+
+import NodeStaticValue from "./NodeStaticValue.vue";
 
 export default defineComponent({
-  components: {},
+  components: {
+    NodeStaticValue,
+  },
   props: {
     nodeData: {
       type: Object as PropType<GUINodeData>,
@@ -64,9 +72,9 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: ["updatePosition", "savePosition", "newEdge", "newEdgeEnd"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue"],
   setup(props, ctx) {
-    const agentParams = props.nodeData.type === "computed" ? agent2NodeParams[props.nodeData.agent ?? ""] : staticNodeParams;
+    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.agent ?? ""] : staticNodeParams;
 
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);
@@ -117,11 +125,11 @@ export default defineComponent({
     };
 
     // edge event
-    const onStartEdge = (event: MouseEvent | TouchEvent, target: string, index: number) => {
+    const onStartEdge = (event: MouseEvent | TouchEvent, direction: NewEdgeEventDirection, index: number) => {
       console.log("edge", event);
       isNewEdge.value = true;
       const { clientX, clientY } = getClientPos(event);
-      ctx.emit("newEdge", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, target });
+      ctx.emit("newEdgeStart", { on: "start", nodeId: props.nodeData.nodeId, x: clientX, y: clientY, index, direction });
     };
     const onEndEdge = () => {
       isNewEdge.value = false;
@@ -173,14 +181,38 @@ export default defineComponent({
       return props.nodeData.nodeId === props.nearestData?.nodeId;
     });
 
-    const isExpectNearButton = (targetType: string, index: number) => {
+    const isExpectNearButton = (direction: NewEdgeEventDirection, index: number) => {
       if (!expectNearNode.value) {
         return false;
       }
-      return props.nearestData?.target === targetType && props.nearestData?.index === index;
+      return props.nearestData?.direction === direction && props.nearestData?.index === index;
+    };
+
+    let currentWidth = 0;
+    let currentHeight = 0;
+    const focusEvent = () => {
+      currentWidth = thisRef.value.offsetWidth;
+      currentHeight = thisRef.value.offsetHeight;
+      thisRef.value.style.width = currentWidth * 3 + "px";
+      thisRef.value.style.height = currentHeight * 3 + "px";
+      thisRef.value.style.zIndex = 100;
+      ctx.emit("updatePosition", getWH());
+    };
+    const blurEvent = () => {
+      thisRef.value.style.width = currentWidth + "px";
+      thisRef.value.style.height = currentHeight + "px";
+      thisRef.value.style.zIndex = 1;
+      ctx.emit("updatePosition", getWH());
+    };
+    const updateValue = (value: string) => {
+      console.log(value);
+      ctx.emit("updateValue", value);
     };
 
     return {
+      focusEvent,
+      blurEvent,
+
       transform,
       onStartNode,
       isDragging,
@@ -194,6 +226,8 @@ export default defineComponent({
 
       expectNearNode,
       isExpectNearButton,
+
+      updateValue,
 
       // helper
       nodeMainClass,

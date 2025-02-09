@@ -5,10 +5,11 @@ import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
 import ContextMenu from "./ContextMenu.vue";
 
-import { EdgeData } from "./gui/type";
+import { EdgeData, NodePosition } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
-import { useNewEdge, graphToGUIData } from "./gui/utils";
+import { useNewEdge } from "../utils/gui/composable";
+import { graphToGUIData, guiEdgeData2edgeData } from "../utils/gui/utils";
 
 import { useStore } from "@/store";
 
@@ -27,34 +28,25 @@ export default defineComponent({
 
     store.initData(rawNode, rawEdge);
     onMounted(() => {
-      savePosition();
+      saveNodePosition();
     });
 
-    const updatePosition = (index: number, pos: { x: number; y: number; width: number; height: number }) => {
-      store.updatePosition(index, pos);
+    const updateNodePosition = (index: number, pos: NodePosition) => {
+      store.updateNodePosition(index, pos);
     };
-    const savePosition = () => {
-      store.saveData();
+    const saveNodePosition = () => {
+      store.saveNodeData();
+    };
+    const updateNodeValue = (index: number, value: string) => {
+      store.updateStaticNodeValue(index, value);
+      console.log(index, value);
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
-      return store.edges.map((edge) => {
-        const { type, from, to } = edge;
-        return {
-          type,
-          from: {
-            ...from,
-            data: store.nodeRecords[edge.from.nodeId],
-          },
-          to: {
-            ...to,
-            data: store.nodeRecords[edge.to.nodeId],
-          },
-        };
-      });
+      return guiEdgeData2edgeData(store.edges, store.nodeRecords);
     });
 
-    const { svgRef, newEdgeData, newEdgeEvent, newEdgeEventEnd, nearestData } = useNewEdge();
+    const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData, edgeConnectable } = useNewEdge();
 
     const openMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
@@ -64,15 +56,21 @@ export default defineComponent({
       contextMenu.value.closeMenu();
     };
 
+    const debug1 = () => {
+      store.reset();
+    };
+
     return {
-      updatePosition,
-      savePosition,
+      updateNodePosition,
+      saveNodePosition,
+      updateNodeValue,
 
       store,
 
       edgeDataList,
+      newEdgeStartEvent,
       newEdgeEvent,
-      newEdgeEventEnd,
+      newEdgeEndEvent,
       newEdgeData,
       svgRef,
       nearestData,
@@ -80,6 +78,10 @@ export default defineComponent({
       contextMenu,
       openMenu,
       closeMenu,
+
+      edgeConnectable,
+
+      debug1,
     };
   },
 });
@@ -92,22 +94,30 @@ export default defineComponent({
         <Edge
           v-for="(edge, index) in edgeDataList"
           :key="index"
-          :from-data="edge.from"
-          :to-data="edge.to"
+          :source-data="edge.source"
+          :target-data="edge.target"
           class="pointer-events-auto"
           @dblclick="(e) => openMenu(e, index)"
         />
-        <Edge v-if="newEdgeData" :from-data="newEdgeData.from" :to-data="newEdgeData.to" class="pointer-events-auto" />
+        <Edge
+          v-if="newEdgeData"
+          :source-data="newEdgeData.source"
+          :target-data="newEdgeData.target"
+          class="pointer-events-auto"
+          :is-connectable="edgeConnectable"
+        />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"
         :key="index"
         :node-data="node"
         :nearest-data="nearestData"
-        @update-position="(pos) => updatePosition(index, pos)"
-        @save-position="savePosition"
+        @update-position="(pos) => updateNodePosition(index, pos)"
+        @update-value="(value) => updateNodeValue(index, value)"
+        @save-position="saveNodePosition"
+        @new-edge-start="newEdgeStartEvent"
         @new-edge="newEdgeEvent"
-        @new-edge-end="newEdgeEventEnd"
+        @new-edge-end="newEdgeEndEvent"
       />
       <ContextMenu ref="contextMenu" />
     </div>
@@ -128,8 +138,13 @@ export default defineComponent({
         Redo
       </button>
     </div>
-    <div>
-      {{ store.graphData }}
+    <div class="text-left">
+      <button @click="debug1" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Debug</button>
+    </div>
+    <div class="text-left">
+      <pre>
+        {{ JSON.stringify(store.graphData, null, 2) }}
+      </pre>
     </div>
   </div>
 </template>

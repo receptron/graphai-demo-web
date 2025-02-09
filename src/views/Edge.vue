@@ -1,7 +1,7 @@
 <template>
   <path
     :d="edgePath.d"
-    :stroke="isHover ? 'blue' : 'red'"
+    :stroke="isConnectable ? (isHover ? colors.hover : colors.edge) : colors.notConnectable"
     fill="none"
     :stroke-width="isHover ? 4 : 2"
     @mouseover="isHover = true"
@@ -11,27 +11,38 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, PropType } from "vue";
-import { EdgeData2 } from "./gui/type";
+import { EdgeData2 } from "../utils/gui/type";
+
+const colors = {
+  edge: "red",
+  hover: "blue",
+  notConnectable: "pink",
+};
 
 export default defineComponent({
   components: {},
   props: {
-    fromData: {
+    sourceData: {
       type: Object as PropType<EdgeData2>,
       required: true,
     },
-    toData: {
+    targetData: {
       type: Object as PropType<EdgeData2>,
       required: true,
+    },
+    isConnectable: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
   setup(props) {
     const isHover = ref(false);
     const edgePath = computed(() => {
-      const { x, y, width, outputCenters } = props.fromData.data.position;
-      const { index } = props.fromData;
-      const { x: x2, y: y2, inputCenters } = props.toData.data.position;
-      const { index: index2 } = props.toData;
+      const { x, y, width, outputCenters } = props.sourceData.data.position;
+      const { index } = props.sourceData;
+      const { x: x2, y: y2, inputCenters } = props.targetData.data.position;
+      const { index: index2 } = props.targetData;
       const y1Offset = index === undefined ? 0 : outputCenters && outputCenters.length >= index ? outputCenters[index] : 0;
       const y2Offset = index2 === undefined ? 0 : inputCenters && inputCenters.length >= index2 ? inputCenters[index2] : 0;
 
@@ -42,6 +53,7 @@ export default defineComponent({
     return {
       edgePath,
       isHover,
+      colors,
     };
   },
 });

@@ -1,5 +1,7 @@
 import type { DefaultParamsType } from "graphai";
 
+export type Position = { x: number; y: number };
+export type NodePosition = { x: number; y: number; width: number; height: number };
 export type GUINodeData = {
   type: string;
   agent?: string;
@@ -11,37 +13,35 @@ export type GUINodeData = {
   value?: unknown; // ResultData<DefaultResultData>;
 };
 
+export type GUINodeDataRecord = Record<string, GUINodeData>;
+
+export type EdgeEndPointData = {
+  nodeId: string;
+  index: number;
+};
+
 export type GUIEdgeData = {
   type: string;
-  from: {
-    nodeId: string;
-    index: number;
-  };
-  to: {
-    nodeId: string;
-    index: number;
-  };
+  source: EdgeEndPointData;
+  target: EdgeEndPointData;
 };
+
+export type EdgeFormToData = {
+  data: GUINodeData;
+} & EdgeEndPointData;
 
 export type EdgeData = {
   type: string;
-  from: {
-    nodeId: string;
-    index: number;
-    data: GUINodeData;
-  };
-  to: {
-    nodeId: string;
-    index: number;
-    data: GUINodeData;
-  };
+  source: EdgeFormToData;
+  target: EdgeFormToData;
 };
 
-type NewEdgeEventTargetType = "output" | "input";
+export type NewEdgeEventDirection = "outbound" | "inbound";
 
+// x, y is clientX, clientY of mouse pointer
 export type NewEdgeEventData = {
   on: string;
-  target: NewEdgeEventTargetType;
+  direction: NewEdgeEventDirection;
   index: number;
   nodeId: string;
   x: number;
@@ -51,12 +51,12 @@ export type NewEdgeEventData = {
 export type GUINearestData = {
   nodeId: string;
   index: number;
-  target: NewEdgeEventTargetType;
+  direction: NewEdgeEventDirection;
 };
 
 type NewEdgeMouseData = {
   data: { position: { x: number; y: number; width?: number; outputCenters?: number[]; inputCenters?: number[] } };
-  index?: number; // index and width never exists
+  index?: number; // index and width, outputCenters, inputCenters never exists. for data type compatibility.
 };
 type NewEdgeNodeData = {
   nodeId: string;
@@ -67,18 +67,25 @@ type NewEdgeNodeData = {
 export type EdgeData2 = NewEdgeMouseData | NewEdgeNodeData;
 
 export type NewEdgeData1 = {
-  target: "output";
-  from: NewEdgeNodeData;
-  to: NewEdgeMouseData;
+  direction: "outbound";
+  source: NewEdgeNodeData;
+  target: NewEdgeMouseData;
 };
 
 export type NewEdgeData2 = {
-  target: "input";
-  from: NewEdgeMouseData;
-  to: NewEdgeNodeData;
+  direction: "inbound";
+  source: NewEdgeMouseData;
+  target: NewEdgeNodeData;
 };
 
 export type NewEdgeData = NewEdgeData1 | NewEdgeData2;
+
+export type ClosestNodeData = { node: GUINodeData; distance: number };
+export type NearestData = {
+  nodeId: string;
+  index: number;
+  direction: string;
+};
 
 // TODO good name
 export type InputOutputParam = { name: string; type?: string };
