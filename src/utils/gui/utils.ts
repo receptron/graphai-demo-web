@@ -337,25 +337,23 @@ const sameTargetEdge = (edge1: EdgeData | GUIEdgeData, edge2: EdgeData | GUIEdge
   return edge1.target.nodeId === edge2.target.nodeId && edge1.target.index === edge2.target.index;
 };
 
-export const isEdgeConnectale = (expectEdge: GUIEdgeData | null, edges: GUIEdgeData[]) => {
+export const isEdgeConnectale = (expectEdge: GUIEdgeData | null, edges: GUIEdgeData[], nodeRecords: GUINodeDataRecord) => {
   if (!expectEdge) {
     return false;
   }
   if (edges.find((edge) => sameEdge(edge, expectEdge))) {
     return false;
   }
-  const existEdge = edges.filter((edge) => {
-    if (!expectEdge) {
-      return false;
-    }
-    if (sameEdge(edge, expectEdge)) {
-      return false;
-    }
-
+  const existanceEdges = edges.filter((edge) => {
     return sameTargetEdge(edge, expectEdge);
   });
-  console.log(existEdge);
+  const profile = edgeEnd2agentProfile(expectEdge.target, nodeRecords, "target");
+  if (!profile) {
+    // maybe static node
+    return true;
+  }
+  if (profile.IOData.type === "text") {
+    return existanceEdges.length === 0;
+  }
   return true;
-  // return true;
-  // return {};
 };

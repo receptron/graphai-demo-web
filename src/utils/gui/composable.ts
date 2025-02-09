@@ -60,7 +60,7 @@ export const useNewEdge = () => {
   });
 
   const edgeConnectable = computed(() => {
-    return isEdgeConnectale(expectEdge.value, store.edges);
+    return isEdgeConnectale(expectEdge.value, store.edges, store.nodeRecords);
   });
 
   return {
