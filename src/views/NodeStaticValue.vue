@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, PropType, onMounted, onBeforeUnmount } from "vue";
 import type { GUINodeData } from "../utils/gui/type";
 export default defineComponent({
   props: {
@@ -63,7 +63,7 @@ export default defineComponent({
       textarea.value.addEventListener("focus", focusEvent);
       textarea.value.addEventListener("blur", blueEvent);
     });
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       textarea.value.removeEventListener("focus", focusEvent);
       textarea.value.removeEventListener("blur", blueEvent);
     });

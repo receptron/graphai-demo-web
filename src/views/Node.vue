@@ -205,7 +205,6 @@ export default defineComponent({
       ctx.emit("updatePosition", getWH());
     };
     const updateValue = (value: string) => {
-      console.log(value);
       ctx.emit("updateValue", value);
     };
 
