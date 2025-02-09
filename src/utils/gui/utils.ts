@@ -196,7 +196,7 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
     if (node.agent) {
       tmp[node.nodeId] = {
         agent: node.agent,
-        params: node.params,
+        params: node.data.params,
         inputs: inputs ?? {},
         // isResult: true,
         // anyInput (boolean)
