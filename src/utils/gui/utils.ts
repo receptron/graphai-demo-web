@@ -195,7 +195,7 @@ export const guiEdgeData2edgeData = (guiEdges: GUIEdgeData[], nodeRecords: GUINo
         data: nodeRecords[edge.target.nodeId],
       },
     };
-  })
+  });
 };
 
 export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLElement, nodeData: GUINodeData) => {
@@ -255,7 +255,7 @@ export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLE
   };
 };
 
-export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData) => {
+export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINearestData): GUIEdgeData | null => {
   if (newEdgeData.direction === "outbound") {
     const sourceData = newEdgeData.source;
     const { nodeId, index } = sourceData;
@@ -323,4 +323,39 @@ export const pickNearestConnect = (nearestNode: ClosestNodeData, newEdgeData: Ne
 
     return closest;
   }, null);
+};
+
+const sameEdge = (edge1: EdgeData | GUIEdgeData, edge2: EdgeData | GUIEdgeData) => {
+  return (
+    edge1.source.nodeId === edge2.source.nodeId &&
+    edge1.source.index === edge2.source.index &&
+    edge1.target.nodeId === edge2.target.nodeId &&
+    edge1.target.index === edge2.target.index
+  );
+};
+const sameTargetEdge = (edge1: EdgeData | GUIEdgeData, edge2: EdgeData | GUIEdgeData) => {
+  return edge1.target.nodeId === edge2.target.nodeId && edge1.target.index === edge2.target.index;
+};
+
+export const isEdgeConnectale = (expectEdge: GUIEdgeData | null, edges: GUIEdgeData[]) => {
+  if (!expectEdge) {
+    return false;
+  }
+  if (edges.find((edge) => sameEdge(edge, expectEdge))) {
+    return false;
+  }
+  const existEdge = edges.filter((edge) => {
+    if (!expectEdge) {
+      return false;
+    }
+    if (sameEdge(edge, expectEdge)) {
+      return false;
+    }
+
+    return sameTargetEdge(edge, expectEdge);
+  });
+  console.log(existEdge);
+  return true;
+  // return true;
+  // return {};
 };

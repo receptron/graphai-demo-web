@@ -42,7 +42,7 @@ export default defineComponent({
       return guiEdgeData2edgeData(store.edges, store.nodeRecords);
     });
 
-    const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData } = useNewEdge();
+    const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData, edgeConnectable } = useNewEdge();
 
     const openMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
@@ -69,6 +69,8 @@ export default defineComponent({
       contextMenu,
       openMenu,
       closeMenu,
+
+      edgeConnectable,
     };
   },
 });
@@ -86,7 +88,13 @@ export default defineComponent({
           class="pointer-events-auto"
           @dblclick="(e) => openMenu(e, index)"
         />
-        <Edge v-if="newEdgeData" :source-data="newEdgeData.source" :target-data="newEdgeData.target" class="pointer-events-auto" />
+        <Edge
+          v-if="newEdgeData"
+          :source-data="newEdgeData.source"
+          :target-data="newEdgeData.target"
+          class="pointer-events-auto"
+          :is-connectable="edgeConnectable"
+        />
       </svg>
       <Node
         v-for="(node, index) in store.nodes"
