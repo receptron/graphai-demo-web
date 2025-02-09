@@ -112,7 +112,7 @@ export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRec
 
 // for store
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecord) => {
-  return edges
+  const records = edges
     .map((edge) => {
       const { source: sourceEdge, target: targetEdge } = edge;
 
@@ -137,21 +137,58 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
         sourceData,
         targetNodeId: targetEdge.nodeId,
         targetPropId,
+        targetIndex: targetEdge.index,
       };
     })
-    .reduce((tmp: Record<string, Record<string, string[]>>, current) => {
-      if (!tmp[current.targetNodeId]) {
-        tmp[current.targetNodeId] = {};
+    .reduce(
+      (
+        tmp: Record<
+          string,
+          Record<
+            string,
+            {
+              sourceData: string;
+              targetNodeId: string;
+              targetPropId: string;
+              targetIndex: number;
+            }[]
+          >
+        >,
+        current,
+      ) => {
+        if (!tmp[current.targetNodeId]) {
+          tmp[current.targetNodeId] = {};
+        }
+        if (!tmp[current.targetNodeId][current.targetPropId]) {
+          tmp[current.targetNodeId][current.targetPropId] = [];
+        }
+        tmp[current.targetNodeId][current.targetPropId].push(current);
+        return tmp;
+      },
+      {},
+    );
+  return Object.keys(records).reduce((tmp: Record<string, Record<string, string | string[]>>, nodeId) => {
+    tmp[nodeId] = Object.keys(records[nodeId]).reduce((tmp2: Record<string, string | string[]>, propId) => {
+      const { targetIndex } = records[nodeId][propId][0];
+      const targetProfile = edgeEnd2agentProfile({ nodeId, index: targetIndex }, nodeRecords, "target");
+      if (!targetProfile) {
+        tmp2[propId] = records[nodeId][propId][0].sourceData;
+      } else if (targetProfile.IOData.type === "text") {
+        tmp2[propId] = records[nodeId][propId][0].sourceData;
+      } else if (targetProfile.IOData.type === "arrat") {
+        tmp2[propId] = records[nodeId][propId].map((data) => data.sourceData);
+      } else if (records[nodeId][propId].length === 1) {
+        tmp2[propId] = records[nodeId][propId][0].sourceData;
+      } else {
+        tmp2[propId] = records[nodeId][propId].map((data) => data.sourceData);
       }
-      if (!tmp[current.targetNodeId][current.targetPropId]) {
-        tmp[current.targetNodeId][current.targetPropId] = [];
-      }
-      tmp[current.targetNodeId][current.targetPropId].push(current.sourceData);
-      return tmp;
+      return tmp2;
     }, {});
+    return tmp;
+  }, {});
 };
 
-export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string, Record<string, string[]>>) => {
+export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string, Record<string, string | string[]>>) => {
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
     const inputs = edgeObject[node.nodeId];
     if (node.agent) {
