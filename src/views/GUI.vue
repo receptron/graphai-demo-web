@@ -55,7 +55,7 @@ export default defineComponent({
     const debug1 = () => {
       store.reset();
     };
-    
+
     return {
       updateNodePosition,
       saveNodePosition,
@@ -133,18 +133,12 @@ export default defineComponent({
       </button>
     </div>
     <div class="text-left">
-      <button
-        @click="debug1"
-        class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500"
-      >
-        Debug
-      </button>
+      <button @click="debug1" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Debug</button>
     </div>
     <div class="text-left">
       <pre>
         {{ JSON.stringify(store.graphData, null, 2) }}
       </pre>
     </div>
-    
   </div>
 </template>

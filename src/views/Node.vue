@@ -37,7 +37,10 @@
         <span class="ml-2 text-xs whitespace-nowrap">{{ input.name }}</span>
       </div>
     </div>
-    <div class="w-full p-2 flex flex-col gap-1">
+    <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'static'">
+      <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" />
+    </div>
+    <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
       <label class="text-xs text-gray-300">Name</label>
       <input type="text" placeholder="Enter the name" class="w-full border border-gray-300 rounded-md p-1 text-black" />
       <label class="text-xs text-gray-300">Messages</label>
@@ -53,8 +56,12 @@ import { getClientPos } from "../utils/gui/utils";
 import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
 
+import NodeStaticValue from "./NodeStaticValue.vue";
+
 export default defineComponent({
-  components: {},
+  components: {
+    NodeStaticValue,
+  },
   props: {
     nodeData: {
       type: Object as PropType<GUINodeData>,
@@ -181,7 +188,27 @@ export default defineComponent({
       return props.nearestData?.direction === direction && props.nearestData?.index === index;
     };
 
+    let currentWidth = 0;
+    let currentHeight = 0;
+    const focusEvent = () => {
+      currentWidth = thisRef.value.offsetWidth;
+      currentHeight = thisRef.value.offsetHeight;
+      thisRef.value.style.width = currentWidth * 3 + "px";
+      thisRef.value.style.height = currentHeight * 3 + "px";
+      thisRef.value.style.zIndex = 100;
+      ctx.emit("updatePosition", getWH());
+    };
+    const blurEvent = () => {
+      thisRef.value.style.width = currentWidth + "px";
+      thisRef.value.style.height = currentHeight + "px";
+      thisRef.value.style.zIndex = 1;
+      ctx.emit("updatePosition", getWH());
+    };
+
     return {
+      focusEvent,
+      blurEvent,
+
       transform,
       onStartNode,
       isDragging,

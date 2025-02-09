@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { GUINodeData, GUIEdgeData, GUINodeDataRecord } from "../utils/gui/type";
 import { edges2inputs, store2graphData } from "../utils/gui/utils";
 import { defineStore } from "pinia";
+
 type HistoryData = {
   nodes: GUINodeData[];
   edges: GUIEdgeData[];
@@ -10,7 +11,6 @@ export const useStore = defineStore("store", () => {
   const hisotories = ref<HistoryData[]>([]);
   const currentData = ref<HistoryData>({ nodes: [], edges: [] });
   const index = ref(0);
-
 
   const reset = () => {
     hisotories.value = [];
@@ -77,7 +77,7 @@ export const useStore = defineStore("store", () => {
     updateData([...nodes.value], [...edges.value, edgeData], true);
   };
   const deleteEdge = (edgeIndex: number) => {
-    updateData([...nodes.value], [...edges.value.filter((__, i) => i !== edgeIndex)], true);
+    updateData([...nodes.value], [...edges.value.filter((__, idx) => idx !== edgeIndex)], true);
   };
 
   // history api
@@ -92,7 +92,6 @@ export const useStore = defineStore("store", () => {
   };
 
   const redoable = computed(() => {
-    console.log(index.value, hisotories.value.length);
     return index.value < hisotories.value.length;
   });
   const redo = () => {
@@ -120,7 +119,7 @@ export const useStore = defineStore("store", () => {
     redo,
 
     reset,
-    
+
     // computed
     nodes,
     edges,
