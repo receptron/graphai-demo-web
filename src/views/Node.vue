@@ -12,7 +12,7 @@
   >
     <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
     <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
-      {{ nodeData.agent?.replace(/Agent$/, "") }}
+      {{ nodeData.data.agent?.replace(/Agent$/, "") }}
     </div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
@@ -74,7 +74,7 @@ export default defineComponent({
   },
   emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue"],
   setup(props, ctx) {
-    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.agent ?? ""] : staticNodeParams;
+    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.agent ?? ""] : staticNodeParams;
 
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);

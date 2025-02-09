@@ -4,11 +4,11 @@ export type Position = { x: number; y: number };
 export type NodePosition = { x: number; y: number; width: number; height: number };
 export type GUINodeData = {
   type: string;
-  agent?: string;
-  guiAgentId?: string;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
   data: {
+    agent?: string;
+    guiAgentId?: string;
     value?: unknown; // ResultData<DefaultResultData>;
     staticNodeType?: string;
     params?: DefaultParamsType;

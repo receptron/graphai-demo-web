@@ -22,19 +22,22 @@ export default defineComponent({
       const isStatic = agent.value === "StaticNode";
       const targetAgent = agentProfiles[agent.value];
       const data = isStatic
-        ? {}
+        ? { data: {} }
         : targetAgent.agent
           ? {
-              agent: targetAgent.agent,
-              guiAgentId: agent.value,
+              data: {
+                agent: targetAgent.agent,
+                guiAgentId: agent.value,
+              },
             }
           : {
-              agent: agent.value,
+              data: {
+                agent: agent.value,
+              },
             };
 
       store.pushNode({
         ...data,
-        data: {},
         nodeId: nodeId.value,
         type: isStatic ? "static" : "computed",
         position: { x: Math.random() * 200, y: Math.random() * 200 },
