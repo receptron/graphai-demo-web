@@ -73,7 +73,7 @@ export const useStore = defineStore("store", () => {
   };
   const updateStaticNodeValue = (positionIndex: number, value: string) => {
     const newNode = { ...nodes.value[positionIndex] };
-    newNode.value = value;
+    newNode.data.value = value;
     const newNodes = [...nodes.value];
     newNodes[positionIndex] = newNode;
     updateData(newNodes, [...edges.value], true);

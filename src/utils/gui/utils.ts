@@ -84,7 +84,9 @@ export const graphToGUIData = (graphData: GraphData) => {
       agent: isComputed ? (node.agent as string) : undefined,
       guiAgentId: isComputed ? (node.agent as string) : undefined,
       params: isComputed ? node.params : undefined,
-      value: isComputed ? undefined : node.value,
+      data: {
+        value: isComputed ? undefined : node.value,
+      },
     };
   });
 
@@ -204,7 +206,9 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
       };
     } else {
       tmp[node.nodeId] = {
-        value: node.value,
+        data: {
+          value: node.data.value,
+        },
         ...inputs,
       } as StaticNodeData;
     }

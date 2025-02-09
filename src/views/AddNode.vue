@@ -34,6 +34,7 @@ export default defineComponent({
 
       store.pushNode({
         ...data,
+        data: {},
         nodeId: nodeId.value,
         type: isStatic ? "static" : "computed",
         position: { x: Math.random() * 200, y: Math.random() * 200 },

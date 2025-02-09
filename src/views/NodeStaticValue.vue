@@ -10,7 +10,7 @@
     <textarea
       placeholder="Enter the text"
       class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
-      :value="String(nodeData.value ?? '')"
+      :value="String(nodeData.data.value ?? '')"
       ref="textarea"
       :rows="rows"
     ></textarea>

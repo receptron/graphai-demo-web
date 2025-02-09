@@ -10,7 +10,9 @@ export type GUINodeData = {
   isResult?: boolean;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
-  value?: unknown; // ResultData<DefaultResultData>;
+  data: {
+    value?: unknown; // ResultData<DefaultResultData>;
+  };
 };
 
 export type GUINodeDataRecord = Record<string, GUINodeData>;
