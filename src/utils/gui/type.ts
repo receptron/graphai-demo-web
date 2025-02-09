@@ -6,7 +6,7 @@ export type GUINodeData = {
   type: string;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
-  data: {
+  data: { // Application dependent data
     agent?: string;
     guiAgentId?: string;
     value?: unknown; // ResultData<DefaultResultData>;
