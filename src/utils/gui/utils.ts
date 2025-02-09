@@ -110,7 +110,7 @@ export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRec
   }
 };
 
-// for store
+// for store to generate new graphData
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecord) => {
   const records = edges
     .map((edge) => {
