@@ -174,11 +174,11 @@ export default defineComponent({
       return props.nodeData.nodeId === props.nearestData?.nodeId;
     });
 
-    const isExpectNearButton = (targetType: NewEdgeEventDirection, index: number) => {
+    const isExpectNearButton = (direction: NewEdgeEventDirection, index: number) => {
       if (!expectNearNode.value) {
         return false;
       }
-      return props.nearestData?.direction === targetType && props.nearestData?.index === index;
+      return props.nearestData?.direction === direction && props.nearestData?.index === index;
     };
 
     return {

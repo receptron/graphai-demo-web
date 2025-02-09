@@ -11,6 +11,12 @@ export const useStore = defineStore("store", () => {
   const currentData = ref<HistoryData>({ nodes: [], edges: [] });
   const index = ref(0);
 
+
+  const reset = () => {
+    hisotories.value = [];
+    currentData.value = { nodes: [], edges: [] };
+  };
+
   const nodes = computed(() => {
     return currentData.value.nodes;
   });
@@ -113,6 +119,8 @@ export const useStore = defineStore("store", () => {
     undo,
     redo,
 
+    reset,
+    
     // computed
     nodes,
     edges,
