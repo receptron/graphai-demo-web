@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'static'">
-      <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" />
+      <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" @update-value="updateValue" />
     </div>
     <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
       <label class="text-xs text-gray-300">Name</label>
@@ -72,7 +72,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.agent ?? ""] : staticNodeParams;
 
@@ -204,6 +204,10 @@ export default defineComponent({
       thisRef.value.style.zIndex = 1;
       ctx.emit("updatePosition", getWH());
     };
+    const updateValue = (value: string) => {
+      console.log(value);
+      ctx.emit("updateValue", value);
+    };
 
     return {
       focusEvent,
@@ -222,6 +226,8 @@ export default defineComponent({
 
       expectNearNode,
       isExpectNearButton,
+
+      updateValue,
 
       // helper
       nodeMainClass,

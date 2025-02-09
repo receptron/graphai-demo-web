@@ -71,6 +71,13 @@ export const useStore = defineStore("store", () => {
     newNodes[positionIndex] = newNode;
     updateData(newNodes, [...edges.value], false);
   };
+  const updateStaticNodeValue = (positionIndex: number, value: string) => {
+    const newNode = { ...nodes.value[positionIndex] };
+    newNode.value = value;
+    const newNodes = [...nodes.value];
+    newNodes[positionIndex] = newNode;
+    updateData(newNodes, [...edges.value], true);
+  };
 
   // edge
   const pushEdge = (edgeData: GUIEdgeData) => {
@@ -114,6 +121,8 @@ export const useStore = defineStore("store", () => {
 
     updateNodePosition,
     saveNodeData,
+
+    updateStaticNodeValue,
 
     undo,
     redo,
