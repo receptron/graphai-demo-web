@@ -6,7 +6,8 @@ export type GUINodeData = {
   type: string;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
-  data: { // Application dependent data
+  data: {
+    // Application dependent data
     agent?: string;
     guiAgentId?: string;
     value?: unknown; // ResultData<DefaultResultData>;
@@ -17,8 +18,8 @@ export type GUINodeData = {
 };
 
 export type UpdateStaticValue = {
-  staticNodeType: string,
-  value: string,
+  staticNodeType: string;
+  value: string;
 };
 
 export type GUINodeDataRecord = Record<string, GUINodeData>;
