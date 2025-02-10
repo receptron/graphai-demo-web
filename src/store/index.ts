@@ -87,6 +87,13 @@ export const useStore = defineStore("store", () => {
   const deleteEdge = (edgeIndex: number) => {
     updateData([...nodes.value], [...edges.value.filter((__, idx) => idx !== edgeIndex)], true);
   };
+  const deleteNode = (nodeIndex: number) => {
+    const node =  nodes.value[nodeIndex]
+    updateData([...nodes.value.filter((__, idx) => idx !== nodeIndex)], [...edges.value.filter(edge => {
+      const { source, target } = edge;
+      return source.nodeId !== node.nodeId && target.nodeId !== node.nodeId
+    })], true);
+  };
 
   // history api
   const undoable = computed(() => {
@@ -120,6 +127,7 @@ export const useStore = defineStore("store", () => {
     pushNode,
     pushEdge,
     deleteEdge,
+    deleteNode,
 
     updateNodePosition,
     saveNodeData,

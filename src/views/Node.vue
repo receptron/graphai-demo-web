@@ -9,10 +9,14 @@
     ref="thisRef"
     @mousedown="onStartNode"
     @touchstart="onStartNode"
-  >
-    <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
-    <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
-      {{ nodeData.data.agent?.replace(/Agent$/, "") }}
+    >
+    <div
+      @dblclick="(e) => openNodeMenu(e)"
+      >
+      <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
+      <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
+        {{ nodeData.data.agent?.replace(/Agent$/, "") }}
+      </div>
     </div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
@@ -72,7 +76,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue", "openNodeMenu"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.agent ?? ""] : staticNodeParams;
 
@@ -207,7 +211,9 @@ export default defineComponent({
     const updateValue = (value: UpdateStaticValue) => {
       ctx.emit("updateValue", value);
     };
-
+    const openNodeMenu = (event: MouseEvent) => {
+      ctx.emit("openNodeMenu", event);
+    };
     return {
       focusEvent,
       blurEvent,
@@ -227,7 +233,7 @@ export default defineComponent({
       isExpectNearButton,
 
       updateValue,
-
+      openNodeMenu,
       // helper
       nodeMainClass,
       nodeHeaderClass,

@@ -3,7 +3,8 @@ import { defineComponent, computed, onMounted, ref } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
-import ContextMenu from "./ContextMenu.vue";
+import ContextEdgeMenu from "./ContextEdgeMenu.vue";
+import ContextNodeMenu from "./ContextNodeMenu.vue";
 
 import { EdgeData, NodePosition, UpdateStaticValue } from "../utils/gui/type";
 
@@ -18,11 +19,13 @@ export default defineComponent({
     Node,
     Edge,
     AddNode,
-    ContextMenu,
+    ContextEdgeMenu,
+    ContextNodeMenu,
   },
   setup() {
     const store = useStore();
-    const contextMenu = ref();
+    const contextEdgeMenu = ref();
+    const contextNodeMenu = ref();
 
     const { rawEdge, rawNode } = graphToGUIData(graphChat);
 
@@ -48,12 +51,17 @@ export default defineComponent({
 
     const { svgRef, newEdgeData, newEdgeStartEvent, newEdgeEvent, newEdgeEndEvent, nearestData, edgeConnectable } = useNewEdge();
 
-    const openMenu = (event: MouseEvent, edgeIndex: number) => {
+    const openEdgeMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
-      contextMenu.value.openMenu(event, rect.top, edgeIndex);
+      contextEdgeMenu.value.openMenu(event, rect.top, edgeIndex);
     };
     const closeMenu = () => {
-      contextMenu.value.closeMenu();
+      contextEdgeMenu.value.closeMenu();
+      contextNodeMenu.value.closeMenu();
+    };
+    const openNodeMenu = (event: MouseEvent, nodeIndex: number) => {
+      const rect = svgRef.value.getBoundingClientRect();
+      contextNodeMenu.value.openMenu(event, rect.top, nodeIndex);
     };
 
     const debug1 = () => {
@@ -75,10 +83,12 @@ export default defineComponent({
       svgRef,
       nearestData,
 
-      contextMenu,
-      openMenu,
+      contextEdgeMenu,
+      contextNodeMenu,
+      openEdgeMenu,
+      openNodeMenu,
       closeMenu,
-
+      
       edgeConnectable,
 
       debug1,
@@ -97,7 +107,7 @@ export default defineComponent({
           :source-data="edge.source"
           :target-data="edge.target"
           class="pointer-events-auto"
-          @dblclick="(e) => openMenu(e, index)"
+          @dblclick="(e) => openEdgeMenu(e, index)"
         />
         <Edge
           v-if="newEdgeData"
@@ -118,8 +128,10 @@ export default defineComponent({
         @new-edge-start="newEdgeStartEvent"
         @new-edge="newEdgeEvent"
         @new-edge-end="newEdgeEndEvent"
+        @open-node-menu="(event) => openNodeMenu(event, index)"
       />
-      <ContextMenu ref="contextMenu" />
+      <ContextEdgeMenu ref="contextEdgeMenu" />
+      <ContextNodeMenu ref="contextNodeMenu" />
     </div>
     <div>
       <AddNode />
