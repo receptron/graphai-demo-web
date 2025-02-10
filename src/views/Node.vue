@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect, computed, PropType, onMounted } from "vue";
-import type { GUINodeData, GUINearestData, NewEdgeEventDirection } from "../utils/gui/type";
+import type { GUINodeData, GUINearestData, NewEdgeEventDirection, UpdateStaticValue } from "../utils/gui/type";
 import { getClientPos } from "../utils/gui/utils";
 import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
@@ -204,7 +204,7 @@ export default defineComponent({
       thisRef.value.style.zIndex = 1;
       ctx.emit("updatePosition", getWH());
     };
-    const updateValue = (value: string) => {
+    const updateValue = (value: UpdateStaticValue) => {
       ctx.emit("updateValue", value);
     };
 

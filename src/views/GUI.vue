@@ -5,7 +5,7 @@ import Edge from "./Edge.vue";
 import AddNode from "./AddNode.vue";
 import ContextMenu from "./ContextMenu.vue";
 
-import { EdgeData, NodePosition } from "../utils/gui/type";
+import { EdgeData, NodePosition, UpdateStaticValue } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
 import { useNewEdge } from "../utils/gui/composable";
@@ -37,7 +37,7 @@ export default defineComponent({
     const saveNodePosition = () => {
       store.saveNodeData();
     };
-    const updateNodeValue = (index: number, value: string) => {
+    const updateNodeValue = (index: number, value: UpdateStaticValue) => {
       store.updateStaticNodeValue(index, value);
       console.log(index, value);
     };

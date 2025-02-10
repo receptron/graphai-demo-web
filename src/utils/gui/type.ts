@@ -16,6 +16,11 @@ export type GUINodeData = {
   };
 };
 
+export type UpdateStaticValue = {
+  staticNodeType: string,
+  value: string,
+};
+
 export type GUINodeDataRecord = Record<string, GUINodeData>;
 
 export type EdgeEndPointData = {
