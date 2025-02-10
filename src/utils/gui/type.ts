@@ -4,13 +4,21 @@ export type Position = { x: number; y: number };
 export type NodePosition = { x: number; y: number; width: number; height: number };
 export type GUINodeData = {
   type: string;
-  agent?: string;
-  guiAgentId?: string;
-  params?: DefaultParamsType;
-  isResult?: boolean;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
-  value?: unknown; // ResultData<DefaultResultData>;
+  data: { // Application dependent data
+    agent?: string;
+    guiAgentId?: string;
+    value?: unknown; // ResultData<DefaultResultData>;
+    staticNodeType?: string;
+    params?: DefaultParamsType;
+    isResult?: boolean;
+  };
+};
+
+export type UpdateStaticValue = {
+  staticNodeType: string,
+  value: string,
 };
 
 export type GUINodeDataRecord = Record<string, GUINodeData>;

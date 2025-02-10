@@ -1,5 +1,5 @@
 import { ref, computed } from "vue";
-import { GUINodeData, GUIEdgeData, GUINodeDataRecord } from "../utils/gui/type";
+import { GUINodeData, GUIEdgeData, GUINodeDataRecord, UpdateStaticValue } from "../utils/gui/type";
 import { edges2inputs, store2graphData } from "../utils/gui/utils";
 import { defineStore } from "pinia";
 
@@ -71,10 +71,11 @@ export const useStore = defineStore("store", () => {
     newNodes[positionIndex] = newNode;
     updateData(newNodes, [...edges.value], false);
   };
-  const updateStaticNodeValue = (positionIndex: number, value: string) => {
+  const updateStaticNodeValue = (positionIndex: number, value: UpdateStaticValue) => {
     const newNode = { ...nodes.value[positionIndex] };
-    newNode.value = value;
+    newNode.data = { ...newNode.data, ...value }
     const newNodes = [...nodes.value];
+    console.log(newNode, value);
     newNodes[positionIndex] = newNode;
     updateData(newNodes, [...edges.value], true);
   };
