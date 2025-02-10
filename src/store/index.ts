@@ -8,12 +8,12 @@ type HistoryData = {
   edges: GUIEdgeData[];
 };
 export const useStore = defineStore("store", () => {
-  const hisotories = ref<HistoryData[]>([]);
+  const histories = ref<HistoryData[]>([]);
   const currentData = ref<HistoryData>({ nodes: [], edges: [] });
   const index = ref(0);
 
   const reset = () => {
-    hisotories.value = [];
+    histories.value = [{ nodes: [], edges: [] }];
     currentData.value = { nodes: [], edges: [] };
   };
 
@@ -42,15 +42,15 @@ export const useStore = defineStore("store", () => {
     const data = { nodes: nodeData, edges: edgeData };
     currentData.value = data;
     if (saveHistory) {
-      hisotories.value.length = index.value;
-      hisotories.value.push(data);
+      histories.value.length = index.value;
+      histories.value.push(data);
       index.value = index.value + 1;
     }
   };
   const saveNodeData = () => {
     // just special case. only use position update.
-    hisotories.value.length = index.value;
-    hisotories.value.push(currentData.value);
+    histories.value.length = index.value;
+    histories.value.push(currentData.value);
     index.value = index.value + 1;
   };
 
@@ -73,7 +73,7 @@ export const useStore = defineStore("store", () => {
   };
   const updateStaticNodeValue = (positionIndex: number, value: UpdateStaticValue) => {
     const newNode = { ...nodes.value[positionIndex] };
-    newNode.data = { ...newNode.data, ...value }
+    newNode.data = { ...newNode.data, ...value };
     const newNodes = [...nodes.value];
     console.log(newNode, value);
     newNodes[positionIndex] = newNode;
@@ -94,24 +94,25 @@ export const useStore = defineStore("store", () => {
   });
   const undo = () => {
     if (undoable.value) {
-      currentData.value = hisotories.value[index.value - 2];
+      console.log(histories.value);
+      currentData.value = histories.value[index.value - 2];
       index.value = index.value - 1;
     }
   };
 
   const redoable = computed(() => {
-    return index.value < hisotories.value.length;
+    return index.value < histories.value.length;
   });
   const redo = () => {
     if (redoable.value) {
-      currentData.value = hisotories.value[index.value];
+      currentData.value = histories.value[index.value];
       index.value = index.value + 1;
     }
   };
 
   return {
     // variables
-    hisotories,
+    histories,
     currentData,
 
     // methods

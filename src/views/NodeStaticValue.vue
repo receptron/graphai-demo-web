@@ -1,7 +1,7 @@
 <template>
   <label class="text-xs text-gray-300">Value</label>
   <select v-model="dataType" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none">
-    <option v-for="(option, k) in options" :value="option.value" :key="k">{{option.name}}</option>
+    <option v-for="(option, k) in options" :value="option.value" :key="k">{{ option.name }}</option>
   </select>
   <div v-show="['text', 'data'].includes(dataType)">
     <textarea
@@ -14,9 +14,11 @@
   </div>
   <div v-show="['number'].includes(dataType)">
     <input
-      type="number" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"  :value="String(nodeData.data.value ?? '')"
+      type="number"
+      class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
+      :value="String(nodeData.data.value ?? '')"
       ref="numberInput"
-      />
+    />
   </div>
   <div v-show="['boolean'].includes(dataType)">
     <select v-model="booleanValue" ref="selectForm">
@@ -31,10 +33,10 @@ import { defineComponent, ref, PropType, onMounted, onBeforeUnmount } from "vue"
 import type { GUINodeData } from "../utils/gui/type";
 
 const options = [
-  {value: "text", name: "Text"},
-  {value: "number", name: "Number"},
-  {value: "data", name: "Data(JSON format array or object)"},
-  {value: "boolean", name: "Boolean"},
+  { value: "text", name: "Text" },
+  { value: "number", name: "Number" },
+  { value: "data", name: "Data(JSON format array or object)" },
+  { value: "boolean", name: "Boolean" },
 ];
 
 export default defineComponent({
@@ -50,7 +52,7 @@ export default defineComponent({
     const numberInput = ref();
     const selectForm = ref();
     const rows = ref(3);
-    
+
     const dataType = ref(props.nodeData.data.staticNodeType ?? "text");
     const booleanValue = ref("true");
 
@@ -73,7 +75,7 @@ export default defineComponent({
           }
         })();
         console.log(value);
-        
+
         ctx.emit("updateValue", {
           value,
           staticNodeType: "text",
@@ -86,7 +88,7 @@ export default defineComponent({
           return Number(numberInput.value.value);
         }
         if (dataType.value === "boolean") {
-          return booleanValue.value === "true"
+          return booleanValue.value === "true";
         }
         return "";
       })();
@@ -95,7 +97,7 @@ export default defineComponent({
         value,
         staticNodeType: dataType.value,
       });
-    }
+    };
     onMounted(() => {
       textarea.value.addEventListener("focus", focusEvent);
       textarea.value.addEventListener("blur", blueEvent);
