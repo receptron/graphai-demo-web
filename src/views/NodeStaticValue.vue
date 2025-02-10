@@ -7,18 +7,16 @@
     <textarea
       placeholder="Enter the text"
       class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
-      :value="String(nodeData.data.value ?? '')"
+      v-model="textAreaValue"
       ref="textarea"
       :rows="rows"
     ></textarea>
+    <div v-if="['data'].includes(dataType)">
+      {{ isValidData ? "valid" : "invalid" }}
+    </div>
   </div>
   <div v-show="['number'].includes(dataType)">
-    <input
-      type="number"
-      class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
-      :value="String(nodeData.data.value ?? '')"
-      ref="numberInput"
-    />
+    <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none" v-model="numberValue" ref="numberInput" />
   </div>
   <div v-show="['boolean'].includes(dataType)">
     <select v-model="booleanValue" ref="selectForm">
@@ -29,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, ref, computed, PropType, onMounted, onBeforeUnmount, watch } from "vue";
 import type { GUINodeData } from "../utils/gui/type";
 
 const options = [
@@ -54,7 +52,9 @@ export default defineComponent({
     const rows = ref(3);
 
     const dataType = ref(props.nodeData.data.staticNodeType ?? "text");
+    const numberValue = ref(props.nodeData.data.staticNodeType ?? "");
     const booleanValue = ref("true");
+    const textAreaValue = ref(props.nodeData.data.value ?? "");
 
     const focusEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
@@ -63,18 +63,18 @@ export default defineComponent({
         // event.target.style.background = "pink";
       }
     };
-    const blueEvent = (event: FocusEvent) => {
+    const blurEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
         // event.target.style.background = "red";
         rows.value = 3;
         ctx.emit("blurEvent");
-
+        // text, data
         const value = (() => {
-          if (dataType.value === "text") {
-            return textarea.value.value;
+          if (dataType.value === "data" && isValidData.value) {
+            return JSON.parse(textAreaValue.value);
           }
+          return textAreaValue.value;
         })();
-        console.log(value);
 
         ctx.emit("updateValue", {
           value,
@@ -82,15 +82,11 @@ export default defineComponent({
         });
       }
     };
-    const blueUpdateEvent = () => {
+    const blurUpdateEvent = () => {
       const value = (() => {
         if (dataType.value === "number") {
-          return Number(numberInput.value.value);
+          return Number(numberValue.value);
         }
-        if (dataType.value === "boolean") {
-          return booleanValue.value === "true";
-        }
-        return "";
       })();
       console.log(value);
       ctx.emit("updateValue", {
@@ -98,17 +94,35 @@ export default defineComponent({
         staticNodeType: dataType.value,
       });
     };
+    watch([booleanValue, dataType], () => {
+      if (dataType.value === "boolean") {
+        // TODO history
+        ctx.emit("updateValue", {
+          value: booleanValue.value === "true",
+          staticNodeType: dataType.value,
+        });
+      }
+    });
+    const isValidData = computed(() => {
+      if (dataType.value === "data") {
+        try {
+          JSON.parse(textAreaValue.value);
+        } catch (__e) {
+          return false;
+        }
+      }
+      return true;
+    });
+
     onMounted(() => {
       textarea.value.addEventListener("focus", focusEvent);
-      textarea.value.addEventListener("blur", blueEvent);
-      numberInput.value.addEventListener("blur", blueUpdateEvent);
-      selectForm.value.addEventListener("blur", blueUpdateEvent);
+      textarea.value.addEventListener("blur", blurEvent);
+      numberInput.value.addEventListener("blur", blurUpdateEvent);
     });
     onBeforeUnmount(() => {
       textarea.value.removeEventListener("focus", focusEvent);
-      textarea.value.removeEventListener("blur", blueEvent);
-      numberInput.value.removeEventListener("blur", blueUpdateEvent);
-      selectForm.value.removeEventListener("blur", blueUpdateEvent);
+      textarea.value.removeEventListener("blur", blurEvent);
+      numberInput.value.removeEventListener("blur", blurUpdateEvent);
     });
     return {
       numberInput,
@@ -117,7 +131,10 @@ export default defineComponent({
       dataType,
       rows,
       booleanValue,
+      numberValue,
+      textAreaValue,
       options,
+      isValidData,
     };
   },
 });
