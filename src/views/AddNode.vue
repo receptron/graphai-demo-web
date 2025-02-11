@@ -1,3 +1,16 @@
+<template>
+  <div class="text-left">
+    NodeId:<input type="text" v-model="nodeId" class="border-2" />
+    <select class="border-2" v-model="agent">
+      <option>StaticNode</option>
+      <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
+    </select>
+  </div>
+  <div>
+    <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
+  </div>
+</template>
+
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
@@ -23,18 +36,12 @@ export default defineComponent({
       const targetAgent = agentProfiles[agent.value];
       const data = isStatic
         ? { data: {} }
-        : targetAgent.agent
-          ? {
-              data: {
-                agent: targetAgent.agent,
-                guiAgentId: agent.value,
-              },
-            }
-          : {
-              data: {
-                agent: agent.value,
-              },
-            };
+        : {
+            data: {
+              agent: targetAgent.agent ? targetAgent.agent : agent.value,
+              guiAgentId: agent.value,
+            },
+          };
 
       store.pushNode({
         ...data,
@@ -52,14 +59,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<template>
-  <div>
-    <input type="text" v-model="nodeId" class="border-2" />
-    <select class="border-2" v-model="agent">
-      <option>StaticNode</option>
-      <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
-    </select>
-    <button @click="addNode" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500 hover:bg-sky-700">Add node</button>
-  </div>
-</template>
