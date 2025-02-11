@@ -50,14 +50,16 @@ export default defineComponent({
       const y1dash = y1 + y1Offset;
       const y2dash = y2 + y2Offset;
 
+      const controlYOffset = y1dash > y2dash ? 40 : -40;
       if (x1 < x2) {
-        const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
+        // const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
+        const controlXOffset = 40;
+        const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
         return { d };
       }
       const controlXOffset = 120;
-      const controlYOffset = y1 > y2 ? 40 : -40;
       const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
-
+      
       return { d };
     });
 
