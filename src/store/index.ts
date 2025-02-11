@@ -88,11 +88,17 @@ export const useStore = defineStore("store", () => {
     updateData([...nodes.value], [...edges.value.filter((__, idx) => idx !== edgeIndex)], true);
   };
   const deleteNode = (nodeIndex: number) => {
-    const node =  nodes.value[nodeIndex]
-    updateData([...nodes.value.filter((__, idx) => idx !== nodeIndex)], [...edges.value.filter(edge => {
-      const { source, target } = edge;
-      return source.nodeId !== node.nodeId && target.nodeId !== node.nodeId
-    })], true);
+    const node = nodes.value[nodeIndex];
+    updateData(
+      [...nodes.value.filter((__, idx) => idx !== nodeIndex)],
+      [
+        ...edges.value.filter((edge) => {
+          const { source, target } = edge;
+          return source.nodeId !== node.nodeId && target.nodeId !== node.nodeId;
+        }),
+      ],
+      true,
+    );
   };
 
   // history api

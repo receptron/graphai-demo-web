@@ -1,6 +1,6 @@
 <template>
   <ul v-if="menuVisible" :style="menuStyle" class="absolute bg-white border border-gray-300 shadow-md rounded-md py-2 w-40">
-    <slot/>
+    <slot />
   </ul>
 </template>
 
@@ -11,7 +11,6 @@ import { getClientPos } from "../utils/gui/utils";
 
 export default defineComponent({
   setup() {
-
     const menuVisible = ref(false);
     const menuStyle = ref({ top: "0px", left: "0px" });
 

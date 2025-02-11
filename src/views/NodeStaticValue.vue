@@ -60,12 +60,10 @@ export default defineComponent({
       if (event.target instanceof HTMLTextAreaElement) {
         ctx.emit("focusEvent");
         rows.value = 10;
-        // event.target.style.background = "pink";
       }
     };
     const blurEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
-        // event.target.style.background = "red";
         rows.value = 3;
         ctx.emit("blurEvent");
         // text, data

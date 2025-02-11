@@ -88,7 +88,7 @@ export default defineComponent({
       openEdgeMenu,
       openNodeMenu,
       closeMenu,
-      
+
       edgeConnectable,
 
       debug1,
