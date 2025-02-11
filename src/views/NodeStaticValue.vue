@@ -8,7 +8,7 @@
       placeholder="Enter the text"
       class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
       v-model="textAreaValue"
-      ref="textarea"
+      ref="textareaRef"
       :rows="rows"
     ></textarea>
     <div v-if="['data'].includes(dataType)">
@@ -16,10 +16,10 @@
     </div>
   </div>
   <div v-show="['number'].includes(dataType)">
-    <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none" v-model="numberValue" ref="numberInput" />
+    <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none" v-model="numberValue" ref="inputRef" />
   </div>
   <div v-show="['boolean'].includes(dataType)">
-    <select v-model="booleanValue" ref="selectForm">
+    <select v-model="booleanValue" ref="selectFormRef">
       <option value="true">True</option>
       <option value="false">False</option>
     </select>
@@ -46,9 +46,9 @@ export default defineComponent({
   },
   emits: ["focusEvent", "blurEvent", "updateValue"],
   setup(props, ctx) {
-    const textarea = ref();
-    const numberInput = ref();
-    const selectForm = ref();
+    const textareaRef = ref();
+    const inputRef = ref();
+    const selectFormRef = ref();
     const rows = ref(3);
 
     const dataType = ref(props.nodeData.data.staticNodeType ?? "text");
@@ -60,12 +60,10 @@ export default defineComponent({
       if (event.target instanceof HTMLTextAreaElement) {
         ctx.emit("focusEvent");
         rows.value = 10;
-        // event.target.style.background = "pink";
       }
     };
     const blurEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
-        // event.target.style.background = "red";
         rows.value = 3;
         ctx.emit("blurEvent");
         // text, data
@@ -115,19 +113,19 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      textarea.value.addEventListener("focus", focusEvent);
-      textarea.value.addEventListener("blur", blurEvent);
-      numberInput.value.addEventListener("blur", blurUpdateEvent);
+      textareaRef.value.addEventListener("focus", focusEvent);
+      textareaRef.value.addEventListener("blur", blurEvent);
+      inputRef.value.addEventListener("blur", blurUpdateEvent);
     });
     onBeforeUnmount(() => {
-      textarea.value.removeEventListener("focus", focusEvent);
-      textarea.value.removeEventListener("blur", blurEvent);
-      numberInput.value.removeEventListener("blur", blurUpdateEvent);
+      textareaRef.value.removeEventListener("focus", focusEvent);
+      textareaRef.value.removeEventListener("blur", blurEvent);
+      inputRef.value.removeEventListener("blur", blurUpdateEvent);
     });
     return {
-      numberInput,
-      textarea,
-      selectForm,
+      inputRef,
+      textareaRef,
+      selectFormRef,
       dataType,
       rows,
       booleanValue,

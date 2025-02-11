@@ -6,7 +6,7 @@ import {
   GUINearestData,
   EdgeData,
   InputOutput,
-  InputOutputParam,
+  InputOutputType,
   NewEdgeEventData,
   NewEdgeData,
   ClosestNodeData,
@@ -38,7 +38,7 @@ export const graphToGUIData = (graphData: GraphData) => {
 
   const getIndex = (nodeId: string, propId: string, key: keyof InputOutput) => {
     const agent = node2agent[nodeId];
-    const indexes = agent ? (agentProfiles[agent][key] as InputOutputParam[]) : [];
+    const indexes = agent ? (agentProfiles[agent][key] as InputOutputType[]) : [];
     const index = indexes.findIndex((data) => data.name === propId);
     if (index === -1) {
       console.log(`${key} ${nodeId}.${propId} is not hit`);
@@ -81,8 +81,8 @@ export const graphToGUIData = (graphData: GraphData) => {
       nodeId,
       position: { x: i, y: j },
 
-      params: isComputed ? node.params : undefined,
       data: {
+        params: isComputed ? node.params : undefined,
         value: isComputed ? undefined : node.value,
         agent: isComputed ? (node.agent as string) : undefined,
         guiAgentId: isComputed ? (node.agent as string) : undefined,

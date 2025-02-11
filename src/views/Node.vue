@@ -10,9 +10,11 @@
     @mousedown="onStartNode"
     @touchstart="onStartNode"
   >
-    <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
-    <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
-      {{ nodeData.data.agent?.replace(/Agent$/, "") }}
+    <div @dblclick="(e) => openNodeMenu(e)">
+      <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
+      <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
+        {{ nodeData.data.agent?.replace(/Agent$/, "") }}
+      </div>
     </div>
     <div class="flex flex-col items-end mt-1">
       <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
@@ -41,10 +43,7 @@
       <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" @update-value="updateValue" />
     </div>
     <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
-      <label class="text-xs text-gray-300">Name</label>
-      <input type="text" placeholder="Enter the name" class="w-full border border-gray-300 rounded-md p-1 text-black" />
-      <label class="text-xs text-gray-300">Messages</label>
-      <textarea placeholder="Enter the text" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"></textarea>
+      <NodeComputedParams :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" :node-index="nodeIndex" />
     </div>
   </div>
 </template>
@@ -57,10 +56,12 @@ import { agentProfiles, staticNodeParams } from "../utils/gui/data";
 import { nodeMainClass, nodeHeaderClass, nodeOutputClass, nodeInputClass } from "../utils/gui/classUtils";
 
 import NodeStaticValue from "./NodeStaticValue.vue";
+import NodeComputedParams from "./NodeComputedParams.vue";
 
 export default defineComponent({
   components: {
     NodeStaticValue,
+    NodeComputedParams,
   },
   props: {
     nodeData: {
@@ -71,8 +72,12 @@ export default defineComponent({
       type: Object as PropType<GUINearestData>,
       default: undefined,
     },
+    nodeIndex: {
+      type: Number,
+      required: true,
+    },
   },
-  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue", "openNodeMenu"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.agent ?? ""] : staticNodeParams;
 
@@ -207,7 +212,9 @@ export default defineComponent({
     const updateValue = (value: UpdateStaticValue) => {
       ctx.emit("updateValue", value);
     };
-
+    const openNodeMenu = (event: MouseEvent) => {
+      ctx.emit("openNodeMenu", event);
+    };
     return {
       focusEvent,
       blurEvent,
@@ -227,7 +234,7 @@ export default defineComponent({
       isExpectNearButton,
 
       updateValue,
-
+      openNodeMenu,
       // helper
       nodeMainClass,
       nodeHeaderClass,
