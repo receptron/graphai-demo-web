@@ -170,5 +170,10 @@ export default defineComponent({
         >
       </div>
     </div>
+    <div>
+      <div class="text-left">
+        {{ store.histories }}
+      </div>
+    </div>
   </div>
 </template>

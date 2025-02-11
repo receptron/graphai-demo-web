@@ -86,7 +86,6 @@ export default defineComponent({
           return Number(numberValue.value);
         }
       })();
-      console.log(value);
       ctx.emit("updateValue", {
         value,
         staticNodeType: dataType.value,
