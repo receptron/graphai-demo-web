@@ -239,10 +239,10 @@ export const guiEdgeData2edgeData = (guiEdges: GUIEdgeData[], nodeRecords: GUINo
   });
 };
 
-export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLElement, nodeData: GUINodeData) => {
+export const edgeStartEventData = (data: NewEdgeEventData, parentElement: HTMLElement, nodeData: GUINodeData) => {
   // Since x and y are clientX and clientY, adjust the height by the header.
   // If there is a horizontal menu, you will need to adjust x.
-  const rect = parantElement.getBoundingClientRect();
+  const rect = parentElement.getBoundingClientRect();
   const mousePosition = { x: data.x - rect.left, y: data.y - rect.top };
 
   const edgeNodeData = {
@@ -274,8 +274,8 @@ export const edgeStartEventData = (data: NewEdgeEventData, parantElement: HTMLEl
   };
 };
 
-export const edgeUpdateEventData = (data: NewEdgeEventData, parantElement: HTMLElement, prevEdgeData: NewEdgeData) => {
-  const rect = parantElement.getBoundingClientRect();
+export const edgeUpdateEventData = (data: NewEdgeEventData, parentElement: HTMLElement, prevEdgeData: NewEdgeData) => {
+  const rect = parentElement.getBoundingClientRect();
   const mousePosition = { x: data.x - rect.left, y: data.y - rect.top };
 
   const newData = { data: { position: mousePosition } };
