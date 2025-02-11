@@ -81,8 +81,8 @@ export const graphToGUIData = (graphData: GraphData) => {
       nodeId,
       position: { x: i, y: j },
 
-      params: isComputed ? node.params : undefined,
       data: {
+        params: isComputed ? node.params : undefined,
         value: isComputed ? undefined : node.value,
         agent: isComputed ? (node.agent as string) : undefined,
         guiAgentId: isComputed ? (node.agent as string) : undefined,

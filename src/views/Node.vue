@@ -43,7 +43,7 @@
       <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" @update-value="updateValue" />
     </div>
     <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
-      <NodeComputedParams :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" />
+      <NodeComputedParams :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" :node-index="nodeIndex" />
     </div>
   </div>
 </template>
@@ -71,6 +71,10 @@ export default defineComponent({
     nearestData: {
       type: Object as PropType<GUINearestData>,
       default: undefined,
+    },
+    nodeIndex: {
+      type: Number,
+      required: true,
     },
   },
   emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue", "openNodeMenu"],

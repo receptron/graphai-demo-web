@@ -1,6 +1,14 @@
 <template>
   <div>
-    <NodeComputedParam v-for="(param, k) in params" :key="k" :param="param" @focus-event="focusEvent" @blur-event="blurEvent" />
+    <NodeComputedParam
+      v-for="(param, k) in params"
+      :key="k"
+      :param="param"
+      @focus-event="focusEvent"
+      @blur-event="blurEvent"
+      :app-data="nodeData.data"
+      :node-index="nodeIndex"
+    />
   </div>
 </template>
 <script lang="ts">
@@ -14,6 +22,10 @@ export default defineComponent({
   props: {
     nodeData: {
       type: Object as PropType<GUINodeData>,
+      required: true,
+    },
+    nodeIndex: {
+      type: Number,
       required: true,
     },
   },

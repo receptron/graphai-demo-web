@@ -1,20 +1,22 @@
 import type { DefaultParamsType } from "graphai";
 
+export type ApplicationData = {
+  // Application dependent data
+  agent?: string;
+  guiAgentId?: string;
+  value?: unknown; // ResultData<DefaultResultData>;
+  staticNodeType?: string;
+  params?: DefaultParamsType;
+  isResult?: boolean;
+};
+
 export type Position = { x: number; y: number };
 export type NodePosition = { x: number; y: number; width: number; height: number };
 export type GUINodeData = {
   type: string;
   nodeId: string;
   position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
-  data: {
-    // Application dependent data
-    agent?: string;
-    guiAgentId?: string;
-    value?: unknown; // ResultData<DefaultResultData>;
-    staticNodeType?: string;
-    params?: DefaultParamsType;
-    isResult?: boolean;
-  };
+  data: ApplicationData;
 };
 
 export type UpdateStaticValue = {

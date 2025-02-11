@@ -120,6 +120,7 @@ export default defineComponent({
       <Node
         v-for="(node, index) in store.nodes"
         :key="index"
+        :node-index="index"
         :node-data="node"
         :nearest-data="nearestData"
         @update-position="(pos) => updateNodePosition(index, pos)"
