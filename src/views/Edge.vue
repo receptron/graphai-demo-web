@@ -50,7 +50,8 @@ export default defineComponent({
       const y1dash = y1 + y1Offset;
       const y2dash = y2 + y2Offset;
 
-      const controlYOffset = y1dash > y2dash ? 40 : -40;
+      const ydashDiff = Math.abs(y1dash - y2dash);
+      const controlYOffset = ((ydashDiff > 40 ) ? 40 : ydashDiff) * (y1dash > y2dash ? 1 : -1);
       if (x1 < x2) {
         // const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
         const controlXOffset = 40;
