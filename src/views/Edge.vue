@@ -39,15 +39,26 @@ export default defineComponent({
   setup(props) {
     const isHover = ref(false);
     const edgePath = computed(() => {
-      const { x, y, width, outputCenters } = props.sourceData.data.position;
+      const { x, y: y1, width, outputCenters } = props.sourceData.data.position;
+      const x1 = x + (width ?? 0);
       const { index } = props.sourceData;
       const { x: x2, y: y2, inputCenters } = props.targetData.data.position;
       const { index: index2 } = props.targetData;
       const y1Offset = index === undefined ? 0 : outputCenters && outputCenters.length >= index ? outputCenters[index] : 0;
       const y2Offset = index2 === undefined ? 0 : inputCenters && inputCenters.length >= index2 ? inputCenters[index2] : 0;
 
-      const d = `M ${x + (width ?? 0)} ${y + y1Offset} ${x2} ${y2 + y2Offset}`;
-      return { x, y, d };
+      const y1dash = y1 + y1Offset;
+      const y2dash = y2 + y2Offset;
+
+      if (x1 < x2) {
+        const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
+        return { d };
+      }
+      const controlXOffset = 120;
+      const controlYOffset = y1 > y2 ? 40 : -40;
+      const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
+
+      return { d };
     });
 
     return {
