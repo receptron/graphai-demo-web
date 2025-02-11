@@ -15,6 +15,7 @@ export const useStore = defineStore("store", () => {
   const reset = () => {
     histories.value = [{ nodes: [], edges: [] }];
     currentData.value = { nodes: [], edges: [] };
+    index.value = 1;
   };
 
   const nodes = computed(() => {
