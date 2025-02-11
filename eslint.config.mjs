@@ -53,6 +53,7 @@ export default [
       "camelcase": "off",
       "max-lines": "off",
       "max-lines-per-function": "off",
+      "max-params": ["error", 4],
       "no-ternary": "off",
       "no-nested-ternary": "off",
       "no-unreachable": "error",
