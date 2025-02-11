@@ -5,22 +5,14 @@
       <input type="text" class="w-full border border-gray-300 rounded-md p-1 text-black" />
     </div>
     <div v-else-if="param.type === 'text'">
-      <textarea
-        ref="textarea"
-        :rows="rows"
-        class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
-        ></textarea>
+      <textarea ref="textarea" :rows="rows" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"></textarea>
     </div>
     <div v-else-if="param.type === 'data'">
-      <textarea
-        ref="textarea"
-        :rows="rows"
-        class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"
-        ></textarea>
+      <textarea ref="textarea" :rows="rows" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none"></textarea>
     </div>
     <div v-else-if="param.type === 'int'">
       <!-- TODO convert int after user input: min, max, defaultValue -->
-      <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black" step="1" pattern="\d*" inputmode="numeric"/>
+      <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black" step="1" pattern="\d*" inputmode="numeric" />
     </div>
     <div v-else-if="param.type === 'float'">
       <!-- TODO min, max, defaultValue -->
@@ -49,7 +41,7 @@ export default defineComponent({
   setup(__props, ctx) {
     const textarea = ref();
     const rows = ref(3);
-    
+
     const booleanValue = ref("true");
 
     const focusEvent = (event: FocusEvent) => {

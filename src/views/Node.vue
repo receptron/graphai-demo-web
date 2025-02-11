@@ -43,7 +43,7 @@
       <NodeStaticValue :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" @update-value="updateValue" />
     </div>
     <div class="w-full p-2 flex flex-col gap-1" v-if="nodeData.type === 'computed'">
-      <NodeComputedParams  :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" />
+      <NodeComputedParams :node-data="nodeData" @focus-event="focusEvent" @blur-event="blurEvent" />
     </div>
   </div>
 </template>

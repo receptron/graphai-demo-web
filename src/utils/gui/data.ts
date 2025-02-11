@@ -1,6 +1,5 @@
 import { InputOutput } from "./type";
 
-
 // data type
 //  - string
 //    - string, form = input text
@@ -33,7 +32,7 @@ export const agentProfiles: Record<string, InputOutput> = {
       { name: "model", type: "string" },
       { name: "stream", type: "boolean" },
       { name: "temperature", type: "float", defaultValue: 0.7, max: 1, min: 0 },
-      { name: "int", type: "int", defaultValue: 1, max: 100, min: 0 }
+      { name: "int", type: "int", defaultValue: 1, max: 100, min: 0 },
     ],
   },
   stringTemplateAgent: {

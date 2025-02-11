@@ -22,7 +22,7 @@ export default defineComponent({
   },
   emits: ["focusEvent", "blurEvent", "updateValue"],
   setup(props, ctx) {
-    const profile = agentProfiles[props.nodeData.data.guiAgentId ?? ""]
+    const profile = agentProfiles[props.nodeData.data.guiAgentId ?? ""];
     const { params } = profile;
 
     const focusEvent = () => {
