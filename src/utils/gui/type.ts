@@ -102,3 +102,9 @@ export type NearestData = {
 export type InputOutputType = { name: string; type?: string };
 export type ParamType = { name: string; type?: string; defaultValue?: number; max?: number; min?: number };
 export type InputOutput = { inputs: InputOutputType[]; outputs: InputOutputType[]; params?: ParamType[]; agent?: string; inputSchema?: unknown };
+
+export type HistoryPayload = {
+  nodes: GUINodeData[];
+  edges: GUIEdgeData[];
+};
+export type HistoryData = { name: string; data: HistoryPayload };
