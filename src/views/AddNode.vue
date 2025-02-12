@@ -1,6 +1,6 @@
 <template>
   <div class="text-left">
-    NodeId:<input type="text" v-model="nodeId" class="border-2 w-full" />
+    NodeId:<input type="text" v-model="nodeId" class="border-2 w-full" :class="isError ? 'border-red-600' : ''" />
     <select class="border-2 w-full mt-2" v-model="agent">
       <option>StaticNode</option>
       <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { useStore } from "@/store";
 import { agentProfiles } from "../utils/gui/data";
 
@@ -22,15 +22,23 @@ export default defineComponent({
     const nodesKey = Object.keys(agentProfiles);
     const nodeId = ref("");
     const agent = ref(nodesKey[0]);
+    const isError = ref(false);
 
     const store = useStore();
+
+    watch(nodeId, () => {
+      isError.value = false;
+    });
+
     const addNode = () => {
       if (nodeId.value === "") {
+        isError.value = true;
         return;
       }
-      // TODO
-      //   uniq id check.
-      //   reset nodeId after add
+      if (store.nodeRecords[nodeId.value]) {
+        isError.value = true;
+        return;
+      }
 
       const isStatic = agent.value === "StaticNode";
       const targetAgent = agentProfiles[agent.value];
@@ -49,12 +57,16 @@ export default defineComponent({
         type: isStatic ? "static" : "computed",
         position: { x: Math.random() * 200, y: Math.random() * 200 },
       });
+
+      nodeId.value = "";
     };
     return {
       addNode,
       nodesKey,
       nodeId,
       agent,
+
+      isError,
     };
   },
 });
