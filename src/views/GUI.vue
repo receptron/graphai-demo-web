@@ -172,6 +172,9 @@ export default defineComponent({
     </div>
     <div>
       <div class="text-left">
+        <div v-for="(history, k) in store.histories" :key="k">
+          {{ history.name }}
+        </div>
         {{ store.histories }}
       </div>
     </div>

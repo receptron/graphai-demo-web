@@ -1,15 +1,11 @@
 import { ref, computed } from "vue";
-import { GUINodeData, GUIEdgeData, GUINodeDataRecord, UpdateStaticValue } from "../utils/gui/type";
+import { GUINodeData, GUIEdgeData, GUINodeDataRecord, UpdateStaticValue, HistoryData, HistoryPayload } from "../utils/gui/type";
 import { edges2inputs, store2graphData } from "../utils/gui/utils";
 import { defineStore } from "pinia";
 
-type HistoryData = {
-  nodes: GUINodeData[];
-  edges: GUIEdgeData[];
-};
 export const useStore = defineStore("store", () => {
-  const histories = ref<{ name: string; data: HistoryData }[]>([]);
-  const currentData = ref<HistoryData>({ nodes: [], edges: [] });
+  const histories = ref<HistoryData[]>([]);
+  const currentData = ref<HistoryPayload>({ nodes: [], edges: [] });
   const index = ref(0);
 
   const reset = () => {

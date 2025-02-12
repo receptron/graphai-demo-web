@@ -52,15 +52,16 @@ export default defineComponent({
 
       const ydashDiff = Math.abs(y1dash - y2dash);
       const controlYOffset = (ydashDiff > 40 ? 40 : ydashDiff) * (y1dash > y2dash ? 1 : -1);
-      if (x1 < x2) {
-        // const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
-        const controlXOffset = 40;
-        const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
-        return { d };
-      }
-      const controlXOffset = 120;
-      const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
 
+      const xDiff = x2 - x1;
+
+      const maxOffset = 120;
+      const minOffset = 40;
+      const offsetThreshold = maxOffset - minOffset;
+      const controlXOffset = (xDiff > 0) ? minOffset + ((xDiff > offsetThreshold) ? 0 : offsetThreshold - xDiff) : maxOffset; // xDiff = 0 then x = 120
+      
+      const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
+      // const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
       return { d };
     });
 
