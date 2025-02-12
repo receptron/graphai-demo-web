@@ -72,6 +72,19 @@ export default defineComponent({
     const booleanValue = ref(value === true ? "true" : "false");
     const textAreaValue = ref(String(value ?? ""));
 
+    watch(
+      () => props.appData,
+      (updateParams) => {
+        const updateValue = (updateParams.params ?? {})[key];
+
+        if (props.param.type === "text" && updateValue !== textAreaValue.value) {
+          textAreaValue.value = updateValue;
+        }
+        if (props.param.type === "data") {
+          console.log(updateValue);
+        }
+      },
+    );
     const focusEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
         ctx.emit("focusEvent");
@@ -90,7 +103,6 @@ export default defineComponent({
       store.updateNodeParam(props.nodeIndex, key, inputValue.value);
     };
     watch([booleanValue], () => {
-      console.log("WW", props.param.type);
       if (props.param.type === "boolean") {
         store.updateNodeParam(props.nodeIndex, key, booleanValue.value === "true");
       }

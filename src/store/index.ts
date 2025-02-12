@@ -40,6 +40,7 @@ export const useStore = defineStore("store", () => {
       histories.value.length = index.value;
       histories.value.push({ data, name });
       index.value = index.value + 1;
+      //console.log(histories.value);
     }
   };
   const saveNodeData = () => {
@@ -67,7 +68,15 @@ export const useStore = defineStore("store", () => {
     updateData(newNodes, [...edges.value], "updatePosition", false);
   };
   const updateNodeParam = (positionIndex: number, key: string, value: unknown) => {
-    const newNode = { ...nodes.value[positionIndex] };
+    const oldNode = nodes.value[positionIndex];
+    const newNode = {
+      ...oldNode,
+      data: {
+        ...oldNode.data,
+        params: oldNode.data.params ? { ...oldNode.data.params } : {},
+      },
+    };
+
     if (value === "" || value === undefined || (value === null && newNode.data.params && newNode.data.params[key] !== undefined)) {
       // delete operation
       const { [key]: __, ...updatedParams } = newNode.data.params || {};
