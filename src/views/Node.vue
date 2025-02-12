@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="flex flex-col items-end mt-1">
-      <div v-for="(output, index) in edgeIO.outputs" :key="'out-' + index" class="relative flex items-center" ref="outputsRef">
+      <div v-for="(output, index) in edgeIO.outputs" :key="['out', output.name, index].join('-')" class="relative flex items-center" ref="outputsRef">
         <span class="mr-2 text-xs whitespace-nowrap">{{ output.name }}</span>
         <div
           class="w-4 h-4 rounded-full absolute right-[-10px] min-w-[12px]"
@@ -29,7 +29,7 @@
     </div>
 
     <div class="flex flex-col items-start mt-1 mb-1">
-      <div v-for="(input, index) in edgeIO.inputs" :key="'in-' + index" class="relative flex items-center" ref="inputsRef">
+      <div v-for="(input, index) in edgeIO.inputs" :key="['in', input.name, index].join('-')" class="relative flex items-center" ref="inputsRef">
         <div
           class="w-4 h-4 rounded-full absolute left-[-10px] min-w-[12px]"
           :class="nodeInputClass(isExpectNearButton('outbound', index), nodeData)"

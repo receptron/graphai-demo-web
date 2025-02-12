@@ -156,9 +156,10 @@ export default defineComponent({
       <main class="flex-1">
         <div class="h-[100vh] relative overflow-hidden" @click="closeMenu">
           <svg x="0" y="0" class="absolute pointer-events-none w-full h-[100%]" ref="svgRef">
+            
             <Edge
               v-for="(edge, index) in edgeDataList"
-              :key="index"
+              :key="['edge', edge.source, edge.target, index].join('-')"
               :source-data="edge.source"
               :target-data="edge.target"
               class="pointer-events-auto"
@@ -174,7 +175,7 @@ export default defineComponent({
           </svg>
           <Node
             v-for="(node, index) in store.nodes"
-            :key="index"
+            :key="[node.nodeId, index].join('-')"
             :node-index="index"
             :node-data="node"
             :nearest-data="nearestData"
