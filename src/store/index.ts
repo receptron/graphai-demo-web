@@ -9,10 +9,7 @@ export const useStore = defineStore("store", () => {
   const index = ref(0);
 
   const reset = () => {
-    // histories.value = [{data: { nodes: [], edges: [] }, name: "reset"}];
     updateData([], [], "reset", true);
-    //currentData.value = { nodes: [], edges: [] };
-    // index.value = 1;
   };
 
   const nodes = computed(() => {
