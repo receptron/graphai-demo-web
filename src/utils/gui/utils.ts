@@ -331,12 +331,20 @@ export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseC
     if (targetNode === node.nodeId) {
       return closest;
     }
+    /*
     const nodeCenterX = node.position.x + (node.position.width ?? 0) / 2;
     const nodeCenterY = node.position.y + (node.position.height ?? 0) / 2;
+    */
     const mouseX = mouseCurrentPosition.x;
     const mouseY = mouseCurrentPosition.y;
 
-    const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
+    const { x, y, width, height } = node.position;
+
+    const closestX = Math.max(x, Math.min(mouseX, x + (width ?? 0)));
+    const closestY = Math.max(y, Math.min(mouseY, y + (height ?? 0 )));
+    
+    // const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
+     const distance = Math.sqrt((closestX - mouseX) ** 2 + (closestY - mouseY) ** 2);
 
     if (!closest || distance < closest.distance) {
       return { node, distance };

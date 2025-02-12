@@ -175,7 +175,6 @@ export default defineComponent({
         <div v-for="(history, k) in store.histories" :key="k">
           {{ history.name }}
         </div>
-        {{ store.histories }}
       </div>
     </div>
   </div>
