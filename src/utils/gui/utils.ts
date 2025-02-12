@@ -79,7 +79,7 @@ export const graphToGUIData = (graphData: GraphData) => {
         }
       });
     });
-    console.log(positions);
+
     const position = positions[nodeId] ?? { x: i, y: j };
     return {
       type: isComputed ? "computed" : "static",

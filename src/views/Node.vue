@@ -89,6 +89,8 @@ export default defineComponent({
     const isNewEdge = ref(false);
     const offset = ref({ x: 0, y: 0 });
 
+    const startPosition = {x: 0, y: 0};
+    let d = 0;
     const onStartNode = (event: MouseEvent | TouchEvent) => {
       console.log("node");
       if (isNewEdge.value) {
@@ -99,6 +101,12 @@ export default defineComponent({
       const position = props.nodeData.position;
       offset.value.x = clientX - position.x;
       offset.value.y = clientY - position.y;
+
+      // for update detection
+      startPosition.x = position.x;
+      startPosition.y = position.y;
+      d = 0;
+
     };
 
     const getWH = () => {
@@ -120,13 +128,19 @@ export default defineComponent({
     const onMoveNode = (event: MouseEvent | TouchEvent) => {
       if (!isDragging.value) return;
       const { clientX, clientY } = getClientPos(event);
-      const newPosition = { ...getWH(), x: clientX - offset.value.x, y: clientY - offset.value.y };
+      const x = clientX - offset.value.x;
+      const y = clientY - offset.value.y;
+      const newPosition = { ...getWH(), x, y };
       ctx.emit("updatePosition", newPosition);
+      d = (startPosition.x - x) ** 2 + (startPosition.y - y) ** 2
     };
 
     const onEndNode = () => {
       isDragging.value = false;
-      ctx.emit("savePosition");
+      console.log(d);
+      if (d > 4) {
+        ctx.emit("savePosition");
+      }
     };
 
     // edge event

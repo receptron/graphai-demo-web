@@ -72,22 +72,23 @@ export const useStore = defineStore("store", () => {
   const updateNodeParam = (positionIndex: number, key: string, value: unknown) => {
     const newNode = { ...nodes.value[positionIndex] };
     if (value === "" || value === undefined || (value === null && newNode.data.params && newNode.data.params[key] !== undefined)) {
+      // delete operation
       const { [key]: __, ...updatedParams } = newNode.data.params || {};
       newNode.data.params = updatedParams;
     } else {
+      // upsert
       newNode.data.params = { ...(newNode.data.params || {}), [key]: value };
     }
     const newNodes = [...nodes.value];
     newNodes[positionIndex] = newNode;
-    updateData(newNodes, [...edges.value], "update params", true);
+    updateData(newNodes, [...edges.value], "updateParams", true);
   };
   const updateStaticNodeValue = (positionIndex: number, value: UpdateStaticValue) => {
     const newNode = { ...nodes.value[positionIndex] };
     newNode.data = { ...newNode.data, ...value };
     const newNodes = [...nodes.value];
-    console.log(newNode, value);
     newNodes[positionIndex] = newNode;
-    updateData(newNodes, [...edges.value], "update static value", true);
+    updateData(newNodes, [...edges.value], "updateStaticValue", true);
   };
 
   // edge
