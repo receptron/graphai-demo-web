@@ -43,8 +43,8 @@ export default defineComponent({
     const saveNodePosition = () => {
       store.saveNodeData();
     };
-    const updateNodeValue = (index: number, value: UpdateStaticValue) => {
-      store.updateStaticNodeValue(index, value);
+    const updateStaticNodeValue = (index: number, value: UpdateStaticValue, saveHistory: boolean) => {
+      store.updateStaticNodeValue(index, value, saveHistory);
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
@@ -90,7 +90,7 @@ export default defineComponent({
     return {
       updateNodePosition,
       saveNodePosition,
-      updateNodeValue,
+      updateStaticNodeValue,
 
       store,
 
@@ -179,7 +179,7 @@ export default defineComponent({
             :node-data="node"
             :nearest-data="nearestData"
             @update-position="(pos) => updateNodePosition(index, pos)"
-            @update-value="(value) => updateNodeValue(index, value)"
+            @update-static-node-value="(value) => updateStaticNodeValue(index, value, true)"
             @save-position="saveNodePosition"
             @new-edge-start="newEdgeStartEvent"
             @new-edge="newEdgeEvent"

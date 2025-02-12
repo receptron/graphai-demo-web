@@ -81,17 +81,40 @@ export const graphToGUIData = (graphData: GraphData) => {
     });
 
     const position = positions[nodeId] ?? { x: i, y: j };
+    const data = (() => {
+      if (isComputed) {
+        return {
+          params: node.params,
+          agent: node.agent as string,
+          guiAgentId: node.agent as string,
+        };
+      }
+      const staticNodeType = (() => {
+        if (node.value === undefined) {
+          return "text";
+        }
+        if (typeof node.value === "object" || Array.isArray(node.value)) {
+          return "data";
+        }
+        if (node.value === true || node.value === false) {
+          return "boolean";
+        }
+        if (node.value) {
+          return "number";
+        }
+        return "text";
+      })();
+      return {
+        value: staticNodeType === "data" ? JSON.stringify(node.value, null, 2) : node.value,
+        staticNodeType,
+      };
+    })();
     return {
       type: isComputed ? "computed" : "static",
       nodeId,
       position,
 
-      data: {
-        params: isComputed ? node.params : undefined,
-        value: isComputed ? undefined : node.value,
-        agent: isComputed ? (node.agent as string) : undefined,
-        guiAgentId: isComputed ? (node.agent as string) : undefined,
-      },
+      data,
     };
   });
 

@@ -83,12 +83,12 @@ export const useStore = defineStore("store", () => {
     newNodes[positionIndex] = newNode;
     updateData(newNodes, [...edges.value], "updateParams", true);
   };
-  const updateStaticNodeValue = (positionIndex: number, value: UpdateStaticValue) => {
+  const updateStaticNodeValue = (positionIndex: number, value: UpdateStaticValue, saveHistory: boolean) => {
     const newNode = { ...nodes.value[positionIndex] };
     newNode.data = { ...newNode.data, ...value };
     const newNodes = [...nodes.value];
     newNodes[positionIndex] = newNode;
-    updateData(newNodes, [...edges.value], "updateStaticValue", true);
+    updateData(newNodes, [...edges.value], "updateStaticValue", saveHistory);
   };
 
   // edge

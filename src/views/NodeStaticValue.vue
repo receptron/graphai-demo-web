@@ -19,7 +19,7 @@
     <input type="number" class="w-full border border-gray-300 rounded-md p-1 text-black resize-none" v-model="numberValue" ref="inputRef" />
   </div>
   <div v-show="['boolean'].includes(dataType)">
-    <select v-model="booleanValue" ref="selectFormRef">
+    <select v-model="booleanValue" ref="selectFormRef" @change="selectUpdate">
       <option value="true">True</option>
       <option value="false">False</option>
     </select>
@@ -91,6 +91,7 @@ export default defineComponent({
         staticNodeType: dataType.value,
       });
     };
+    /*
     watch([booleanValue, dataType], () => {
       if (dataType.value === "boolean") {
         // TODO history
@@ -99,7 +100,35 @@ export default defineComponent({
           staticNodeType: dataType.value,
         });
       }
-    });
+      });
+    */
+    const selectUpdate = () => {
+      ctx.emit("updateValue", {
+        value: booleanValue.value === "true",
+        staticNodeType: dataType.value,
+      });
+    };
+    // for redo
+    watch(
+      () => props.nodeData.data.value,
+      (value) => {
+        if (dataType.value === "boolean") {
+          booleanValue.value = value as string;
+        } else if (value !== null && typeof value === "object") {
+          textAreaValue.value = JSON.stringify(value, null, 2);
+        } else {
+          textAreaValue.value = value as string;
+        }
+      },
+    );
+    watch(
+      () => props.nodeData.data.staticNodeType,
+      (staticNodeType) => {
+        if (staticNodeType) {
+          dataType.value = staticNodeType;
+        }
+      },
+    );
     const isValidData = computed(() => {
       if (dataType.value === "data") {
         try {
@@ -132,6 +161,7 @@ export default defineComponent({
       textAreaValue,
       options,
       isValidData,
+      selectUpdate,
     };
   },
 });

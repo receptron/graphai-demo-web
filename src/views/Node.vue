@@ -77,7 +77,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateValue", "openNodeMenu"],
+  emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateStaticNodeValue", "openNodeMenu"],
   setup(props, ctx) {
     const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.agent ?? ""] : staticNodeParams;
 
@@ -222,7 +222,7 @@ export default defineComponent({
       ctx.emit("updatePosition", getWH());
     };
     const updateValue = (value: UpdateStaticValue) => {
-      ctx.emit("updateValue", value);
+      ctx.emit("updateStaticNodeValue", value);
     };
     const openNodeMenu = (event: MouseEvent) => {
       ctx.emit("openNodeMenu", event);
