@@ -1,7 +1,7 @@
 <template>
   <div class="text-left">
-    NodeId:<input type="text" v-model="nodeId" class="border-2" />
-    <select class="border-2" v-model="agent">
+    NodeId:<input type="text" v-model="nodeId" class="border-2 w-full" />
+    <select class="border-2 w-full mt-2" v-model="agent">
       <option>StaticNode</option>
       <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
     </select>
@@ -34,14 +34,14 @@ export default defineComponent({
 
       const isStatic = agent.value === "StaticNode";
       const targetAgent = agentProfiles[agent.value];
-      const data = isStatic
-        ? { data: {} }
-        : {
-            data: {
+      const data = {
+        data: isStatic
+          ? {}
+          : {
               agent: targetAgent.agent ? targetAgent.agent : agent.value,
               guiAgentId: agent.value,
             },
-          };
+      };
 
       store.pushNode({
         ...data,

@@ -154,7 +154,7 @@ export default defineComponent({
         </div>
       </aside>
       <main class="flex-1">
-        <div class="h-[100vh] relative overflow-hidden" @click="closeMenu">
+        <div class="h-[100vh] relative overflow-hidden border-4 rounded-md" @click="closeMenu">
           <svg x="0" y="0" class="absolute pointer-events-none w-full h-[100%]" ref="svgRef">
             <Edge
               v-for="(edge, index) in edgeDataList"
