@@ -89,7 +89,7 @@ export default defineComponent({
     const isNewEdge = ref(false);
     const offset = ref({ x: 0, y: 0 });
 
-    const startPosition = {x: 0, y: 0};
+    const startPosition = { x: 0, y: 0 };
     let d = 0;
     const onStartNode = (event: MouseEvent | TouchEvent) => {
       console.log("node");
@@ -106,7 +106,6 @@ export default defineComponent({
       startPosition.x = position.x;
       startPosition.y = position.y;
       d = 0;
-
     };
 
     const getWH = () => {
@@ -132,12 +131,11 @@ export default defineComponent({
       const y = clientY - offset.value.y;
       const newPosition = { ...getWH(), x, y };
       ctx.emit("updatePosition", newPosition);
-      d = (startPosition.x - x) ** 2 + (startPosition.y - y) ** 2
+      d = (startPosition.x - x) ** 2 + (startPosition.y - y) ** 2;
     };
 
     const onEndNode = () => {
       isDragging.value = false;
-      console.log(d);
       if (d > 4) {
         ctx.emit("savePosition");
       }
