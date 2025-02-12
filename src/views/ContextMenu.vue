@@ -14,12 +14,12 @@ export default defineComponent({
     const menuVisible = ref(false);
     const menuStyle = ref({ top: "0px", left: "0px" });
 
-    const openMenu = (event: MouseEvent | TouchEvent, topOffset: number) => {
+    const openMenu = (event: MouseEvent | TouchEvent, rect: DOMRect) => {
       event.preventDefault();
       const { clientX, clientY } = getClientPos(event);
       menuStyle.value = {
-        top: `${clientY - topOffset}px`,
-        left: `${clientX}px`,
+        top: `${clientY - rect.top}px`,
+        left: `${clientX - rect.left}px`,
       };
       menuVisible.value = true;
     };

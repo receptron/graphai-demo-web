@@ -53,7 +53,7 @@ export default defineComponent({
 
     const openEdgeMenu = (event: MouseEvent, edgeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
-      contextEdgeMenu.value.openMenu(event, rect.top, edgeIndex);
+      contextEdgeMenu.value.openMenu(event, rect, edgeIndex);
     };
     const closeMenu = () => {
       contextEdgeMenu.value.closeMenu();
@@ -61,7 +61,7 @@ export default defineComponent({
     };
     const openNodeMenu = (event: MouseEvent, nodeIndex: number) => {
       const rect = svgRef.value.getBoundingClientRect();
-      contextNodeMenu.value.openMenu(event, rect.top, nodeIndex);
+      contextNodeMenu.value.openMenu(event, rect, nodeIndex);
     };
 
     const debug1 = () => {
