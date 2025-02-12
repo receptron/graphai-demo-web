@@ -58,8 +58,8 @@ export default defineComponent({
       const maxOffset = 120;
       const minOffset = 40;
       const offsetThreshold = maxOffset - minOffset;
-      const controlXOffset = (xDiff > 0) ? minOffset + ((xDiff > offsetThreshold) ? 0 : offsetThreshold - xDiff) : maxOffset; // xDiff = 0 then x = 120
-      
+      const controlXOffset = xDiff > 0 ? minOffset + (xDiff > offsetThreshold ? 0 : offsetThreshold - xDiff) : maxOffset; // xDiff = 0 then x = 120
+
       const d = `M ${x1} ${y1dash} C ${x1 + controlXOffset} ${y1dash - controlYOffset}, ${x2 - controlXOffset} ${y2dash + controlYOffset}, ${x2} ${y2dash}`;
       // const d = `M ${x1} ${y1dash} ${x2} ${y2dash}`;
       return { d };

@@ -11,6 +11,7 @@ import {
   NewEdgeData,
   ClosestNodeData,
   EdgeEndPointData,
+  NodePositionData,
 } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 import { agentProfiles } from "./data";
@@ -27,6 +28,8 @@ export const getClientPos = (event: MouseEvent | TouchEvent) => {
 export const graphToGUIData = (graphData: GraphData) => {
   let i = -50;
   let j = 10;
+
+  const positions = graphData?.metadata?.positions ?? {};
 
   const nodeIds = Object.keys(graphData.nodes);
   const rawEdge: GUIEdgeData[] = [];
@@ -76,10 +79,12 @@ export const graphToGUIData = (graphData: GraphData) => {
         }
       });
     });
+    console.log(positions);
+    const position = positions[nodeId] ?? { x: i, y: j };
     return {
       type: isComputed ? "computed" : "static",
       nodeId,
-      position: { x: i, y: j },
+      position,
 
       data: {
         params: isComputed ? node.params : undefined,
@@ -214,9 +219,16 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
     }
     return tmp;
   }, {});
+  const positions = nodes.reduce((tmp: Record<string, NodePositionData>, node) => {
+    tmp[node.nodeId] = node.position;
+    return tmp;
+  }, {});
   const newGraphData = {
     version: 0.5,
     nodes: newNodes,
+    metadata: {
+      positions,
+    },
   };
   return newGraphData;
 };
@@ -341,10 +353,10 @@ export const pickNearestNode = (nodes: GUINodeData[], targetNode: string, mouseC
     const { x, y, width, height } = node.position;
 
     const closestX = Math.max(x, Math.min(mouseX, x + (width ?? 0)));
-    const closestY = Math.max(y, Math.min(mouseY, y + (height ?? 0 )));
-    
+    const closestY = Math.max(y, Math.min(mouseY, y + (height ?? 0)));
+
     // const distance = Math.sqrt((nodeCenterX - mouseX) ** 2 + (nodeCenterY - mouseY) ** 2);
-     const distance = Math.sqrt((closestX - mouseX) ** 2 + (closestY - mouseY) ** 2);
+    const distance = Math.sqrt((closestX - mouseX) ** 2 + (closestY - mouseY) ** 2);
 
     if (!closest || distance < closest.distance) {
       return { node, distance };

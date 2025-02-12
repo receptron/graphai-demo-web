@@ -35,15 +35,12 @@ export default defineComponent({
   emits: ["focusEvent", "blurEvent", "updateValue"],
   setup(props, ctx) {
     const profile = agentProfiles[props.nodeData.data.guiAgentId ?? ""];
-    console.log(profile);
     const { params } = profile;
 
     const focusEvent = () => {
-      console.log("F");
       ctx.emit("focusEvent");
     };
     const blurEvent = () => {
-      console.log("B");
       ctx.emit("blurEvent");
     };
     return {

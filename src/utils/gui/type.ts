@@ -12,10 +12,11 @@ export type ApplicationData = {
 
 export type Position = { x: number; y: number };
 export type NodePosition = { x: number; y: number; width: number; height: number };
+export type NodePositionData = { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
 export type GUINodeData = {
   type: string;
   nodeId: string;
-  position: { x: number; y: number; width?: number; height?: number; outputCenters?: number[]; inputCenters?: number[] };
+  position: NodePositionData;
   data: ApplicationData;
 };
 

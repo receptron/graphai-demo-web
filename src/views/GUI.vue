@@ -11,7 +11,7 @@ import { EdgeData, NodePosition, UpdateStaticValue } from "../utils/gui/type";
 import { graphChat } from "../graph/chat";
 import { useNewEdge } from "../utils/gui/composable";
 import { graphToGUIData, guiEdgeData2edgeData } from "../utils/gui/utils";
-
+import { GraphData } from "graphai";
 import { useStore } from "@/store";
 
 export default defineComponent({
@@ -27,9 +27,12 @@ export default defineComponent({
     const contextEdgeMenu = ref();
     const contextNodeMenu = ref();
 
-    const { rawEdge, rawNode } = graphToGUIData(graphChat);
+    const updateGraph = (graph: GraphData) => {
+      const { rawEdge, rawNode } = graphToGUIData(graph);
+      store.initData(rawNode, rawEdge);
+    };
+    updateGraph(graphChat);
 
-    store.initData(rawNode, rawEdge);
     onMounted(() => {
       saveNodePosition();
     });
@@ -42,7 +45,6 @@ export default defineComponent({
     };
     const updateNodeValue = (index: number, value: UpdateStaticValue) => {
       store.updateStaticNodeValue(index, value);
-      console.log(index, value);
     };
 
     const edgeDataList = computed<EdgeData[]>(() => {
@@ -66,6 +68,23 @@ export default defineComponent({
 
     const debug1 = () => {
       store.reset();
+    };
+
+    const save = () => {
+      const dataStr = JSON.stringify(store.graphData);
+      window.localStorage.setItem("GRAPHAIGUI", dataStr);
+    };
+
+    const load = () => {
+      const data = window.localStorage.getItem("GRAPHAIGUI");
+      try {
+        if (data) {
+          const graphData = JSON.parse(data);
+          updateGraph(graphData);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     return {
@@ -92,6 +111,9 @@ export default defineComponent({
       edgeConnectable,
 
       debug1,
+
+      save,
+      load,
     };
   },
 });
@@ -122,6 +144,13 @@ export default defineComponent({
         <hr />
         <div>
           <button @click="debug1" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Clear Graph</button>
+        </div>
+        <hr />
+        <div>
+          <button @click="save" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Save Graph</button>
+        </div>
+        <div>
+          <button @click="load" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Load Graph</button>
         </div>
       </aside>
       <main class="flex-1">
