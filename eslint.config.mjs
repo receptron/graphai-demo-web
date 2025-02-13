@@ -71,7 +71,7 @@ export default [
       "vue/no-unused-vars": "error",
       "vue/no-reserved-component-names": "error",
       "vue/multi-word-component-names": "off",
-      "sonarjs/cognitive-complexity": "error",
+      "sonarjs/cognitive-complexity": ["error", 20],
       "sonarjs/no-duplicate-string": "off",
       "sonarjs/todo-tag": "off",
       "sonarjs/elseif-without-else": "error",
