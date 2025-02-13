@@ -6,6 +6,8 @@ import AddNode from "./AddNode.vue";
 import ContextEdgeMenu from "./ContextEdgeMenu.vue";
 import ContextNodeMenu from "./ContextNodeMenu.vue";
 
+import GraphRunner from "./GraphRunner.vue";
+
 import { EdgeData, NodePosition, UpdateStaticValue } from "../utils/gui/type";
 
 import { graphChat } from "../graph/chat";
@@ -21,6 +23,7 @@ export default defineComponent({
     AddNode,
     ContextEdgeMenu,
     ContextNodeMenu,
+    GraphRunner,
   },
   setup() {
     const store = useStore();
@@ -66,7 +69,7 @@ export default defineComponent({
       contextNodeMenu.value.openMenu(event, rect, nodeIndex);
     };
 
-    const debug1 = () => {
+    const resetGraph = () => {
       store.reset();
     };
 
@@ -110,7 +113,7 @@ export default defineComponent({
 
       edgeConnectable,
 
-      debug1,
+      resetGraph,
 
       save,
       load,
@@ -143,7 +146,7 @@ export default defineComponent({
         </button>
         <hr />
         <div>
-          <button @click="debug1" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Clear Graph</button>
+          <button @click="resetGraph" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Clear Graph</button>
         </div>
         <hr />
         <div>
@@ -190,6 +193,9 @@ export default defineComponent({
           <ContextNodeMenu ref="contextNodeMenu" />
         </div>
       </main>
+    </div>
+    <div>
+      <GraphRunner />
     </div>
     <div>
       <div class="text-left">

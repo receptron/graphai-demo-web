@@ -125,7 +125,6 @@ export const useStore = defineStore("store", () => {
   });
   const undo = () => {
     if (undoable.value) {
-      console.log(histories.value);
       currentData.value = histories.value[index.value - 2].data;
       index.value = index.value - 1;
     }
