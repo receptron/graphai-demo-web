@@ -81,8 +81,19 @@ export default defineComponent({
           textAreaValue.value = updateValue;
         }
         if (props.param.type === "data") {
-          console.log(updateValue);
+          if (typeof updateValue === "object" || Array.isArray(updateValue)) {
+            textAreaValue.value = JSON.stringify(updateValue, null, 2);
+          } else {
+            textAreaValue.value = updateValue;
+          }
         }
+        if (props.param.type === "int" || props.param.type === "float") {
+          const numberValue = Number(inputValue.value);
+          if (numberValue !== updateValue) {
+            inputValue.value = updateValue;
+          }
+        }
+        // inputValue
       },
     );
     const focusEvent = (event: FocusEvent) => {
