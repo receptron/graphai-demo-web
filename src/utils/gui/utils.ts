@@ -234,9 +234,7 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
       };
     } else {
       tmp[node.nodeId] = {
-        data: {
-          value: node.data.value,
-        },
+        value: node.data.value,
         ...inputs,
       } as StaticNodeData;
     }
