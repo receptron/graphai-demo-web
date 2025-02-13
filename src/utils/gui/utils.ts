@@ -26,9 +26,6 @@ export const getClientPos = (event: MouseEvent | TouchEvent) => {
 };
 
 export const graphToGUIData = (graphData: GraphData) => {
-  let i = -50;
-  let j = 10;
-
   const positions = graphData?.metadata?.positions ?? {};
 
   const nodeIds = Object.keys(graphData.nodes);
@@ -49,12 +46,8 @@ export const graphToGUIData = (graphData: GraphData) => {
     return index;
   };
 
+  let positionIndex = 0;
   const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
-    i = i + 200;
-    if (i > 800) {
-      i = 100;
-      j = j + 300;
-    }
     const node = graphData.nodes[nodeId];
     const isComputed = isComputedNodeData(node);
     const inputs = isComputed ? (node.inputs ?? {}) : node.update ? { update: node.update } : {};
@@ -80,7 +73,8 @@ export const graphToGUIData = (graphData: GraphData) => {
       });
     });
 
-    const position = positions[nodeId] ?? { x: i, y: j };
+    const position = positions[nodeId] ?? { x: (positionIndex % 4) * 200 + 100, y: Math.floor(positionIndex / 4) * 300 + 50 };
+    positionIndex += 1;
     const data = (() => {
       if (isComputed) {
         return {
@@ -226,7 +220,7 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
         agent: node.data.agent,
         params: node.data.params,
         inputs: inputs ?? {},
-        // isResult: true,
+        isResult: true, //
         // anyInput (boolean)
         // if/unless (edge)
         // defaultValue (object?)

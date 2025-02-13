@@ -75,6 +75,7 @@ export default defineComponent({
           config: {
             openAIAgent: {
               apiKey: import.meta.env.VITE_OPEN_API_KEY,
+              forWeb: true,
             },
           },
         },

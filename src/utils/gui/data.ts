@@ -12,6 +12,9 @@ import { InputOutput } from "./type";
 //    - number, form = input number
 //  - data
 //    - json formated data(array, object)
+//  - message
+//  - messages
+//  - array
 
 export const agentProfiles: Record<string, InputOutput> = {
   eventAgent: {
@@ -21,11 +24,12 @@ export const agentProfiles: Record<string, InputOutput> = {
   },
   openAIAgent: {
     inputs: [
+      { name: "message", type: "string" },
       { name: "messages", type: "string" },
       { name: "prompt", type: "string" },
       { name: "model", type: "string" },
     ],
-    outputs: [{ name: "message" }, { name: "text", type: "string" }],
+    outputs: [{ name: "message" }, { name: "messages" }, { name: "text", type: "string" }],
     params: [
       { name: "system", type: "text" },
       { name: "prompt", type: "text" },
