@@ -27,7 +27,7 @@
       <input ref="inputRef" type="number" class="w-full border border-gray-300 rounded-md p-1 text-black" v-model="inputValue" />
     </div>
     <div v-else-if="param.type === 'boolean'">
-      <select v-model="booleanValue" ref="selectFormRef">
+      <select v-model="booleanValue" ref="selectFormRef" @change="selectUpdate">
         <option value="true">True</option>
         <option value="false">False</option>
       </select>
@@ -87,10 +87,19 @@ export default defineComponent({
             textAreaValue.value = updateValue;
           }
         }
+        if (props.param.type === "string" && updateValue !== inputValue.value) {
+          inputValue.value = updateValue;
+        }
         if (props.param.type === "int" || props.param.type === "float") {
           const numberValue = Number(inputValue.value);
           if (numberValue !== updateValue) {
             inputValue.value = updateValue;
+          }
+        }
+        if (props.param.type === "boolean") {
+          const booleanText = updateValue ? "true" : "false";
+          if (booleanText !== booleanValue.value) {
+            booleanValue.value = booleanText;
           }
         }
         // inputValue
@@ -113,11 +122,16 @@ export default defineComponent({
     const blurUpdateEvent = () => {
       store.updateNodeParam(props.nodeIndex, key, inputValue.value);
     };
+    /*
     watch([booleanValue], () => {
       if (props.param.type === "boolean") {
         store.updateNodeParam(props.nodeIndex, key, booleanValue.value === "true");
       }
     });
+    */
+    const selectUpdate = () => {
+      store.updateNodeParam(props.nodeIndex, key, booleanValue.value === "true");
+    };
 
     onMounted(() => {
       if (textareaRef.value) {
@@ -142,6 +156,8 @@ export default defineComponent({
       booleanValue,
       inputValue,
       textAreaValue,
+
+      selectUpdate,
 
       inputRef,
       textareaRef,
