@@ -19,7 +19,7 @@ import { InputOutput } from "./type";
 export const agentProfiles: Record<string, InputOutput> = {
   eventAgent: {
     inputs: [{ name: "wait", type: "array" }],
-    outputs: [{ name: "text" }, {name: "message"}],
+    outputs: [{ name: "text" }, { name: "message" }],
     params: [],
   },
   openAIAgent: {
@@ -36,7 +36,6 @@ export const agentProfiles: Record<string, InputOutput> = {
       { name: "model", type: "string" },
       { name: "stream", type: "boolean" },
       { name: "temperature", type: "float", defaultValue: 0.7, max: 1, min: 0 },
-      { name: "int", type: "int", defaultValue: 1, max: 100, min: 0 },
     ],
   },
   stringTemplateAgent: {
@@ -45,7 +44,7 @@ export const agentProfiles: Record<string, InputOutput> = {
     params: [],
   },
   pushAgent: {
-    inputs: [{ name: "array" }, { name: "item" }, {name: "items"}],
+    inputs: [{ name: "array" }, { name: "item" }, { name: "items" }],
     outputs: [{ name: "array" }],
     params: [],
   },

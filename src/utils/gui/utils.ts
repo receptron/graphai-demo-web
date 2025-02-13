@@ -55,20 +55,32 @@ export const graphToGUIData = (graphData: GraphData) => {
       // node, props
       // inputs(to), oututs(from)
       inputs2dataSources([inputs[inputProp]]).forEach((source) => {
-        const outputNodeId = source.value || source.nodeId;
-        if (source.propIds && source.propIds.length > 0) {
-          source.propIds.forEach((outputPropId) => {
-            if (nodeIds.includes(outputNodeId)) {
-              const sourceIndex = getIndex(outputNodeId, outputPropId, "outputs");
-              const targetIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
+        const outputNodeId = source.nodeId;
+        console.log(outputNodeId, source);
+        if (outputNodeId) {
+          // source is computed node
+          if (source.propIds && source.propIds.length > 0) {
+            source.propIds.forEach((outputPropId) => {
+              if (nodeIds.includes(outputNodeId)) {
+                const sourceIndex = getIndex(outputNodeId, outputPropId, "outputs");
+                const targetIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
 
-              rawEdge.push({
-                source: { nodeId: outputNodeId, index: sourceIndex > -1 ? sourceIndex : 0 },
-                target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
-                type: "edge",
-              });
-            }
-          });
+                rawEdge.push({
+                  source: { nodeId: outputNodeId, index: sourceIndex > -1 ? sourceIndex : 0 },
+                  target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
+                  type: "edge",
+                });
+              }
+            });
+          } else {
+            // source is static nodeData
+            const targetIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
+            rawEdge.push({
+              source: { nodeId: outputNodeId, index: 0 },
+              target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
+              type: "edge",
+            });
+          }
         }
       });
     });
