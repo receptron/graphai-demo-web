@@ -65,7 +65,7 @@ export const graphToGUIData = (graphData: GraphData) => {
               rawEdge.push({
                 source: { nodeId: outputNodeId, index: sourceIndex > -1 ? sourceIndex : 0 },
                 target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
-                type: "AA",
+                type: "edge",
               });
             }
           });
@@ -99,7 +99,7 @@ export const graphToGUIData = (graphData: GraphData) => {
         return "text";
       })();
       return {
-        value: staticNodeType === "data" ? JSON.stringify(node.value, null, 2) : node.value,
+        value: node.value,
         staticNodeType,
       };
     })();
@@ -199,7 +199,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
         tmp2[propId] = records[nodeId][propId][0].sourceData;
       } else if (targetProfile.IOData.type === "text") {
         tmp2[propId] = records[nodeId][propId][0].sourceData;
-      } else if (targetProfile.IOData.type === "arrat") {
+      } else if (targetProfile.IOData.type === "array") {
         tmp2[propId] = records[nodeId][propId].map((data) => data.sourceData);
       } else if (records[nodeId][propId].length === 1) {
         tmp2[propId] = records[nodeId][propId][0].sourceData;
@@ -328,7 +328,7 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
     const sourceData = newEdgeData.source;
     const { nodeId, index } = sourceData;
     const addEdge = {
-      type: "AA",
+      type: "edge",
       source: {
         nodeId,
         index,
@@ -341,7 +341,7 @@ export const edgeEndEventData = (newEdgeData: NewEdgeData, nearestData: GUINeare
     const targetData = newEdgeData.target;
     const { nodeId, index } = targetData;
     const addEdge = {
-      type: "AA",
+      type: "edge",
       source: nearestData,
       target: {
         nodeId,

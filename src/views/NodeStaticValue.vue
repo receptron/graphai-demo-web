@@ -54,7 +54,7 @@ export default defineComponent({
     const dataType = ref(props.nodeData.data.staticNodeType ?? "text");
     const numberValue = ref(props.nodeData.data.staticNodeType ?? "");
     const booleanValue = ref("true");
-    const textAreaValue = ref(String(props.nodeData.data.value ?? ""));
+    const textAreaValue = ref(String(props.nodeData.data.staticNodeType === "data" ?  JSON.stringify(props.nodeData.data.value, null, 2) : props.nodeData.data.value ?? ""));
 
     const focusEvent = (event: FocusEvent) => {
       if (event.target instanceof HTMLTextAreaElement) {
