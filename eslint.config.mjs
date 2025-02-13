@@ -72,6 +72,7 @@ export default [
       "sonarjs/elseif-without-else": "error",
       "sonarjs/max-switch-cases": "error",
       "sonarjs/no-all-duplicated-branches": "error",
+      "sonarjs/no-commented-code": "off",
       "sonarjs/no-collapsible-if": "warn",
       "sonarjs/no-collection-size-mischeck": "error",
       "sonarjs/no-duplicated-branches": "error",
