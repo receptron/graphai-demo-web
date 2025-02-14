@@ -41,6 +41,7 @@ import Chat from "../components/Chat.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/openai_agent";
+import tinyswallowAgent, { loadEngine } from "../agents/tinyswallow";
 
 export default defineComponent({
   components: {
@@ -48,7 +49,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    loadEngine();
 
+    // TODO
     const streamNodes = ["llm"];
     const outputNodes = ["llm", "userInput"];
     const { eventAgent, userInput, events, submitText } = textInputEvent();
@@ -69,6 +72,7 @@ export default defineComponent({
           ...agents,
           openAIAgent,
           eventAgent,
+          tinyswallowAgent,
         },
         {
           agentFilters,

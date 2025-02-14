@@ -16,28 +16,31 @@ import { InputOutput } from "./type";
 //  - messages
 //  - array
 
+const llmAgentProfile = {
+  inputs: [
+    { name: "message", type: "string" },
+    { name: "messages", type: "string" },
+    { name: "prompt", type: "string" },
+    { name: "model", type: "string" },
+  ],
+  outputs: [{ name: "message" }, { name: "messages" }, { name: "text", type: "string" }],
+  params: [
+    { name: "system", type: "text" },
+    { name: "prompt", type: "text" },
+    { name: "model", type: "string" },
+    { name: "stream", type: "boolean" },
+    { name: "temperature", type: "float", defaultValue: 0.7, max: 1, min: 0 },
+  ],
+};
+
 export const agentProfiles: Record<string, InputOutput> = {
   eventAgent: {
     inputs: [{ name: "wait", type: "array" }],
     outputs: [{ name: "text" }, { name: "message" }],
     params: [],
   },
-  openAIAgent: {
-    inputs: [
-      { name: "message", type: "string" },
-      { name: "messages", type: "string" },
-      { name: "prompt", type: "string" },
-      { name: "model", type: "string" },
-    ],
-    outputs: [{ name: "message" }, { name: "messages" }, { name: "text", type: "string" }],
-    params: [
-      { name: "system", type: "text" },
-      { name: "prompt", type: "text" },
-      { name: "model", type: "string" },
-      { name: "stream", type: "boolean" },
-      { name: "temperature", type: "float", defaultValue: 0.7, max: 1, min: 0 },
-    ],
-  },
+  tinyswallowAgent: llmAgentProfile,
+  openAIAgent: llmAgentProfile,
   stringTemplateAgent: {
     inputs: [{ name: "text" }, { name: "message1" }, { name: "message2" }],
     outputs: [{ name: "text" }],
