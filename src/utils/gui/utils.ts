@@ -46,7 +46,7 @@ export const graphToGUIData = (graphData: GraphData) => {
     return index;
   };
 
-  let positionIndex = 0;
+  let positionIndex = 1;
   const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
     const node = graphData.nodes[nodeId];
     const isComputed = isComputedNodeData(node);

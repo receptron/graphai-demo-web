@@ -2,6 +2,8 @@
 import { defineComponent, computed, onMounted, ref } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
+import Loop from "./Loop.vue";
+
 import AddNode from "./AddNode.vue";
 import ContextEdgeMenu from "./ContextEdgeMenu.vue";
 import ContextNodeMenu from "./ContextNodeMenu.vue";
@@ -20,6 +22,7 @@ export default defineComponent({
   components: {
     Node,
     Edge,
+    Loop,
     AddNode,
     ContextEdgeMenu,
     ContextNodeMenu,
@@ -158,6 +161,7 @@ export default defineComponent({
       </aside>
       <main class="flex-1">
         <div class="h-[100vh] relative overflow-hidden border-4 rounded-md" @click="closeMenu">
+          <Loop />
           <svg x="0" y="0" class="absolute pointer-events-none w-full h-[100%]" ref="svgRef">
             <Edge
               v-for="(edge, index) in edgeDataList"

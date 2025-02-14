@@ -27,7 +27,7 @@
       <input ref="inputRef" type="number" class="w-full border border-gray-300 rounded-md p-1 text-black" v-model="inputValue" />
     </div>
     <div v-else-if="param.type === 'boolean'">
-      <select v-model="booleanValue" ref="selectFormRef" @change="selectUpdate">
+      <select v-model="booleanValue" ref="selectFormRef" @change="selectUpdate" class="border border-gray-300 rounded-md">
         <option value="true">True</option>
         <option value="false">False</option>
       </select>

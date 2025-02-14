@@ -105,6 +105,11 @@ export type ParamType = { name: string; type?: string; defaultValue?: number; ma
 export type InputOutput = { inputs: InputOutputType[]; outputs: InputOutputType[]; params?: ParamType[]; agent?: string; inputSchema?: unknown };
 
 export type HistoryPayload = {
+  loop: {
+    type: string;
+    while?: string;
+    count?: number;
+  };
   nodes: GUINodeData[];
   edges: GUIEdgeData[];
 };

@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore("store", () => {
   const histories = ref<HistoryData[]>([]);
-  const currentData = ref<HistoryPayload>({ nodes: [], edges: [] });
+  const currentData = ref<HistoryPayload>({ nodes: [], edges: [], loop: { type: "none" } });
   const index = ref(0);
 
   const reset = () => {
@@ -19,6 +19,11 @@ export const useStore = defineStore("store", () => {
   const edges = computed(() => {
     return currentData.value.edges;
   });
+
+  const loop = computed(() => {
+    return currentData.value.loop;
+  });
+
   const nodeRecords = computed<GUINodeDataRecord>(() => {
     return nodes.value.reduce((tmp: GUINodeDataRecord, current) => {
       tmp[current.nodeId] = current;
@@ -34,7 +39,7 @@ export const useStore = defineStore("store", () => {
   // end of computed
 
   const updateData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[], name: string, saveHistory: boolean) => {
-    const data = { nodes: nodeData, edges: edgeData };
+    const data = { nodes: nodeData, edges: edgeData, loop: loop.value };
     currentData.value = data;
     if (saveHistory) {
       histories.value.length = index.value;
