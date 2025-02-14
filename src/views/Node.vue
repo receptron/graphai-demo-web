@@ -79,7 +79,7 @@ export default defineComponent({
   },
   emits: ["updatePosition", "savePosition", "newEdgeStart", "newEdge", "newEdgeEnd", "updateStaticNodeValue", "openNodeMenu"],
   setup(props, ctx) {
-    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.agent ?? ""] : staticNodeParams;
+    const agentParams = props.nodeData.type === "computed" ? agentProfiles[props.nodeData.data.guiAgentId ?? ""] : staticNodeParams;
 
     const thisRef = ref();
     const inputsRef = ref<HTMLElement[]>([]);
