@@ -1,11 +1,11 @@
 import { ref, computed } from "vue";
-import { GUINodeData, GUIEdgeData, GUINodeDataRecord, UpdateStaticValue, HistoryData, HistoryPayload } from "../utils/gui/type";
+import { GUINodeData, GUIEdgeData, GUINodeDataRecord, UpdateStaticValue, HistoryData, HistoryPayload, LoopData } from "../utils/gui/type";
 import { edges2inputs, store2graphData } from "../utils/gui/utils";
 import { defineStore } from "pinia";
 
 export const useStore = defineStore("store", () => {
   const histories = ref<HistoryData[]>([]);
-  const currentData = ref<HistoryPayload>({ nodes: [], edges: [], loop: { type: "none" } });
+  const currentData = ref<HistoryPayload>({ nodes: [], edges: [], loop: { loopType: "none" } });
   const index = ref(0);
 
   const reset = () => {
@@ -42,19 +42,20 @@ export const useStore = defineStore("store", () => {
     const data = { nodes: nodeData, edges: edgeData, loop: loop.value };
     currentData.value = data;
     if (saveHistory) {
-      histories.value.length = index.value;
-      histories.value.push({ data, name });
-      index.value = index.value + 1;
-      //console.log(histories.value);
+      pushDataToHistory(name, data);
     }
   };
-  const saveNodeData = () => {
-    // just special case. only use position update.
+  const pushDataToHistory = (name: string, data: HistoryPayload) => {
+    // don't call directory.
     histories.value.length = index.value;
-    histories.value.push({ data: currentData.value, name: "position" });
+    histories.value.push({ data, name });
     index.value = index.value + 1;
   };
-
+  const saveNodePositionData = () => {
+    // just special case. only use position update.
+    pushDataToHistory("position", currentData.value)
+  };
+  
   const initData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[]) => {
     // this time, node position is not set. save after mounted.
     updateData(nodeData, edgeData, "init", false);
@@ -102,6 +103,9 @@ export const useStore = defineStore("store", () => {
     updateData(newNodes, [...edges.value], "updateStaticValue", saveHistory);
   };
 
+  const updateLoop = (loopData: LoopData) => {
+    console.log(loopData)
+  };
   // edge
   const pushEdge = (edgeData: GUIEdgeData) => {
     updateData([...nodes.value], [...edges.value, edgeData], "addEdge", true);
@@ -159,10 +163,12 @@ export const useStore = defineStore("store", () => {
 
     updateNodePosition,
     updateNodeParam,
-    saveNodeData,
+    // pushDataToHistory,
+    saveNodePositionData,
 
     updateStaticNodeValue,
-
+    updateLoop,
+    
     undo,
     redo,
 

@@ -104,12 +104,13 @@ export type InputOutputType = { name: string; type?: string };
 export type ParamType = { name: string; type?: string; defaultValue?: number; max?: number; min?: number };
 export type InputOutput = { inputs: InputOutputType[]; outputs: InputOutputType[]; params?: ParamType[]; agent?: string; inputSchema?: unknown };
 
+export type LoopData = {
+  loopType: string;
+  while?: string;
+  count?: number;
+};
 export type HistoryPayload = {
-  loop: {
-    type: string;
-    while?: string;
-    count?: number;
-  };
+  loop: LoopData;
   nodes: GUINodeData[];
   edges: GUIEdgeData[];
 };

@@ -47,7 +47,7 @@ export default defineComponent({
       store.updateNodePosition(index, pos);
     };
     const saveNodePosition = () => {
-      store.saveNodeData();
+      store.saveNodePositionData();
     };
     const updateStaticNodeValue = (index: number, value: UpdateStaticValue, saveHistory: boolean) => {
       store.updateStaticNodeValue(index, value, saveHistory);
