@@ -71,12 +71,16 @@ export default defineComponent({
     const countRef = ref();
 
     const updateType = (event: Event) => {
-      loopType.value = event.target.value;
-      updateLoop();
+      if (event.target instanceof HTMLInputElement) {
+        loopType.value = event?.target?.value ?? "";
+        updateLoop();
+      }
     };
     const updateWhile = (event: Event) => {
-      whileValue.value = event.target.value;
-      updateLoop();
+      if (event.target instanceof HTMLInputElement) {
+        whileValue.value = event?.target?.value ?? "";
+        updateLoop();
+      }
     };
     const blurUpdateEvent = () => {
       updateLoop();
