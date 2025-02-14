@@ -25,12 +25,17 @@
           </div>
         </div>
       </div>
+      <div v-if="!ready">Loading web llm model</div>
+      <div v-else>Ready!</div>
+      <div>
+        {{ loading }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import { GraphAI } from "graphai";
 
@@ -41,7 +46,7 @@ import Chat from "../components/Chat.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/openai_agent";
-import tinyswallowAgent, { loadEngine } from "../agents/tinyswallow";
+import tinyswallowAgent, { modelLoad, loadEngine, CallbackReport } from "../agents/tinyswallow";
 
 export default defineComponent({
   components: {
@@ -90,6 +95,17 @@ export default defineComponent({
       await graphai.run();
       console.log(store.graphData);
     };
+
+    const loading = ref("");
+    const ready = ref(false);
+    modelLoad((report: CallbackReport) => {
+      if (report.progress === 1) {
+        ready.value = true;
+      }
+      loading.value = report.text;
+      console.log(report.text);
+    });
+
     return {
       run,
 
@@ -101,6 +117,9 @@ export default defineComponent({
       messages,
       events,
       streamNodes,
+
+      loading,
+      ready,
     };
   },
 });

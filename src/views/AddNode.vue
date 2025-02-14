@@ -1,7 +1,7 @@
 <template>
   <div class="text-left">
-    NodeId:<input type="text" v-model="nodeId" class="border-2 w-full" :class="isError ? 'border-red-600' : ''" />
-    <select class="border-2 w-full mt-2" v-model="agent">
+    NodeId:<input type="text" v-model="nodeId" class="w-full border-2 border-gray-300 rounded-md p-1 text-black" :class="isError ? 'border-red-600' : ''" />
+    <select class="w-full border-2 border-gray-300 rounded-md p-1 text-black resize-none mt-2" v-model="agent">
       <option>StaticNode</option>
       <option v-for="(agentName, k) in nodesKey" :key="k">{{ agentName }}</option>
     </select>

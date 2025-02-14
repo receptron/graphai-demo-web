@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref } from "vue";
+import { defineComponent, computed, onMounted, ref, nextTick } from "vue";
 import Node from "./Node.vue";
 import Edge from "./Edge.vue";
 import Loop from "./Loop.vue";
@@ -9,6 +9,7 @@ import ContextEdgeMenu from "./ContextEdgeMenu.vue";
 import ContextNodeMenu from "./ContextNodeMenu.vue";
 
 import GraphRunner from "./GraphRunner.vue";
+import TemplateGraph from "./TemplateGraph.vue";
 
 import { EdgeData, NodePosition, UpdateStaticValue } from "../utils/gui/type";
 
@@ -29,6 +30,7 @@ export default defineComponent({
     ContextEdgeMenu,
     ContextNodeMenu,
     GraphRunner,
+    TemplateGraph,
   },
   setup() {
     const store = useStore();
@@ -41,6 +43,11 @@ export default defineComponent({
     };
     updateGraph(graphChat);
 
+    const setGraph = async (graph: GraphData) => {
+      resetGraph();
+      await nextTick(); // to reset edge position. Due to duplicate edge keys, the position will be incorrect.
+      updateGraph(graph);
+    };
     onMounted(() => {
       saveNodePosition();
     });
@@ -119,9 +126,10 @@ export default defineComponent({
       edgeConnectable,
 
       resetGraph,
-
       save,
       load,
+
+      setGraph,
     };
   },
 });
@@ -154,12 +162,15 @@ export default defineComponent({
           <button @click="resetGraph" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Clear Graph</button>
         </div>
         <hr />
+
         <div>
           <button @click="save" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Save Graph</button>
         </div>
         <div>
           <button @click="load" class="text-white font-bold items-center rounded-full px-4 py-2 m-1 bg-sky-500">Load Graph</button>
         </div>
+        <hr />
+        <TemplateGraph @set-graph="setGraph" />
       </aside>
       <main class="flex-1">
         <div class="h-[100vh] relative overflow-hidden border-4 rounded-md" @click="closeMenu">

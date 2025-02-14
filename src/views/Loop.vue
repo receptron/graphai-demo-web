@@ -67,10 +67,10 @@ export default defineComponent({
       (value) => {
         loopType.value = value.loopType;
         if (value.loopType === "while") {
-          whileValue.value = value.while;
+          whileValue.value = value.while ?? "";
         }
         if (value.loopType === "count") {
-          countValue.value = value.count;
+          countValue.value = String(value.count ?? 1);
         }
       },
     );
