@@ -124,9 +124,29 @@ export const graphToGUIData = (graphData: GraphData) => {
     };
   });
 
+  // graph loop 2 store loop
+  const loop2loop = (graphLoop: LoopData) => {
+    if (graphLoop.while) {
+      return {
+        loopType: "while",
+        while: graphLoop.while,
+      };
+    }
+    if (graphLoop.count) {
+      return {
+        loopType: "count",
+        count: graphLoop.count,
+      };
+    }
+    return {
+      loopType: "none",
+    };
+  };
+  const { loop: graphLoop } = graphData;
   return {
     rawEdge,
     rawNode,
+    loop: loop2loop(graphLoop ?? {}),
   };
 };
 

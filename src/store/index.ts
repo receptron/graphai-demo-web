@@ -23,6 +23,7 @@ export const useStore = defineStore("store", () => {
   const loop = computed(() => {
     return currentData.value.loop;
   });
+  // stpre loop 2 graph loop
   const loopObj = computed(() => {
     if (loop.value.loopType === "while") {
       return {
@@ -69,9 +70,10 @@ export const useStore = defineStore("store", () => {
     pushDataToHistory("position", currentData.value);
   };
 
-  const initData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[]) => {
+  const initData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[], loopData: LoopData) => {
+    const data = { nodes: nodeData, edges: edgeData, loop: loopData };
+    currentData.value = data;
     // this time, node position is not set. save after mounted.
-    updateData(nodeData, edgeData, "init", false);
   };
 
   // node
@@ -118,6 +120,7 @@ export const useStore = defineStore("store", () => {
 
   const updateLoop = (loopData: LoopData) => {
     const data = { nodes: nodes.value, edges: edges.value, loop: loopData };
+    console.log(data);
     currentData.value = data;
     pushDataToHistory("loopUpdate", data);
     // console.log(loopData)

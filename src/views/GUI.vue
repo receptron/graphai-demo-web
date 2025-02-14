@@ -34,8 +34,8 @@ export default defineComponent({
     const contextNodeMenu = ref();
 
     const updateGraph = (graph: GraphData) => {
-      const { rawEdge, rawNode } = graphToGUIData(graph);
-      store.initData(rawNode, rawEdge);
+      const { rawEdge, rawNode, loop } = graphToGUIData(graph);
+      store.initData(rawNode, rawEdge, loop);
     };
     updateGraph(graphChat);
 

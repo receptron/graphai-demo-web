@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { useStore } from "@/store";
 import { agentProfiles } from "../utils/gui/data";
 
@@ -45,39 +45,53 @@ export default defineComponent({
       return tmp;
     });
 
-    const updateLoop = () => {
-      if (loopType.value === "none") {
-        store.updateLoop({
-          loopType: "none",
-        });
-      }
+    const storeLoopData = computed(() => {
       if (loopType.value === "while") {
-        store.updateLoop({
+        return {
           loopType: "while",
           while: whileValue.value,
-        });
+        };
       }
       if (loopType.value === "count") {
-        store.updateLoop({
-          loopType: "while",
+        return {
+          loopType: "count",
           count: Number(countValue.value),
-        });
+        };
       }
+      return {
+        loopType: "none",
+      };
+    });
+    watch(
+      () => store.loop,
+      (value) => {
+        loopType.value = value.loopType;
+        if (value.loopType === "while") {
+          whileValue.value = value.while;
+        }
+        if (value.loopType === "count") {
+          countValue.value = value.count;
+        }
+      },
+    );
+
+    const updateLoop = () => {
+      store.updateLoop(storeLoopData.value);
     };
 
-    const loopType = ref("none");
+    const loopType = ref(store.loop.loopType);
     const countValue = ref("1");
     const whileValue = ref(lists.value[0]);
     const countRef = ref();
 
     const updateType = (event: Event) => {
-      if (event.target instanceof HTMLInputElement) {
+      if (event.target instanceof HTMLSelectElement) {
         loopType.value = event?.target?.value ?? "";
         updateLoop();
       }
     };
     const updateWhile = (event: Event) => {
-      if (event.target instanceof HTMLInputElement) {
+      if (event.target instanceof HTMLSelectElement) {
         whileValue.value = event?.target?.value ?? "";
         updateLoop();
       }
@@ -107,6 +121,7 @@ export default defineComponent({
       updateWhile,
 
       countRef,
+      store,
     };
   },
 });
