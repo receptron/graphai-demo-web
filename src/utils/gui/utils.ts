@@ -14,6 +14,7 @@ import {
   NodePositionData,
 } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
+import { LoopData } from "graphai/lib/type";
 import { agentProfiles } from "./data";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -218,7 +219,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
   }, {});
 };
 
-export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string, Record<string, string | string[]>>) => {
+export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string, Record<string, string | string[]>>, loop: LoopData) => {
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
     const inputs = edgeObject[node.nodeId];
     if (node.data.agent) {
@@ -250,6 +251,7 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
     metadata: {
       positions,
     },
+    loop,
   };
   return newGraphData;
 };

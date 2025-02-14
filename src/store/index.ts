@@ -23,6 +23,19 @@ export const useStore = defineStore("store", () => {
   const loop = computed(() => {
     return currentData.value.loop;
   });
+  const loopObj = computed(() => {
+    if (loop.value.loopType === "while") {
+      return {
+        while: loop.value.while,
+      };
+    }
+    if (loop.value.loopType === "count") {
+      return {
+        count: loop.value.count,
+      };
+    }
+    return {};
+  });
 
   const nodeRecords = computed<GUINodeDataRecord>(() => {
     return nodes.value.reduce((tmp: GUINodeDataRecord, current) => {
@@ -34,7 +47,7 @@ export const useStore = defineStore("store", () => {
     return edges2inputs(edges.value, nodeRecords.value);
   });
   const graphData = computed(() => {
-    return store2graphData(nodes.value, edgeObject.value);
+    return store2graphData(nodes.value, edgeObject.value, loopObj.value);
   });
   // end of computed
 
@@ -53,9 +66,9 @@ export const useStore = defineStore("store", () => {
   };
   const saveNodePositionData = () => {
     // just special case. only use position update.
-    pushDataToHistory("position", currentData.value)
+    pushDataToHistory("position", currentData.value);
   };
-  
+
   const initData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[]) => {
     // this time, node position is not set. save after mounted.
     updateData(nodeData, edgeData, "init", false);
@@ -104,7 +117,10 @@ export const useStore = defineStore("store", () => {
   };
 
   const updateLoop = (loopData: LoopData) => {
-    console.log(loopData)
+    const data = { nodes: nodes.value, edges: edges.value, loop: loopData };
+    currentData.value = data;
+    pushDataToHistory("loopUpdate", data);
+    // console.log(loopData)
   };
   // edge
   const pushEdge = (edgeData: GUIEdgeData) => {
@@ -168,7 +184,7 @@ export const useStore = defineStore("store", () => {
 
     updateStaticNodeValue,
     updateLoop,
-    
+
     undo,
     redo,
 
@@ -177,6 +193,7 @@ export const useStore = defineStore("store", () => {
     // computed
     nodes,
     edges,
+    loop,
     graphData,
     nodeRecords,
 
