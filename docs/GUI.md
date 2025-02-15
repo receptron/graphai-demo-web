@@ -5,6 +5,15 @@
   - GraphAIのAgentをGUI上のAgentをmappingするデータがある
     - src/utils/gui/data.ts 
 - meta agentについて
+  - GraphAI GUIでは、GraphAIの１つのagentをGUI上で別のagentとして扱うことができる。たとえば、copyAgentのinputsの構造をそれぞれ用意して、templateのように使うことが出来る。
+  - GUI上では、convertAgentというメタエージェントになり、GraphDataではcopyAgentとなり、copyAgentが実行される
+  - GUIからGraphAIデータに変換するときに、inputSchemaを使って構造を持ったinputsを生成する
+  - inputSchemaがない場合は、GUI上の項目だけをflatにrecordとして展開される
+  - この変換デーブルをメンテすることで、GUI上のagent(node)を管理することができる。
+  - paramsのdefault値などもここにいれる予定。
+  - この仕組みがある理由は
+    - ユーザに複雑な設定をさせない
+    - inputsは、edgeを接続させるだけなので、inputsのデータ構造を編集できない（させない）ため。
 
 - inputs/outputsの指定方法
 
