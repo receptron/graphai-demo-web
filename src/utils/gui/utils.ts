@@ -175,6 +175,9 @@ type SourceTargetIntermediateData = {
 };
 type SourceTargetTmpObject = Record<string, Record<string, SourceTargetIntermediateData[]>>;
 
+type NodeEdgeMap = Record<string, string | string[]>;
+type EdgeRecord = Record<string, NodeEdgeMap>;
+
 export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecord) => {
   const records = edges
     .map((edge) => {
@@ -215,9 +218,6 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
       return tmp;
     }, {});
 
-  type NodeEdgeMap = Record<string, string | string[]>;
-  type EdgeRecord = Record<string, NodeEdgeMap>;
-
   return Object.keys(records).reduce((edgeRecord: EdgeRecord, nodeId) => {
     const inputsRecord = Object.keys(records[nodeId]).reduce((nodeEdgeMap: NodeEdgeMap, propId) => {
       const { targetIndex } = records[nodeId][propId][0];
@@ -235,19 +235,18 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
       }
       return nodeEdgeMap;
     }, {});
-    const profile = agentProfiles[nodeRecords[nodeId].data.guiAgentId ?? ""];
-    if (profile?.inputSchema) {
-      edgeRecord[nodeId] = resultsOf(profile.inputSchema as NodeEdgeMap, inputsRecord);
-    } else {
-      edgeRecord[nodeId] = inputsRecord;
-    }
+
+    edgeRecord[nodeId] = inputsRecord;
     return edgeRecord;
   }, {});
 };
 
-export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string, Record<string, string | string[]>>, loop: LoopData) => {
+export const store2graphData = (nodeRecords: GUINodeDataRecord, edgeObject: EdgeRecord, loop: LoopData) => {
+  const nodes = Object.values(nodeRecords);
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
-    const inputs = edgeObject[node.nodeId];
+    const profile = agentProfiles[nodeRecords[node.nodeId].data.guiAgentId ?? ""];
+    const inputs = profile?.inputSchema ? resultsOf(profile.inputSchema as NodeEdgeMap, edgeObject[node.nodeId]) : edgeObject[node.nodeId];
+
     if (node.data.agent) {
       tmp[node.nodeId] = {
         agent: node.data.agent,
@@ -271,11 +270,13 @@ export const store2graphData = (nodes: GUINodeData[], edgeObject: Record<string,
     tmp[node.nodeId] = node.position;
     return tmp;
   }, {});
+  // save inputs
   const newGraphData = {
     version: 0.5,
     nodes: newNodes,
     metadata: {
       positions,
+      inputs: edgeObject,
     },
     loop,
   };

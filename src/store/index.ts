@@ -48,7 +48,7 @@ export const useStore = defineStore("store", () => {
     return edges2inputs(edges.value, nodeRecords.value);
   });
   const graphData = computed(() => {
-    return store2graphData(nodes.value, edgeObject.value, loopObj.value);
+    return store2graphData(nodeRecords.value, edgeObject.value, loopObj.value);
   });
   // end of computed
 

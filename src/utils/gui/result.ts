@@ -28,7 +28,7 @@ export const resultsOf = (inputs: Record<string, unknown>, nodes: Record<string,
 const resultOf = (source: unknown, nodes: Record<string, string | string[]>) => {
   if (typeof source === "string" && source[0] === ":") {
     const key = source.slice(1);
-    if (nodes[key]) {
+    if (nodes && nodes[key]) {
       return "${" + nodes[key] + "}";
     }
   }
