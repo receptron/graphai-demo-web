@@ -15,6 +15,7 @@ import {
 } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 import { LoopData } from "graphai/lib/type";
+import { resultsOf } from "./result";
 import { agentProfiles } from "./data";
 
 const isTouch = (event: MouseEvent | TouchEvent): event is TouchEvent => {
@@ -64,7 +65,6 @@ export const graphToGUIData = (graphData: GraphData) => {
               if (nodeIds.includes(outputNodeId)) {
                 const sourceIndex = getIndex(outputNodeId, outputPropId, "outputs");
                 const targetIndex = isComputed ? getIndex(nodeId, inputProp, "inputs") : 0;
-
                 rawEdge.push({
                   source: { nodeId: outputNodeId, index: sourceIndex > -1 ? sourceIndex : 0 },
                   target: { nodeId, index: targetIndex > -1 ? targetIndex : 0 },
@@ -219,7 +219,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
   type EdgeRecord = Record<string, NodeEdgeMap>;
 
   return Object.keys(records).reduce((edgeRecord: EdgeRecord, nodeId) => {
-    edgeRecord[nodeId] = Object.keys(records[nodeId]).reduce((nodeEdgeMap: NodeEdgeMap, propId) => {
+    const inputsRecord = Object.keys(records[nodeId]).reduce((nodeEdgeMap: NodeEdgeMap, propId) => {
       const { targetIndex } = records[nodeId][propId][0];
       const targetProfile = edgeEnd2agentProfile({ nodeId, index: targetIndex }, nodeRecords, "target");
       if (!targetProfile) {
@@ -235,6 +235,12 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
       }
       return nodeEdgeMap;
     }, {});
+    const profile = agentProfiles[nodeRecords[nodeId].data.guiAgentId ?? ""];
+    if (profile?.inputSchema) {
+      edgeRecord[nodeId] = resultsOf(profile.inputSchema as NodeEdgeMap, inputsRecord);
+    } else {
+      edgeRecord[nodeId] = inputsRecord;
+    }
     return edgeRecord;
   }, {});
 };
