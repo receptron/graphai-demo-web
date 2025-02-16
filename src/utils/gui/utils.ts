@@ -11,7 +11,6 @@ import {
   NewEdgeData,
   ClosestNodeData,
   EdgeEndPointData,
-  NodePositionData,
   HistoryPayload,
 } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
@@ -92,7 +91,7 @@ export const graphToGUIData = (graphData: GraphData) => {
       if (isComputed) {
         return {
           params: node.params,
-          agent: node.agent as string,
+          // agent: node.agent as string,
           guiAgentId: node.agent as string,
         };
       }
@@ -154,7 +153,7 @@ export const graphToGUIData = (graphData: GraphData) => {
 export const edgeEnd2agentProfile = (edgeEndPointData: EdgeEndPointData, nodeRecords: GUINodeDataRecord, sorceOrTarget: "source" | "target") => {
   const node = nodeRecords[edgeEndPointData.nodeId];
   if (node && node.type === "computed") {
-    const specializedAgent = node.data.guiAgentId ?? node.data.agent ?? ""; // undefined is static node.
+    const specializedAgent = node.data.guiAgentId ?? ""; // undefined is static node.
 
     const profile = agentProfiles[specializedAgent];
     const IOData = sorceOrTarget === "source" ? profile.outputs[edgeEndPointData.index] : profile.inputs[edgeEndPointData.index];
@@ -245,12 +244,14 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
 export const store2graphData = (nodeRecords: GUINodeDataRecord, edgeObject: EdgeRecord, loop: LoopData, currentData: HistoryPayload) => {
   const nodes = Object.values(nodeRecords);
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
-    const profile = agentProfiles[nodeRecords[node.nodeId].data.guiAgentId ?? ""];
+    const { guiAgentId } = nodeRecords[node.nodeId].data;
+    const profile = agentProfiles[guiAgentId ?? ""];
     const inputs = profile?.inputSchema ? resultsOf(profile.inputSchema as NodeEdgeMap, edgeObject[node.nodeId]) : edgeObject[node.nodeId];
 
-    if (node.data.agent) {
+    // static node don't have profile and guiAgentId
+    if (profile) {
       tmp[node.nodeId] = {
-        agent: node.data.agent,
+        agent: profile.agent,
         params: node.data.params,
         inputs: inputs ?? {},
         isResult: true, //

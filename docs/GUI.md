@@ -38,6 +38,7 @@
 # データ保存/読み込みについて
 - demo guiはlocal storageに１つのgraph dataだけ保存している。string <-> json 
 
+
 # GUIのメタデータ
 - GraphData.metadataに格納する
   - ここにposition dataが入っている

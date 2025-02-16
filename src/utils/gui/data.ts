@@ -35,18 +35,27 @@ const llmAgentProfile = {
 
 export const agentProfiles: Record<string, InputOutput> = {
   eventAgent: {
+    agent: "eventAgent",
     inputs: [{ name: "wait", type: "array" }],
     outputs: [{ name: "text" }, { name: "message" }],
     params: [],
   },
-  tinyswallowAgent: llmAgentProfile,
-  openAIAgent: llmAgentProfile,
+  tinyswallowAgent: {
+    agent: "openAIAgent",
+    ...llmAgentProfile,
+  },
+  openAIAgent: {
+    agent: "openAIAgent",
+    ...llmAgentProfile,
+  },
   stringTemplateAgent: {
+    agent: "stringTemplateAgent",
     inputs: [{ name: "text" }, { name: "message1" }, { name: "message2" }],
     outputs: [{ name: "text" }],
     params: [],
   },
   pushAgent: {
+    agent: "pushAgent",
     inputs: [{ name: "array" }, { name: "item" }, { name: "items" }],
     outputs: [{ name: "array" }],
     params: [],

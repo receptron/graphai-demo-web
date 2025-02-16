@@ -2,7 +2,7 @@ import type { DefaultParamsType } from "graphai";
 
 export type ApplicationData = {
   // Application dependent data
-  agent?: string; // actual agent id
+  // agent?: string; // actual agent id
   guiAgentId?: string; // key of utils/gui/utils/data.
   value?: unknown; // ResultData<DefaultResultData>;
   staticNodeType?: string;

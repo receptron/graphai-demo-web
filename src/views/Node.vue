@@ -13,7 +13,7 @@
     <div @dblclick="(e) => openNodeMenu(e)">
       <div class="w-full text-center py-1 leading-none rounded-t-md" :class="nodeHeaderClass(expectNearNode, nodeData)">{{ nodeData.nodeId }}</div>
       <div class="w-full text-center py-1 leading-none text-xs" v-if="nodeData.type === 'computed'" :class="nodeHeaderClass(expectNearNode, nodeData)">
-        {{ nodeData.data.agent?.replace(/Agent$/, "") }}
+        {{ nodeData.data.guiAgentId?.replace(/Agent$/, "") }}
       </div>
     </div>
     <div class="flex flex-col items-end mt-1">
