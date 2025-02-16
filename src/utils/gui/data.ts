@@ -42,7 +42,7 @@ export const agentProfiles: Record<string, InputOutput> = {
     params: [{ name: "isResult", type: "boolean" }],
   },
   tinyswallowAgent: {
-    agent: "openAIAgent",
+    agent: "tinyswallowAgent",
     ...llmAgentProfile,
   },
   openAIAgent: {
