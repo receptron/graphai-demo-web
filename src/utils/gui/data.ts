@@ -29,6 +29,7 @@ const llmAgentProfile = {
     { name: "prompt", type: "text" },
     { name: "model", type: "string" },
     { name: "stream", type: "boolean" },
+    { name: "isResult", type: "boolean" },
     { name: "temperature", type: "float", defaultValue: 0.7, max: 1, min: 0 },
   ],
 };
@@ -38,7 +39,7 @@ export const agentProfiles: Record<string, InputOutput> = {
     agent: "eventAgent",
     inputs: [{ name: "wait", type: "array" }],
     outputs: [{ name: "text" }, { name: "message" }],
-    params: [],
+    params: [{ name: "isResult", type: "boolean" }],
   },
   tinyswallowAgent: {
     agent: "openAIAgent",

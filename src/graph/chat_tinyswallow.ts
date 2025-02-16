@@ -15,6 +15,7 @@ export const graphChat = {
       agent: "eventAgent",
       params: {
         message: "You:",
+        isResult: true,
       },
     },
     llm: {
@@ -23,6 +24,7 @@ export const graphChat = {
       params: {
         forWeb: true,
         stream: true,
+        isResult: true,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },

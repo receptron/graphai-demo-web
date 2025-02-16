@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { useStore } from "@/store";
 import { GraphAI } from "graphai";
 
@@ -57,8 +57,8 @@ export default defineComponent({
     loadEngine();
 
     // TODO
-    const streamNodes = ["llm"];
-    const outputNodes = ["llm", "userInput"];
+    // const streamNodes = ["llm"];
+    // const outputNodes = ["llm", "userInput"];
     const { eventAgent, userInput, events, submitText } = textInputEvent();
     const { messages, chatMessagePlugin } = useChatPlugin();
     const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
@@ -89,13 +89,17 @@ export default defineComponent({
           },
         },
       );
-      graphai.registerCallback(streamPlugin(streamNodes));
-      graphai.registerCallback(chatMessagePlugin(outputNodes));
+      // console.log(store.streamNodes);
+      // console.log(store.resultNodes);
+      graphai.registerCallback(streamPlugin(store.streamNodes));
+      graphai.registerCallback(chatMessagePlugin(store.resultNodes));
 
       await graphai.run();
-      console.log(store.graphData);
+      // console.log(store.graphData);
     };
-
+    const streamNodes = computed(() => {
+      return store.streamNodes;
+    });
     const loading = ref("");
     const ready = ref(false);
     modelLoad((report: CallbackReport) => {

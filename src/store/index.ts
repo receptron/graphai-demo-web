@@ -50,6 +50,20 @@ export const useStore = defineStore("store", () => {
   const graphData = computed(() => {
     return store2graphData(nodeRecords.value, edgeObject.value, loopObj.value, currentData.value);
   });
+  const streamNodes = computed(() => {
+    return nodes.value
+      .filter((node) => {
+        return node.data?.params?.stream ?? false;
+      })
+      .map((node) => node.nodeId);
+  });
+  const resultNodes = computed(() => {
+    return nodes.value
+      .filter((node) => {
+        return node.data?.params?.isResult ?? false;
+      })
+      .map((node) => node.nodeId);
+  });
   // end of computed
 
   const loadData = (data: HistoryPayload) => {
@@ -205,6 +219,8 @@ export const useStore = defineStore("store", () => {
     loop,
     graphData,
     nodeRecords,
+    streamNodes,
+    resultNodes,
 
     undoable,
     redoable,
