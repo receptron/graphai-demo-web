@@ -95,7 +95,7 @@ export default defineComponent({
       try {
         if (data) {
           const graphData = JSON.parse(data);
-          updateGraph(graphData);
+          store.loadData(graphData.metadata.data);
         }
       } catch (error) {
         console.log(error);

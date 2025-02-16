@@ -12,6 +12,7 @@ import {
   ClosestNodeData,
   EdgeEndPointData,
   NodePositionData,
+  HistoryPayload,
 } from "./type";
 import { inputs2dataSources, GraphData, isComputedNodeData, NodeData, StaticNodeData } from "graphai";
 import { LoopData } from "graphai/lib/type";
@@ -52,7 +53,7 @@ export const graphToGUIData = (graphData: GraphData) => {
   const rawNode = Object.keys(graphData.nodes).map((nodeId) => {
     const node = graphData.nodes[nodeId];
     const isComputed = isComputedNodeData(node);
-    const inputs = isComputed ? (node.inputs ?? {}) : node.update ? { update: node.update } : {};
+    const inputs = isComputed ? (graphData?.metadata?.inputs ?? node.inputs ?? {}) : node.update ? { update: node.update } : {};
     Object.keys(inputs).forEach((inputProp) => {
       // node, props
       // inputs(to), oututs(from)
@@ -241,7 +242,7 @@ export const edges2inputs = (edges: GUIEdgeData[], nodeRecords: GUINodeDataRecor
   }, {});
 };
 
-export const store2graphData = (nodeRecords: GUINodeDataRecord, edgeObject: EdgeRecord, loop: LoopData) => {
+export const store2graphData = (nodeRecords: GUINodeDataRecord, edgeObject: EdgeRecord, loop: LoopData, currentData: HistoryPayload) => {
   const nodes = Object.values(nodeRecords);
   const newNodes = nodes.reduce((tmp: Record<string, NodeData>, node) => {
     const profile = agentProfiles[nodeRecords[node.nodeId].data.guiAgentId ?? ""];
@@ -266,19 +267,15 @@ export const store2graphData = (nodeRecords: GUINodeDataRecord, edgeObject: Edge
     }
     return tmp;
   }, {});
-  const positions = nodes.reduce((tmp: Record<string, NodePositionData>, node) => {
-    tmp[node.nodeId] = node.position;
-    return tmp;
-  }, {});
+
   // save inputs
   const newGraphData = {
     version: 0.5,
     nodes: newNodes,
-    metadata: {
-      positions,
-      inputs: edgeObject,
-    },
     loop,
+    metadata: {
+      data: currentData,
+    },
   };
   return newGraphData;
 };

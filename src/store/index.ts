@@ -48,10 +48,14 @@ export const useStore = defineStore("store", () => {
     return edges2inputs(edges.value, nodeRecords.value);
   });
   const graphData = computed(() => {
-    return store2graphData(nodeRecords.value, edgeObject.value, loopObj.value);
+    return store2graphData(nodeRecords.value, edgeObject.value, loopObj.value, currentData.value);
   });
   // end of computed
 
+  const loadData = (data: HistoryPayload) => {
+    currentData.value = data;
+    pushDataToHistory("load", data);
+  };
   const updateData = (nodeData: GUINodeData[], edgeData: GUIEdgeData[], name: string, saveHistory: boolean) => {
     const data = { nodes: nodeData, edges: edgeData, loop: loop.value };
     currentData.value = data;
@@ -184,6 +188,8 @@ export const useStore = defineStore("store", () => {
     updateNodeParam,
     // pushDataToHistory,
     saveNodePositionData,
+
+    loadData,
 
     updateStaticNodeValue,
     updateLoop,
