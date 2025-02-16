@@ -1,4 +1,5 @@
-export const graphChat = {
+import { GraphData } from "graphai";
+export const graphChat: GraphData = {
   version: 0.5,
   loop: {
     while: ":continue",
@@ -15,6 +16,7 @@ export const graphChat = {
       agent: "eventAgent",
       params: {
         message: "You:",
+        isResult: true,
       },
     },
     llm: {
@@ -23,6 +25,7 @@ export const graphChat = {
       params: {
         forWeb: true,
         stream: true,
+        isResult: true,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
     },
