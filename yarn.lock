@@ -283,23 +283,23 @@
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-0.2.0.tgz#03de706c5dc91f4650fa540bb75a15646dc79d88"
   integrity sha512-8QJxmrbXz2tMPfJVfx0OG4hQzMDLQbs2Mv7sMnYEDbOdZuS11l3kLZeDoA9KGGlts3cT15WjQ/V9tqhT7I24mA==
 
-"@graphai/openai_agent@^0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-0.2.7.tgz#bf8b07761e84f7601b7cc75f9d60cbeed0b94bec"
-  integrity sha512-vGnPncCZnxBL1gNrivurjTGZpcwu0ofukd2aTb2xNcPBrLwgPECCw6FVe0nTaQOHLMp+RPY//J0U181gJz9Dxw==
+"@graphai/openai_agent@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-1.0.0.tgz#e09f5bbbb54671353ec10a6d94e2b5a4b9e5bf05"
+  integrity sha512-afvsMVcK6pbkZyYvkvmJw3c/ecSJ8BxWVIlhNp4/3pJynfU1J8O1aA8UTKkVgysOAL1v/6E1d0PsEFznDQOjeA==
   dependencies:
     "@graphai/llm_utils" "^0.2.0"
-    openai "^4.82.0"
+    openai "^4.86.1"
 
 "@graphai/tools_agent@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.3.tgz#be708a18550130cd0a1700a8ef1bd3adc5c15b07"
   integrity sha512-Jh+ONf7uySw+1lpUwkb0gypDIyu3veLelpCi2tWm2ndIp/NgDDCbFokkNsXzhbYv8mFlYkgFcITkmHi2DiXQkg==
 
-"@graphai/vanilla@^0.2.14":
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-0.2.14.tgz#f83bddc3ae02f00a66a9c35bceaba8e6956d79bd"
-  integrity sha512-YpffShATqtnDQwnF3yINTSbw1L9J4ZxHOIQkOUElS+kDzMy2bRQ4dPAZn9xRYcXWHukmm5q06l00mCJGQnC24g==
+"@graphai/vanilla@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-1.0.0.tgz#c9ea897f2e2846cfcd49800955341107698d0c9e"
+  integrity sha512-K2H5CQdRJ2Gvceg39MOQiNzH0zDYELXDA940SEua+NUzq4mBzOXN/HSloctVI8hs/v++LxoA4fEM1dwJTMTkVw==
   dependencies:
     "@graphai/agent_utils" "0.0.3"
 
@@ -431,10 +431,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@receptron/event_agent_generator@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.4.tgz#119690810d78fa6c31c598de0669c7eae91b267a"
-  integrity sha512-TnKEB73ztifGDFt+LihTL2m11E2tyaclW0nCph0rulJLFla9Kw8FoINLPuB4JYoK6IrUDIUuSlt55Dj7+SENIA==
+"@receptron/event_agent_generator@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.6.tgz#267533315a53e84f419d3dd4856900ee11328960"
+  integrity sha512-BJpCMjPkhSMEE+zG2apop2ZnQT37Z83ew+1eBFdjRBCsWIGTgMsq4n8kQuIOS2xnKK4U4Y+3DICupM5z1HxzQw==
 
 "@receptron/graphai_vue_cytoscape@^0.2.0":
   version "0.2.0"
@@ -1523,10 +1523,10 @@ copy-anything@^3.0.2:
   dependencies:
     is-what "^4.1.8"
 
-core-js@^3.40.0:
-  version "3.40.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.40.0.tgz#2773f6b06877d8eda102fc42f828176437062476"
-  integrity sha512-7vsMc/Lty6AGnn7uFpYT56QesI5D2Y/UkgKounk87OP9Z2H9Z8kj6jzcSGAxFmUtDOS0ntK6lbQz+Nsa0Jj6mQ==
+core-js@^3.41.0:
+  version "3.41.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.41.0.tgz#57714dafb8c751a6095d028a7428f1fb5834a776"
+  integrity sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==
 
 create-require@^1.1.0:
   version "1.1.1"
@@ -2244,10 +2244,10 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^0.6.24:
-  version "0.6.24"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-0.6.24.tgz#46909ca52e066280b7f2f914e223c30d7124b021"
-  integrity sha512-Tz8Fq2qIIRY3V+iE9ptRhXARVKxAUIu8+TSJnQ0XdpBcCZ+jljVIQG+tnZgDiqgsOn2rR0ai92WibKpl580WQw==
+graphai@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-1.0.0.tgz#ae80a39ae68755f99d2da3ab30365c68a39beae8"
+  integrity sha512-Yy9c9s+eU1irmZt7/trDzBxe5VoKNJyaPAoWbkMDsgLvOW6Fy99apnUOO/GRUxzt4he/VCss+mWHLOiZGRmKbg==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -2951,10 +2951,10 @@ object.values@^1.1.6:
     define-properties "^1.2.1"
     es-object-atoms "^1.0.0"
 
-openai@^4.82.0:
-  version "4.83.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-4.83.0.tgz#87edfebecf8a4dc2317269dd704cf0ebd9f11979"
-  integrity sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==
+openai@^4.86.1:
+  version "4.86.1"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-4.86.1.tgz#4147252d5e6255e2ae716ea59b1d4e54a1c1472a"
+  integrity sha512-x3iCLyaC3yegFVZaxOmrYJjitKxZ9hpVbLi+ZlT5UHuHTMlEQEbKXkGOM78z9qm2T5GF+XRUZCP2/aV4UPFPJQ==
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"

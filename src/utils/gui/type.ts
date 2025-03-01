@@ -106,7 +106,7 @@ export type InputOutput = { inputs: InputOutputType[]; outputs: InputOutputType[
 
 export type LoopData = {
   loopType: string;
-  while?: string;
+  while?: string | boolean;
   count?: number;
 };
 export type HistoryPayload = {
