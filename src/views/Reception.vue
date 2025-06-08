@@ -55,7 +55,7 @@ import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphReception } from "@/graph/reception";
 import { openAIAgent } from "@graphai/openai_agent";
-import { httpAgentFilter } from "@graphai/agent_filters";
+import { httpAgentFilter } from "@graphai/http_client_agent_filter";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { useLogs } from "../utils/graphai";

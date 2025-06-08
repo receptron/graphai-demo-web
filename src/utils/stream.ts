@@ -1,16 +1,16 @@
 import { GraphData, AgentFunctionContext, TransactionLog } from "graphai";
-
+import { GraphAILLMStreamData } from "@graphai/llm_utils";
 import { ref } from "vue";
 import { randomInt } from "./graph";
-import { streamAgentFilterGenerator } from "@graphai/agent_filters";
+import { streamAgentFilterGenerator } from "@graphai/stream_agent_filter";
 
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
-  const outSideFunciton = (context: AgentFunctionContext, token: string | any) => {
+  const outSideFunciton = (context: AgentFunctionContext, token: string | GraphAILLMStreamData) => {
     const { nodeId } = context.debugInfo;
-    if (token.type) {
+    if (typeof token === "object" && "type" in token) {
       if (token.type === "response.in_progress") {
         const chunk = token.response.output[0].text;
         streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
