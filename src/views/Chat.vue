@@ -77,7 +77,7 @@ export default defineComponent({
     const { messages, chatMessagePlugin } = useChatPlugin();
     const { updateCytoscape, cytoscapeRef, resetCytoscape } = useCytoscape(selectedGraph);
     const { logs, transitions, updateLog, resetLog } = useLogs();
-    const { streamData, streamAgentFilter, streamPlugin, isStreaming } = useStreamData();
+    const { streamData, streamAgentFilter, isStreaming } = useStreamData();
     const agentFilters = [
       {
         name: "streamAgentFilter",

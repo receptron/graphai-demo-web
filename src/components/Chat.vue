@@ -2,10 +2,15 @@
   <div class="w-10/12 m-auto text-left">
     <div v-for="(m, k) in messages" :key="k">
       <div v-if="m.role === 'user'" class="mr-8">👱{{ m.content }}</div>
-      <div class="ml-20" v-else>🤖<pre>{{ m.content }}</pre></div>
+      <div class="ml-20" v-else>
+        🤖
+        <pre>{{ m.content }}</pre>
+      </div>
     </div>
     <div v-for="(nodeId, k) in streamNodeIds" :key="k">
-      <div class="ml-20" v-if="isStreaming[nodeId]"><pre>🤖{{ streamData[nodeId] }}</pre></div>
+      <div class="ml-20" v-if="isStreaming[nodeId]">
+        <pre>🤖{{ streamData[nodeId] }}</pre>
+      </div>
     </div>
   </div>
 </template>
