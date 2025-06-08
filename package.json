@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@graphai/agent_filters": "^1.0.0",
-    "@graphai/openai_agent": "^1.0.2",
+    "@graphai/openai_agent": "^2.0.3",
     "@graphai/tools_agent": "^0.2.3",
     "@graphai/vanilla": "^1.0.9",
     "@mlc-ai/web-llm": "^0.2.78",
