@@ -39,7 +39,7 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "@/store";
 import { GraphAI } from "graphai";
 
-import { useStreamData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
 import { textInputEvent, useChatPlugin } from "../utils/graphai";
 
 import Chat from "../components/Chat.vue";

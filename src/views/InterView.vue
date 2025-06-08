@@ -47,7 +47,7 @@ import * as agents from "@graphai/vanilla";
 import { graph_data } from "@/graph/interview";
 import { openAIAgent } from "@graphai/openai_agent";
 
-import { useStreamData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
 import { useChatPlugin } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";

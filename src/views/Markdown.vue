@@ -73,7 +73,7 @@ import * as agents from "@graphai/vanilla";
 import { graphMarkdown } from "@/graph/markdown";
 import { openAIAgent } from "@graphai/openai_agent";
 
-import { useStreamData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { eventAgentGenerator, EventData } from "@receptron/event_agent_generator";

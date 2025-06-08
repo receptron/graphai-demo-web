@@ -52,7 +52,8 @@ import { generateGraph } from "@/utils/graph";
 import { graph_data, graph_data2, graph_data_co2, graph_data_http, graph_data_stream, graph_data_nested } from "@/graph/graph_data";
 import { graph_data_morning } from "@/utils/morning";
 
-import { useStreamData, useGraphData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
+import { useGraphData } from "@/utils/stream";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 

@@ -2,8 +2,6 @@ import { GraphData } from "graphai";
 import { ref } from "vue";
 import { randomInt } from "./graph";
 
-export { useStreamData } from "../composables/useStreamData";
-
 class WordStreamer {
   public onWord = (__word: string | undefined) => {
     // This method will be overridden later

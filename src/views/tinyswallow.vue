@@ -52,7 +52,7 @@ import tinyswallowAgent, { modelLoad, loadEngine, CallbackReport } from "../agen
 
 import { graphChat } from "@/graph/chat_tinyswallow";
 
-import { useStreamData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
 import { textInputEvent, useChatPlugin, useLogs } from "../utils/graphai";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";

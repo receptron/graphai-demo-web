@@ -48,7 +48,7 @@ import { openAIAgent } from "@graphai/openai_agent";
 import googleMapAgent from "../agents/google_map_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
-import { useStreamData } from "@/utils/stream";
+import { useStreamData } from "@/composables/useStreamData";
 
 import { useCytoscape } from "@receptron/graphai_vue_cytoscape";
 import { useLogs, textInputEvent } from "../utils/graphai";
