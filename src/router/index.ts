@@ -6,7 +6,6 @@ import NotFound from "@/components/NotFound.vue";
 import Home from "@/views/Home.vue";
 import Step from "@/views/Step.vue";
 import Chat from "@/views/Chat.vue";
-import GraphAI from "@/views/GraphAI.vue";
 import Reception from "@/views/Reception.vue";
 import Random from "@/views/Random.vue";
 import About from "@/views/About.vue";
@@ -85,10 +84,6 @@ const routeChildren: Array<RouteRecordRaw> = [
   {
     path: "gui",
     component: gui,
-  },
-  {
-    path: "graphai",
-    component: GraphAI,
   },
 ];
 
