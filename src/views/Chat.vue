@@ -104,7 +104,7 @@ export default defineComponent({
       );
       graphai.registerCallback(updateCytoscape);
       graphai.registerCallback(updateLog);
-      graphai.registerCallback(streamPlugin(streamNodes));
+      // graphai.registerCallback(streamPlugin(streamNodes));
       graphai.registerCallback(chatMessagePlugin(outputNodes));
       await graphai.run();
     };

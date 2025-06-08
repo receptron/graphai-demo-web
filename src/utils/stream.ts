@@ -8,9 +8,24 @@ export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
-  const outSideFunciton = (context: AgentFunctionContext, token: string) => {
+  const outSideFunciton = (context: AgentFunctionContext, token: string | any) => {
     const { nodeId } = context.debugInfo;
-    streamData.value[nodeId] = (streamData.value[nodeId] || "") + token;
+    if (token.type) {
+      if (token.type === "response.in_progress") {
+        const chunk = token.response.output[0].text;
+        streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
+      } else {
+        if (token.type === "response.created") {
+          isStreaming.value[nodeId] = true;
+        }
+        if (token.type === "response.completed") {
+          isStreaming.value[nodeId] = false;
+          streamData.value[nodeId] = "";
+        }
+      }
+    } else {
+      streamData.value[nodeId] = (streamData.value[nodeId] || "") + token;
+    }
   };
 
   const resetStreamData = (nodeId: string) => {

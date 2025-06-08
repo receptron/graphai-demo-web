@@ -24,7 +24,7 @@ export const graphChat: GraphData = {
       isResult: true,
       params: {
         forWeb: true,
-        stream: true,
+        dataStream: true,
         isResult: true,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
