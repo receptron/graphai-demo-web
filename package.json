@@ -21,7 +21,7 @@
     "@vueuse/head": "^2.0.0",
     "add": "^2.0.6",
     "core-js": "^3.41.0",
-    "graphai": "^2.0.5",
+    "graphai": "^2.0.6",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.1",
     "unplugin-vue-markdown": "^28.3.1",
