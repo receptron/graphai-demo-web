@@ -84,7 +84,7 @@ export default defineComponent({
       },
     ];
 
-    const internalData = ref({});
+    const internalData = ref<Record<string, unknown>>({});
     const graphai = new GraphAI(
       selectedGraph.value,
       {
