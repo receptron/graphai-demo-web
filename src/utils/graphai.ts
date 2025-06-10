@@ -49,12 +49,15 @@ export const textInputEvent = () => {
   const events = computed(() => {
     return Object.values(eventsObj.value);
   });
-
+  const resetEvents = () => {
+    eventsObj.value = {};
+  };
   return {
     eventAgent,
     userInput,
     events,
     submitText,
+    resetEvents,
   };
 };
 
