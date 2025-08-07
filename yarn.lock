@@ -320,10 +320,10 @@
   resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.3.tgz#be708a18550130cd0a1700a8ef1bd3adc5c15b07"
   integrity sha512-Jh+ONf7uySw+1lpUwkb0gypDIyu3veLelpCi2tWm2ndIp/NgDDCbFokkNsXzhbYv8mFlYkgFcITkmHi2DiXQkg==
 
-"@graphai/vanilla@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-2.0.4.tgz#bb88f4169d7f1deb6d7f07ba45fea8689e8427c8"
-  integrity sha512-rpfFOj4DV2wlYyYh46yx78mqTxvApI/wa/CSg2ti/in16OZWS/z+sCuZ0q+2lkI5E9WyHIyPq76hNbOT6v3cNg==
+"@graphai/vanilla@^2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@graphai/vanilla/-/vanilla-2.0.6.tgz#10ea74446279cd66300f5d4f3c7ffc390cc154e6"
+  integrity sha512-2l10062HpfKMlfuN9PBknpS2p1qvWxy7+lMt5fd1tpxGii9/ZLfSIkqVIZErqpHLvMtEg6Mb0k4joJQ2r6wSfQ==
   dependencies:
     "@graphai/agent_utils" "^2.0.1"
 
@@ -2077,10 +2077,10 @@ graceful-fs@^4.2.4:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-graphai@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.6.tgz#ff0e6f7de739bfb109b637a13b72bcb41b32d301"
-  integrity sha512-OOeb0ULF/o2WxuVT4EC6je6IaGJQMVMn/zAwYpTeZf0Mqd33vonUkkSUdADUKWPwM2uJBxPWq+JYys64BISh/Q==
+graphai@^2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/graphai/-/graphai-2.0.13.tgz#f5ede953bf414b0ac5ce80b1c469dc434c60dffa"
+  integrity sha512-jp0aK/smMsXP0COQcGjqobxZqN7xWvmpMG+JQXkhKmpQRX9+Ip3nVBVK32SEms8SChuXDzs9Of3bBKudDIRZTA==
 
 graphemer@^1.4.0:
   version "1.4.0"
@@ -2847,10 +2847,10 @@ picomatch@^4.0.2:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
   integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
 
-pinia@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/pinia/-/pinia-3.0.1.tgz#d19f79a04b2b55fd63f78f1395a8c4a714d96941"
-  integrity sha512-WXglsDzztOTH6IfcJ99ltYZin2mY8XZCXujkYWVIJlBjqsP6ST7zw+Aarh63E1cDVYeyUcPCxPHzJpEOmzB6Wg==
+pinia@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/pinia/-/pinia-3.0.3.tgz#f412019bdeb2f45e85927b432803190343e12d89"
+  integrity sha512-ttXO/InUULUXkMHpTdp9Fj4hLpD/2AoJdmAbAeW2yu1iy1k+pkFekQXw5VpC0/5p51IOR/jDaDRfRWRnMMsGOA==
   dependencies:
     "@vue/devtools-api" "^7.7.2"
 
@@ -2882,15 +2882,6 @@ postcss@^8.5.3:
   integrity sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==
   dependencies:
     nanoid "^3.3.8"
-    picocolors "^1.1.1"
-    source-map-js "^1.2.1"
-
-postcss@^8.5.4:
-  version "8.5.4"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.4.tgz#d61014ac00e11d5f58458ed7247d899bd65f99c0"
-  integrity sha512-QSa9EBe+uwlGTFmHsPKokv3B/oEMQZxfqW0QqNCyhpa6mB1afzulwn8hihglqAb2pOw+BJgNlmXQ8la2VeHB7w==
-  dependencies:
-    nanoid "^3.3.11"
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
@@ -3260,10 +3251,10 @@ tailwindcss@4.0.11:
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.0.11.tgz#cb00fb696d7346f115682bbe909d87a87afb664e"
   integrity sha512-GZ6+tNwieqvpFLZfx2tkZpfOMAK7iumbOJOLmd6v8AcYuHbjUb+cmDRu6l+rFkIqarh5FfLbCSRJhegcVdoPng==
 
-tailwindcss@^4.1.8:
-  version "4.1.8"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.1.8.tgz#5d66d095ee7d82f03d6dbc6158bc248e064a5c05"
-  integrity sha512-kjeW8gjdxasbmFKpVGrGd5T4i40mV5J2Rasw48QARfYeQ8YS9x02ON9SFWax3Qf616rt4Cp3nVNIj6Hd1mP3og==
+tailwindcss@^4.1.11:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.1.11.tgz#799af3e98c19c5baaefafc6e0c16304a0e684854"
+  integrity sha512-2E9TBm6MDD/xKYe+dvJZAmg3yxIEDNRc0jwlNyDg/4Fil2QcSLjFKGVff0lAf1jjeaArlG/M75Ey/EYr/OJtBA==
 
 tapable@^2.2.0:
   version "2.2.1"
