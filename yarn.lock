@@ -340,10 +340,10 @@
   resolved "https://registry.yarnpkg.com/@graphai/stream_agent_filter/-/stream_agent_filter-2.0.2.tgz#128250d8de876ffcfe8db488170ea43ac8c9d9f0"
   integrity sha512-S45q/cnzc8s2FTOUUcCCvMTOW7M7H1En10lKI5YCgH7UhmIeM3aP4x43fxTazeX9mqAC6od01wYIIDBvK/B2yA==
 
-"@graphai/tools_agent@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.3.tgz#be708a18550130cd0a1700a8ef1bd3adc5c15b07"
-  integrity sha512-Jh+ONf7uySw+1lpUwkb0gypDIyu3veLelpCi2tWm2ndIp/NgDDCbFokkNsXzhbYv8mFlYkgFcITkmHi2DiXQkg==
+"@graphai/tools_agent@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@graphai/tools_agent/-/tools_agent-0.2.4.tgz#287b5c43477e71927ea61cc41dfe6ef2ffb7a304"
+  integrity sha512-FhABSq090OhWBnET/pnQ6iRMkBwmkHQo88P5gRTnFc7cmMW8wb96b0bIO00+rC/U8WJIxrE/ufcVSSa9RLq+7Q==
 
 "@graphai/vanilla@^2.0.6":
   version "2.0.6"
@@ -3626,10 +3626,10 @@ vite-plugin-checker@^0.10.2:
     tinyglobby "^0.2.14"
     vscode-uri "^3.1.0"
 
-vite@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.0.tgz#6fb13c74c13cfdd0e200ee61d6ea6e8fafc2e8b5"
-  integrity sha512-3jdAy3NhBJYsa/lCFcnRfbK4kNkO/bhijFCnv5ByUQk/eekYagoV2yQSISUrhpV+5JiY5hmwOh7jNnQ68dFMuQ==
+vite@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.1.tgz#a2c25f31742fd9f8b223d809df1ce3026e813fcf"
+  integrity sha512-yJ+Mp7OyV+4S+afWo+QyoL9jFWD11QFH0i5i7JypnfTcA1rmgxCbiA8WwAICDEtZ1Z1hzrVhN8R8rGTqkTY8ZQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.6"
