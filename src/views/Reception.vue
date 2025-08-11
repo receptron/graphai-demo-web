@@ -49,9 +49,8 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFilterFunction, AgentFilterInfo, sleep } from "graphai";
+import { GraphAI, agentInfoWrapper, type AgentFunction, type AgentFilterFunction, type AgentFilterInfo, sleep } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphReception } from "@/graph/reception";
 import { openAIAgent } from "@graphai/openai_agent";

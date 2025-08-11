@@ -59,9 +59,8 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 
-import { GraphAI, AgentFunction, AgentFunctionInfo } from "graphai";
+import { GraphAI, agentInfoWrapper, type AgentFunction, type AgentFunctionInfo } from "graphai";
 import * as agents from "@graphai/vanilla";
-import { agentInfoWrapper } from "graphai/lib/utils/utils";
 
 import { graphAgent } from "@/graph/agent";
 import { openAIAgent } from "@graphai/openai_agent";
