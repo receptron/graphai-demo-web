@@ -118,11 +118,11 @@ export default defineComponent({
       );
       graphai.injectValue("tools", videoAgent.tools);
       graphai.registerCallback(updateCytoscape);
-      graphai.registerCallback(streamPlugin(["llm", "toolsResponseLLM"]));
+      graphai.registerCallback(streamPlugin(["llmCallWithTools", "toolsResponseLLM"]));
       graphai.registerCallback((log) => {
         const { nodeId, state, result } = log;
         if (state === "completed" && result) {
-          if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
+          if (nodeId === "llmCallWithTools" || nodeId === "toolsResponseLLM") {
             if (hasToolCalls(result)) {
               const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
               messages.value.push({ role: "assistant", content: "[call api]" + calls });

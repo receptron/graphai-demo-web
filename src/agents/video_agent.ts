@@ -1,18 +1,18 @@
 import { AgentFunction } from "graphai";
 
 /* eslint-disable require-await */
-const videoAgent: AgentFunction<unknown, { result: string }, { arg: { time: number }; func: string }, { videoElement: HTMLVideoElement | null }> = async ({
+const videoAgent: AgentFunction<unknown, { content: string }, { arg: { time: number }; func: string }, { videoElement: HTMLVideoElement | null }> = async ({
   namedInputs,
   config,
 }) => {
   if (!config) {
-    return { result: "failed" };
+    return { content: "failed" };
   }
 
   const { videoElement } = config;
   const { arg, func } = namedInputs;
   if (videoElement === null) {
-    return { result: "faild" };
+    return { content: "faild" };
   }
   if (func === "pause") {
     videoElement.pause();
@@ -25,12 +25,12 @@ const videoAgent: AgentFunction<unknown, { result: string }, { arg: { time: numb
   }
   if (func === "getCurrentTime") {
     return {
-      result: JSON.stringify({ currenTimeSeconds: videoElement.currentTime }),
+      content: JSON.stringify({ currenTimeSeconds: videoElement.currentTime }),
       hasNext: true,
     };
   }
 
-  return { result: "success" };
+  return { content: "success" };
 };
 
 const videoAgentInfo = {

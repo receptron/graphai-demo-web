@@ -74,7 +74,7 @@ export default defineComponent({
     Logs,
   },
   setup() {
-    const streamNodes = ["llm", "toolsResponseLLM"];
+    const streamNodes = ["llmCallWithTools", "toolsResponseLLM"];
     const mapRef = ref();
 
     let map: google.maps.Map | null = null;
@@ -111,7 +111,7 @@ export default defineComponent({
     const setMessages = (log: TransactionLog) => {
       const { nodeId, state, result } = log;
       if (state === "completed" && result) {
-        if (nodeId === "llm" || nodeId === "toolsResponseLLM") {
+        if (nodeId === "llmCallWithTools" || nodeId === "toolsResponseLLM") {
           if (hasToolCalls(result)) {
             const calls = result.tool_calls.map((tool) => [tool.name.split("--").join("/"), JSON.stringify(tool.arguments)].join(" ")).join(", ");
             messages.value.push({ role: "assistant", content: "[call api]" + calls });

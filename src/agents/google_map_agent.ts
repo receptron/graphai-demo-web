@@ -1,18 +1,18 @@
 import { AgentFunction } from "graphai";
 
-const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown; func: string }, { map: google.maps.Map | null }> = async ({
+const googleMapAgent: AgentFunction<unknown, { content: string }, { arg: unknown; func: string }, { map: google.maps.Map | null }> = async ({
   namedInputs,
   config,
 }) => {
   if (!config) {
-    return { result: "failed" };
+    return { content: "failed" };
   }
   const { AdvancedMarkerElement } = (await google.maps.importLibrary("marker")) as google.maps.MarkerLibrary;
 
   const { map } = config;
   const { arg, func } = namedInputs;
   if (map === null) {
-    return { result: "faild" };
+    return { content: "faild" };
   }
   if (func === "setCenter") {
     map.setCenter(arg as google.maps.LatLng);
@@ -20,7 +20,7 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
   if (func === "getCenter") {
     const location = map.getCenter();
     return {
-      result: JSON.stringify(location),
+      content: JSON.stringify(location),
       hasNext: true,
     };
   }
@@ -73,7 +73,7 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
       map.fitBounds(bounds);
 
       return {
-        result: JSON.stringify(dataSet),
+        content: JSON.stringify(dataSet),
         hasNext: true,
       };
     }
@@ -99,13 +99,13 @@ const googleMapAgent: AgentFunction<unknown, { result: string }, { arg: unknown;
     const { places } = await Place.searchByText(request);
 
     if (!places.length || places.length === 0 || !places[0].location) {
-      return { result: "faild" };
+      return { content: "faild" };
     }
     map.setCenter(places[0].location);
     map.setZoom(15);
   }
 
-  return { result: "success" };
+  return { content: "success" };
 };
 
 const mapTypes = [
