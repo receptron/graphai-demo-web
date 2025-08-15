@@ -3,16 +3,34 @@ import { GraphAILLMStreamData } from "@graphai/llm_utils";
 import { ref } from "vue";
 import { streamAgentFilterGenerator } from "@graphai/stream_agent_filter";
 
+type GraphAILLMStreamDataToolsProgress = {
+  type: "response.in_progress";
+  response: {
+    output: {
+      type: "tool_calls";
+      function: {
+        arguments: string;
+      };
+    }[];
+  };
+};
+
+
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
   const isStreaming = ref<Record<string, boolean>>({});
 
-  const outSideFunciton = (context: AgentFunctionContext, token: string | GraphAILLMStreamData) => {
+  const outSideFunciton = (context: AgentFunctionContext, token: string | GraphAILLMStreamData | GraphAILLMStreamDataToolsProgress) => {
     const { nodeId } = context.debugInfo;
     if (typeof token === "object" && "type" in token) {
       if (token.type === "response.in_progress") {
-        const chunk = token.response.output[0].text;
-        streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
+        if (token.response.output[0].type === "text") {
+          const chunk = token.response.output[0].text;
+          streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
+        }
+        if (token.response.output[0].type === "tool_calls" && token.response.output[0]?.function?.arguments) {
+          streamData.value[nodeId] = (streamData.value[nodeId] || "") + token.response.output[0]?.function?.arguments;
+        }
       } else {
         if (token.type === "response.created") {
           isStreaming.value[nodeId] = true;
