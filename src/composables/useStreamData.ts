@@ -34,7 +34,8 @@ export const useStreamData = () => {
         if ("type" in output && output.type === "text") {
           const chunk = output.text;
           streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
-        } else if ("type" in output && output.type === "tool_calls" && output?.data?.[0].function?.arguments) {
+        }
+        if ("type" in output && output.type === "tool_calls" && output?.data?.[0].function?.arguments) {
           streamData.value[nodeId] = (streamData.value[nodeId] || "") + output?.data?.[0].function?.arguments;
         }
       } else {
