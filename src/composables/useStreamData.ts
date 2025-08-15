@@ -3,18 +3,22 @@ import { GraphAILLMStreamData } from "@graphai/llm_utils";
 import { ref } from "vue";
 import { streamAgentFilterGenerator } from "@graphai/stream_agent_filter";
 
-type GraphAILLMStreamDataToolsProgress = {
+export type GraphAILLMStreamDataToolsProgress = {
   type: "response.in_progress";
   response: {
     output: {
-      type: "tool_calls";
-      function: {
-        arguments: string;
-      };
+      data: {
+        id?: string;
+        type?: "tool_calls";
+        function: {
+          arguments: string;
+          name: string;
+        };
+        index: number;
+      }[]
     }[];
   };
 };
-
 
 export const useStreamData = () => {
   const streamData = ref<Record<string, string>>({});
@@ -28,8 +32,8 @@ export const useStreamData = () => {
           const chunk = token.response.output[0].text;
           streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
         }
-        if (token.response.output[0].type === "tool_calls" && token.response.output[0]?.function?.arguments) {
-          streamData.value[nodeId] = (streamData.value[nodeId] || "") + token.response.output[0]?.function?.arguments;
+        if (token.response.output?.[0]?.type === "tool_calls" && token.response.output?.[0].data?.[0].function?.arguments) {
+          streamData.value[nodeId] = (streamData.value[nodeId] || "") + token.response.output?.[0].data?.[0].function?.arguments;
         }
       } else {
         if (token.type === "response.created") {
