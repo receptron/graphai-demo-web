@@ -15,7 +15,7 @@ export type GraphAILLMStreamDataToolsProgress = {
           name: string;
         };
         index: number;
-      }[]
+      }[];
     }[];
   };
 };
