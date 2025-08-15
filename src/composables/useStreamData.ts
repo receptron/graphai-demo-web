@@ -7,9 +7,10 @@ export type GraphAILLMStreamDataToolsProgress = {
   type: "response.in_progress";
   response: {
     output: {
+      type: "tool_calls";
       data: {
         id?: string;
-        type?: "tool_calls";
+        type: "function";
         function: {
           arguments: string;
           name: string;
@@ -28,12 +29,13 @@ export const useStreamData = () => {
     const { nodeId } = context.debugInfo;
     if (typeof token === "object" && "type" in token) {
       if (token.type === "response.in_progress") {
-        if (token.response.output[0].type === "text") {
-          const chunk = token.response.output[0].text;
+        const output = token.response.output[0];
+        console.log(output);
+        if ("type" in output && output.type === "text") {
+          const chunk = output.text;
           streamData.value[nodeId] = (streamData.value[nodeId] || "") + chunk;
-        }
-        if (token.response.output?.[0]?.type === "tool_calls" && token.response.output?.[0].data?.[0].function?.arguments) {
-          streamData.value[nodeId] = (streamData.value[nodeId] || "") + token.response.output?.[0].data?.[0].function?.arguments;
+        } else if ("type" in output && output.type === "tool_calls" && output?.data?.[0].function?.arguments) {
+          streamData.value[nodeId] = (streamData.value[nodeId] || "") + output?.data?.[0].function?.arguments;
         }
       } else {
         if (token.type === "response.created") {
