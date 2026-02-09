@@ -16,7 +16,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@graphai/agents": "^2.0.15",
-    "@receptron/graphai_express": "^3.0.1",
+    "@receptron/graphai_express": "^3.0.2",
     "express": "^5.2.1",
     "firebase-admin": "^13.6.1",
     "firebase-functions": "^6.4.0",
