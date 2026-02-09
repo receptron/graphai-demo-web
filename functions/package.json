@@ -19,7 +19,7 @@
     "@receptron/graphai_express": "^3.0.2",
     "express": "^5.2.1",
     "firebase-admin": "^13.6.1",
-    "firebase-functions": "^6.4.0",
+    "firebase-functions": "^7.0.5",
     "graphai": "^2.0.16",
     "to-json-schema": "^0.2.5",
     "ts-json-schema-generator": "^2.5.0"
