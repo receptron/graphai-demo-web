@@ -11,26 +11,26 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@graphai/agents": "^2.0.9",
+    "@graphai/agents": "^2.0.15",
     "@receptron/graphai_express": "^3.0.1",
-    "express": "^5.2.0",
-    "firebase-admin": "^13.4.0",
+    "express": "^5.2.1",
+    "firebase-admin": "^13.6.1",
     "firebase-functions": "^6.4.0",
-    "graphai": "^2.0.13",
+    "graphai": "^2.0.16",
     "to-json-schema": "^0.2.5",
-    "ts-json-schema-generator": "^2.4.0"
+    "ts-json-schema-generator": "^2.5.0"
   },
   "devDependencies": {
     "@types/to-json-schema": "^0.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.39.1",
-    "@typescript-eslint/parser": "^8.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.33.0",
-    "prettier": "^3.6.2",
-    "typescript": "5.9.2"
+    "prettier": "^3.8.1",
+    "typescript": "5.9.3"
   },
   "private": true
 }
