@@ -112,6 +112,11 @@ export default [
       "sonarjs/prefer-object-literal": "error",
       "sonarjs/prefer-single-boolean-return": "error",
       "sonarjs/prefer-while": "error",
+      // TypeScript 6.0 inference trips these type-aware rules on valid code
+      // (union / `X | null` returns, Array.includes generics, `typeof`-guarded `in`) — all false positives.
+      "sonarjs/function-return-type": "off",
+      "sonarjs/argument-type": "off",
+      "sonarjs/in-operator-type-error": "off",
       "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
       "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
       "id-length": ["error", { "exceptions": ["x", "y", "d", "i", "j"] }],

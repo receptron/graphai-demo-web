@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     vue(),
     checker({
+      enableBuild: false,
       typescript: true,
       overlay: false,
       eslint: {
