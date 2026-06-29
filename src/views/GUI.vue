@@ -218,8 +218,7 @@ export default defineComponent({
       <div class="text-left">
         <pre>
         {{ JSON.stringify(store.graphData, null, 2) }}
-      </pre
-        >
+      </pre>
       </div>
     </div>
     <div>
