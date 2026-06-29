@@ -18,7 +18,7 @@
     "@mlc-ai/web-llm": "^0.2.79",
     "@receptron/event_agent_generator": "^0.0.6",
     "@receptron/graphai_vue_cytoscape": "^0.2.0",
-    "@vueuse/head": "^2.0.0",
+    "@unhead/vue": "^3",
     "core-js": "^3.45.0",
     "graphai": "^2.0.18",
     "markdown-it": "^14.2.0",
