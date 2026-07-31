@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# jscpd duplication-scan output (see .github/workflows/duplication-scan.yaml)
+report/
+
 
 # local env files
 .env.local

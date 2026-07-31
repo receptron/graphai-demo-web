@@ -8,7 +8,8 @@
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint src",
     "test": "TS_NODE_PROJECT=tsconfig.test.json node --test  -r ts-node/register ./tests/test_*.mjs",
-    "format": "prettier --write '{src/**/*,*}.{js,ts,vue,json}'"
+    "format": "prettier --write '{src/**/*,*}.{js,ts,vue,json}'",
+    "knip": "knip"
   },
   "dependencies": {
     "@graphai/http_client_agent_filter": "^2.0.1",
@@ -43,10 +44,10 @@
     "@vue/eslint-config-typescript": "^14.9.0",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-no-type-assertion": "^1.3.0",
     "eslint-plugin-sonarjs": "^4.2.0",
     "eslint-plugin-vue": "^10.10.0",
     "globals": "^17.8.0",
+    "knip": "^6",
     "postcss": "^8.5.25",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
