@@ -1,0 +1,28 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // App entry (src/main.ts) is auto-detected by knip's Vite/Vue plugins from index.html's
+  // <script type="module" src="/src/main.ts"> plus vite.config.mjs, so no explicit "entry"
+  // is listed. Analysis is scoped to src/ (the Vue app); the separate functions/ Firebase
+  // sub-project has its own package.json/tsconfig and is out of scope for this scan.
+  "project": ["src/**/*.{ts,vue}"],
+  "ignoreExportsUsedInFile": true,
+  "includeEntryExports": false,
+  // No "ignoreDependencies": knip resolves every declared dependency on its own here, including
+  // tailwindcss (reached through the `@import 'tailwindcss'` in src/index.css via its Tailwind
+  // support) — nothing is structurally invisible.
+  "rules": {
+    // Warn mode: every rule is "warn" (reported, exit 0) or "off". Nothing gates CI here.
+    "files": "warn",
+    "dependencies": "warn",
+    "devDependencies": "warn",
+    "unlisted": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "unresolved": "off",
+    "binaries": "off",
+    "nsExports": "off",
+    "nsTypes": "off",
+    "enumMembers": "off",
+    "duplicates": "off",
+  },
+}
