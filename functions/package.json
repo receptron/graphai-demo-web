@@ -15,22 +15,25 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@graphai/agents": "^2.0.15",
-    "@receptron/graphai_express": "^3.0.2",
-    "express": "^5.2.1",
-    "firebase-admin": "^13.6.1",
-    "firebase-functions": "^7.0.5",
+    "@graphai/agents": "^2.1.0",
+    "@receptron/graphai_express": "^3.0.3",
+    "express": "^5.3.0",
+    "firebase-admin": "^14.5.0",
+    "firebase-functions": "^7.4.0",
     "graphai": "^2.0.16",
     "to-json-schema": "^0.2.5",
     "ts-json-schema-generator": "^2.5.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/to-json-schema": "^0.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
-    "eslint": "^9.33.0",
-    "prettier": "^3.9.6",
-    "typescript": "5.9.3"
+    "@typescript-eslint/eslint-plugin": "^8.71.2",
+    "@typescript-eslint/parser": "^8.71.2",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2"
   },
   "private": true
 }
