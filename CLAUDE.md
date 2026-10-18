@@ -12,7 +12,7 @@ Vue 3 demo web application showcasing GraphAI capabilities. Interactive frontend
 yarn serve      # Start Vite dev server
 yarn build      # Build for production (vue-tsc && vite build)
 yarn lint       # Run ESLint on src/
-yarn test       # Run tests (node:test with ts-node)
+yarn test       # Run tests (node:test)
 yarn format     # Format with Prettier
 ```
 
