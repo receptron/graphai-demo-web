@@ -7,7 +7,7 @@
     "build": "vue-tsc && vite build",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint src",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json node --test  -r ts-node/register ./tests/test_*.mjs",
+    "test": "node --test ./tests/test_*.mjs",
     "format": "prettier --write '{src/**/*,*}.{js,ts,vue,json}'",
     "knip": "knip"
   },
